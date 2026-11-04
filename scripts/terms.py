@@ -12,9 +12,12 @@ for line in open(os.path.join(raw, "za", "Translations0.txt"), encoding="utf-8")
     c = line.split(";")
     if len(c) >= 4 and c[0].strip() and c[3].strip():
         t.setdefault(c[0].strip().lower(), [c[3].strip(), c[1].strip()])
-extra = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "data", "traducciones_es.json")
-if os.path.exists(extra):
-    for k, v in json.load(open(extra, encoding="utf-8")).items():
-        t.setdefault(k.lower().strip(), [v, ""])
+here = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "data")
+# traducciones propias: piezas de BodyParts3D y partes de los órganos HuBMAP
+for name in ("traducciones_es.json", "hubmap_traducciones_es.json"):
+    extra = os.path.join(here, name)
+    if os.path.exists(extra):
+        for k, v in json.load(open(extra, encoding="utf-8")).items():
+            t.setdefault(k.lower().strip(), [v, ""])
 json.dump(t, open(out, "w", encoding="utf-8"), ensure_ascii=False, separators=(",", ":"))
 print("términos:", len(t))

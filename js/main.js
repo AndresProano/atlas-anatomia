@@ -1,354 +1,433 @@
-import { createViewer, VIEWS } from './scene.js?v=dd263107';
-import { createBody, SYSTEM_COLORS, displayName } from './body.js?v=dd263107';
-import { createOrgans } from './organs.js?v=dd263107';
-import { createQuiz } from './quiz.js?v=dd263107';
-import { renderSources } from './sources.js?v=dd263107';
-import { wikiFor, renderWiki } from './wiki.js?v=dd263107';
+// Interfaz tipo app: visor a pantalla completa, buscador flotante, capas en chips,
+// ficha como hoja inferior (móvil) o tarjeta lateral (escritorio) y barra de pestañas.
+import { createViewer, VIEWS } from './scene.js?v=d68bc1b1';
+import { createBody, SYSTEM_COLORS, displayName } from './body.js?v=d68bc1b1';
+import { createOrgans } from './organs.js?v=d68bc1b1';
+import { createQuiz } from './quiz.js?v=d68bc1b1';
+import { renderSources } from './sources.js?v=d68bc1b1';
+import { wikiFor } from './wiki.js?v=d68bc1b1';
 
 const $ = (s) => document.querySelector(s);
+const V = window.ATLAS_V || '';
+const isMobile = () => matchMedia('(max-width: 899px)').matches;
+const store = {
+  get: (k) => { try { return localStorage.getItem(k); } catch { return null; } },
+  set: (k, v) => { try { localStorage.setItem(k, v); } catch { /* sin almacenamiento */ } },
+};
+const esc = (s) => String(s ?? '').replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+const ICON = {
+  focus: '<svg class="ico" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M3 8V5a2 2 0 0 1 2-2h3M16 3h3a2 2 0 0 1 2 2v3M21 16v3a2 2 0 0 1-2 2h-3M8 21H5a2 2 0 0 1-2-2v-3"/></svg>',
+  isolate: '<svg class="ico" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="2" fill="currentColor"/></svg>',
+  hide: '<svg class="ico" viewBox="0 0 24 24"><path d="M3 3l18 18M10.6 6.1A9.7 9.7 0 0 1 12 6c6.5 0 10 6 10 6a17 17 0 0 1-3.2 3.8M6.6 6.6A17 17 0 0 0 2 12s3.5 6 10 6a9.6 9.6 0 0 0 5.4-1.6"/><path d="M9.9 9.9a3 3 0 0 0 4.2 4.2"/></svg>',
+  xray: '<svg class="ico" viewBox="0 0 24 24"><rect x="4" y="3" width="16" height="18" rx="3"/><path d="M12 7v10M9 9h6M9 12h6M9 15h6"/></svg>',
+};
+const SYSTEM_SHORT = {
+  esqueletico: 'Hueso', articular: 'Articulación', muscular: 'Músculo', cardiovascular: 'Corazón y vasos',
+  nervioso: 'Sistema nervioso', respiratorio: 'Sistema respiratorio', digestivo: 'Sistema digestivo',
+  urogenital: 'Sistema urogenital', endocrino: 'Sistema endocrino', ojo_oido: 'Órganos de los sentidos', piel: 'Piel', otros: 'Órgano',
+};
+const LAYERS = [
+  { key: 'huesos', label: 'Huesos', color: SYSTEM_COLORS.esqueletico, systems: ['esqueletico', 'articular'] },
+  { key: 'musculos', label: 'Músculos', color: SYSTEM_COLORS.muscular, systems: ['muscular'] },
+  { key: 'organos', label: 'Órganos', color: SYSTEM_COLORS.digestivo, systems: ['digestivo', 'respiratorio', 'urogenital', 'endocrino', 'otros'] },
+  { key: 'vasos', label: 'Vasos', color: SYSTEM_COLORS.cardiovascular, systems: ['cardiovascular'] },
+  { key: 'nervios', label: 'Nervios', color: SYSTEM_COLORS.nervioso, systems: ['nervioso', 'ojo_oido'] },
+  { key: 'piel', label: 'Piel', color: SYSTEM_COLORS.piel, systems: ['piel'] },
+];
+
 const canvas = $('#canvas');
 const viewer = createViewer(canvas);
+let mode = 'body';
+let organs = null;
 
 // --- tema ---------------------------------------------------------------
-const store = { get: (k) => { try { return localStorage.getItem(k); } catch { return null; } }, set: (k, v) => { try { localStorage.setItem(k, v); } catch { /* sin storage */ } } };
-const savedTheme = store.get('atlas-theme');
-if (savedTheme) document.documentElement.dataset.theme = savedTheme;
+if (store.get('atlas-theme')) document.documentElement.dataset.theme = store.get('atlas-theme');
 $('#theme-btn').addEventListener('click', () => {
-  const dark = document.documentElement.dataset.theme
-    ? document.documentElement.dataset.theme === 'dark'
-    : matchMedia('(prefers-color-scheme: dark)').matches;
-  document.documentElement.dataset.theme = dark ? 'light' : 'dark';
+  const cur = document.documentElement.dataset.theme || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+  document.documentElement.dataset.theme = cur === 'dark' ? 'light' : 'dark';
   store.set('atlas-theme', document.documentElement.dataset.theme);
 });
 
-// altura real de la barra superior (en móvil el buscador queda pegado debajo)
-const topbar = document.querySelector('.topbar');
-new ResizeObserver(() => document.documentElement.style.setProperty('--topbar-h', `${topbar.offsetHeight}px`)).observe(topbar);
-
-// --- aviso si el navegador dibuja sin tarjeta gráfica ---
-if (viewer.softwareGpu) {
-  const warn = document.createElement('div');
-  warn.className = 'gpu-warn';
-  warn.innerHTML = '<strong>Sin aceleración gráfica:</strong> irá lento. '
-    + '<span class="l">En Chrome: Configuración → Sistema → activa <em>«Usar aceleración de hardware cuando esté disponible»</em> y reinicia.</span>'
-    + '<span class="s">Actívala en la configuración del navegador.</span>'
-    + '<button aria-label="Cerrar aviso">✕</button>';
-  warn.querySelector('button').addEventListener('click', () => { warn.remove(); store.set('atlas-gpu-warn', 'off'); });
-  if (store.get('atlas-gpu-warn') !== 'off') document.querySelector('#stage').append(warn);
-}
-
-// --- carga --------------------------------------------------------------
-const loaderEl = $('#loader'), loaderBar = $('#loader-bar'), loaderText = $('#loader-text');
+// --- carga y avisos ---------------------------------------------------------
+const loaderEl = $('#loader');
 function progress(f, text) {
   loaderEl.classList.remove('done');
-  loaderBar.style.width = `${Math.round(Math.min(f, 1) * 100)}%`;
-  loaderText.textContent = text;
+  $('#loader-bar').style.width = `${Math.round(Math.min(f, 1) * 100)}%`;
+  $('#loader-text').textContent = text;
 }
 const loaderDone = () => loaderEl.classList.add('done');
+let toastTimer = null;
+function toast(text, ms = 2600) {
+  const t = $('#toast');
+  t.textContent = text; t.hidden = false;
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => { t.hidden = true; }, ms);
+}
 
-let mode = 'body';
-let organs = null; // se crea más abajo, updateClip puede correr antes
-const systemsEl = $('#systems');
+// --- cuerpo ---------------------------------------------------------------------
 let body = null;
-
-function systemRow(s) {
-  const li = document.createElement('li');
-  li.dataset.system = s;
-  li.className = 'pending';
-  li.innerHTML = `
-    <input type="checkbox" id="sys-${s}">
-    <label for="sys-${s}"><span class="dot" style="background:${SYSTEM_COLORS[s]}"></span><span>${body.systems[s]}</span></label>
-    <span class="count">…</span>
-    <input type="range" min="0" max="1" step="0.05" aria-label="Opacidad ${body.systems[s]}" title="Opacidad">`;
-  const cb = li.querySelector('input[type=checkbox]');
-  const range = li.querySelector('input[type=range]');
-  cb.addEventListener('change', () => body.setSystemVisible(s, cb.checked));
-  range.addEventListener('input', () => body.setSystemOpacity(s, Number(range.value)));
-  return li;
-}
-function syncSystems() {
-  for (const li of systemsEl.children) {
-    const s = li.dataset.system;
-    li.querySelector('input[type=checkbox]').checked = body.state.sysVisible[s];
-    li.querySelector('input[type=range]').value = body.state.sysOpacity[s];
-  }
-}
-
+let firstDone = false;
 body = await createBody(viewer, {
-  onProgress: (f, s) => progress(f, `Cargando modelos 3D… ${Math.round(f * 100)}%`),
-  onSystemLoaded: (s, n) => {
-    if (!body) return; // el primer sistema llega antes de que exista `body`; se sincroniza abajo
-    const li = systemsEl.querySelector(`[data-system="${s}"]`);
-    if (li) { li.classList.remove('pending'); li.querySelector('.count').textContent = n; }
+  onProgress: (f) => progress(f, `Cargando el cuerpo… ${Math.round(f * 100)}%`),
+  onSystemLoaded: () => {
+    if (!body) return;
+    renderLayers();
     const left = body.order.filter((x) => body.models[x] && !body.state.loaded.has(x)).length;
-    $('#load-status').textContent = left ? `· cargando ${left}` : '';
-    if (!left) loaderDone();
+    if (!left && !firstDone) {
+      firstDone = true;
+      loaderDone();
+      if (viewer.softwareGpu && store.get('atlas-gpu-warn') !== 'off') {
+        store.set('atlas-gpu-warn', 'off');
+        toast('Tu navegador no usa la tarjeta gráfica: activa la aceleración de hardware para que vaya fluido.', 6000);
+      } else if (!store.get('atlas-hint')) {
+        store.set('atlas-hint', '1');
+        toast('Toca una estructura para ver su ficha');
+      }
+    }
   },
 }).catch((e) => { progress(0, 'No se pudieron cargar los modelos: ' + e.message); throw e; });
-
-for (const s of body.order) if (body.models[s]) systemsEl.append(systemRow(s));
-syncSystems();
-for (const s of body.state.loaded) {
-  const li = systemsEl.querySelector(`[data-system="${s}"]`);
-  li?.classList.remove('pending');
-  if (li) li.querySelector('.count').textContent = body.models[s].parts;
-}
 viewer.fitTo(body.bodyBox, VIEWS.front, { instant: true });
-body.allLoaded.then(() => updateClip());
 
-// --- ficha ----------------------------------------------------------------
-const infoEmpty = $('#info-empty'), infoCard = $('#info-card');
-let infoTarget = null; // { kind: 'body', id } | { kind: 'organ', gk }
-function showInfo(data) {
-  infoTarget = data;
-  if (!data) { infoCard.hidden = true; infoEmpty.hidden = false; return; }
-  infoEmpty.hidden = true; infoCard.hidden = false;
-  $('#info-name').textContent = data.name;
-  $('#info-system').innerHTML = `<i style="background:${data.color}"></i>${data.systemLabel}`;
-  $('#info-en').textContent = data.en || '—';
-  $('#info-la').textContent = data.la || '—';
-  $('#info-id').textContent = data.idText || '—';
-  $('#info-vol').textContent = data.vol ? `${data.vol.toFixed(2)} cm³` : '—';
-  $('#wiki-body').innerHTML = '<p class="muted">Buscando en Wikipedia…</p>';
-  $('#wiki-src').textContent = '';
-  const ask = data;
-  wikiFor({ es: data.es, en: data.en }).then((w) => { if (infoTarget === ask) renderWiki($('#wiki-body'), $('#wiki-src'), w); });
+// --- capas (chips) --------------------------------------------------------------
+let xray = false;
+const layersEl = $('#layers');
+const layerOn = (l) => l.systems.some((s) => body.state.sysVisible[s]);
+function setLayer(l, on) { l.systems.forEach((s) => body.setSystemVisible(s, on)); }
+function setXray(on) {
+  xray = on;
+  body.setSystemOpacity('muscular', on ? 0.18 : 1);
+  body.setSystemOpacity('piel', on ? 0.15 : 0.35);
+  renderLayers();
 }
-function showBodyPart(p) {
-  if (!p) return showInfo(null);
-  showInfo({
-    kind: 'body', id: p.id, name: displayName(p), es: p.es, en: p.en, la: p.la,
-    idText: `${p.fma || ''} · ${p.id}`, vol: p.vol, color: SYSTEM_COLORS[p.system], systemLabel: body.systems[p.system],
+function renderLayers() {
+  layersEl.innerHTML = LAYERS.map((l) =>
+    `<button class="chip ${layerOn(l) ? '' : 'off'}" data-layer="${l.key}" aria-pressed="${layerOn(l)}"><span class="dot" style="background:${l.color}"></span>${l.label}</button>`).join('')
+    + `<button class="chip ${xray ? 'on' : ''}" data-xray aria-pressed="${xray}">${ICON.xray}Rayos X</button>`;
+}
+layersEl.addEventListener('click', (e) => {
+  const b = e.target.closest('button');
+  if (!b) return;
+  if (b.hasAttribute('data-xray')) return setXray(!xray);
+  const l = LAYERS.find((x) => x.key === b.dataset.layer);
+  setLayer(l, !layerOn(l));
+  renderLayers();
+});
+renderLayers();
+// si la estructura está tapada por músculos o piel, activar rayos X
+function seeThrough(p) {
+  if (p.system !== 'muscular' && p.system !== 'piel' && body.state.sysVisible.muscular && !xray) setXray(true);
+}
+
+// --- ficha --------------------------------------------------------------------------
+const sheet = $('#sheet'), sheetBody = $('#sheet-body');
+let sheetTarget = null;
+function openSheet(html, target) {
+  sheetTarget = target;
+  sheetBody.innerHTML = html;
+  sheet.hidden = false;
+  sheet.classList.remove('expanded');
+  sheet.scrollTop = 0;
+  layout();
+}
+function closeSheet() {
+  sheet.hidden = true;
+  sheetTarget = null;
+  layout();
+}
+$('#sheet-close').addEventListener('click', () => {
+  if (mode === 'body') body.select(null);
+  if (mode === 'organs') organs.select(null);
+  closeSheet();
+});
+$('#sheet-handle').addEventListener('click', () => sheet.classList.toggle('expanded'));
+
+function actionsHtml() {
+  return `<div class="actions">
+    <button class="act" data-act="focus">${ICON.focus}Centrar</button>
+    <button class="act" data-act="isolate">${ICON.isolate}Aislar</button>
+    <button class="act" data-act="hide">${ICON.hide}Ocultar</button>
+  </div>`;
+}
+function descHtml() {
+  return '<div class="section-title">Descripción</div><div class="desc" id="desc"><div class="skeleton"></div><div class="skeleton" style="width:80%"></div><div class="skeleton" style="width:60%"></div></div>';
+}
+function fillDesc(es, en, target) {
+  wikiFor({ es, en }).then((w) => {
+    const d = $('#desc');
+    if (!d || sheetTarget !== target) return;
+    if (!w) { d.innerHTML = '<p class="note">No hay una descripción disponible para esta estructura.</p>'; return; }
+    d.innerHTML = `${w.thumb ? `<img src="${esc(w.thumb)}" alt="" loading="lazy">` : ''}<p>${esc(w.extract)}</p>
+      <a class="more" href="${esc(w.url)}" target="_blank" rel="noopener">Leer más en Wikipedia${w.lang === 'en' ? ' (inglés)' : ''} →</a>`;
   });
 }
+function showPart(p) {
+  if (!p) return closeSheet();
+  const target = { kind: 'body', id: p.id };
+  openSheet(`
+    <p class="kicker"><i style="background:${SYSTEM_COLORS[p.system]}"></i>${SYSTEM_SHORT[p.system] || ''}</p>
+    <h2>${esc(displayName(p))}</h2>
+    <p class="latin">${esc(p.la || p.en)}</p>
+    ${actionsHtml()}
+    ${descHtml()}`, target);
+  fillDesc(p.es, p.en, target);
+}
+sheetBody.addEventListener('click', (e) => {
+  const act = e.target.closest('[data-act]')?.dataset.act;
+  const part = e.target.closest('[data-gk]')?.dataset.gk;
+  if (part !== undefined) return selectOrganPart(part, true);
+  if (!act || !sheetTarget) return;
+  if (sheetTarget.kind === 'body') {
+    const id = sheetTarget.id;
+    if (act === 'focus') body.focus(id);
+    if (act === 'isolate') { body.isolate(id); body.focus(id); }
+    if (act === 'hide') { body.hide(id); closeSheet(); toast('Estructura oculta'); }
+  } else if (sheetTarget.kind === 'organ-part') {
+    const gk = sheetTarget.gk;
+    if (act === 'focus') organs.focus(gk);
+    if (act === 'isolate') organs.isolate(gk);
+    if (act === 'hide') { organs.setGroupVisible(gk, false); organs.select(null); showOrganSummary(); }
+  } else if (sheetTarget.kind === 'organ') {
+    if (act === 'focus') organs.frame(VIEWS.front);
+  }
+  updateShowAll();
+});
 function selectBody(id, { focus = false } = {}) {
   const p = body.select(id);
   if (p && focus) body.focus(id);
-  if (mode !== 'quiz' || !quiz.current || quiz.current.id !== id) showBodyPart(p);
+  showPart(p);
+  updateShowAll();
 }
 
-$('#act-focus').addEventListener('click', () => {
-  if (infoTarget?.kind === 'body') body.focus(infoTarget.id);
-  if (infoTarget?.kind === 'organ') organs.focus(infoTarget.gk);
+// --- mostrar todo / vistas / corte -------------------------------------------------------
+const showAllBtn = $('#show-all');
+function updateShowAll() {
+  const hiddenSomething = mode === 'organs'
+    ? organs?.current?.meshes.some((m) => !m.visible)
+    : body.state.hidden.size > 0 || !!body.state.isolated;
+  showAllBtn.hidden = !hiddenSomething;
+}
+showAllBtn.addEventListener('click', () => {
+  if (mode === 'organs') organs.showAll(); else body.showAll();
+  updateShowAll();
 });
-$('#act-isolate').addEventListener('click', () => {
-  if (infoTarget?.kind === 'body') body.isolate(infoTarget.id);
-  if (infoTarget?.kind === 'organ') organs.isolate(infoTarget.gk);
+const VIEW_CYCLE = [['front', 'Vista anterior'], ['left', 'Vista lateral izquierda'], ['back', 'Vista posterior'], ['right', 'Vista lateral derecha']];
+let viewIdx = 0;
+$('#view-btn').addEventListener('click', () => {
+  viewIdx = (viewIdx + 1) % VIEW_CYCLE.length;
+  const [v, label] = VIEW_CYCLE[viewIdx];
+  if (mode === 'organs') organs.frame(VIEWS[v]); else viewer.fitTo(body.bodyBox, VIEWS[v]);
+  toast(label, 1400);
 });
-$('#act-hide').addEventListener('click', () => {
-  if (infoTarget?.kind === 'body') { body.hide(infoTarget.id); showInfo(null); }
-  if (infoTarget?.kind === 'organ') { organs.setGroupVisible(infoTarget.gk, false); organs.select(null); showInfo(null); }
-});
-$('#show-all').addEventListener('click', () => { if (mode === 'organs') organs.showAll(); else body.showAll(); });
-$('#reset-view').addEventListener('click', () => {
-  if (mode === 'organs') organs.frame(VIEWS.front); else viewer.fitTo(body.bodyBox, VIEWS.front);
-});
-document.querySelectorAll('[data-view]').forEach((b) => b.addEventListener('click', () => {
-  const dir = VIEWS[b.dataset.view];
-  if (mode === 'organs') organs.frame(dir); else viewer.fitTo(body.bodyBox, dir);
-}));
-
-// --- capas y corte ----------------------------------------------------------
-document.querySelectorAll('[data-preset]').forEach((b) => b.addEventListener('click', () => {
-  body.applyPreset(b.dataset.preset);
-  syncSystems();
-  document.querySelectorAll('[data-preset]').forEach((x) => x.classList.toggle('active', x === b));
-}));
-const clipAxis = $('#clip-axis'), clipPos = $('#clip-pos'), clipFlip = $('#clip-flip');
-let clipFlipped = false;
+const clipPop = $('#clip-pop'), clipBtn = $('#clip-btn'), clipPos = $('#clip-pos');
+let clipAxis = 'none';
 function updateClip() {
-  const on = clipAxis.value !== 'none';
-  clipPos.disabled = clipFlip.disabled = !on;
   const box = mode === 'organs' && organs?.current ? new viewer.THREE.Box3().setFromObject(organs.current.scene) : body.bodyBox;
-  viewer.setClip(mode === 'sources' ? 'none' : clipAxis.value, Number(clipPos.value), clipFlipped, box);
+  const active = mode === 'body' || mode === 'organs' ? clipAxis : 'none';
+  viewer.setClip(active, Number(clipPos.value), false, box);
+  clipBtn.classList.toggle('on', clipAxis !== 'none');
+  clipPop.querySelectorAll('[data-axis]').forEach((b) => b.classList.toggle('active', b.dataset.axis === clipAxis));
 }
-clipAxis.addEventListener('change', updateClip);
+clipBtn.addEventListener('click', () => {
+  clipPop.hidden = !clipPop.hidden;
+  if (!clipPop.hidden && clipAxis === 'none') { clipAxis = 'sagital'; updateClip(); }
+});
+clipPop.addEventListener('click', (e) => {
+  const b = e.target.closest('[data-axis]');
+  if (b) { clipAxis = b.dataset.axis; updateClip(); }
+});
 clipPos.addEventListener('input', updateClip);
-clipFlip.addEventListener('click', () => { clipFlipped = !clipFlipped; updateClip(); });
+$('#clip-off').addEventListener('click', () => { clipAxis = 'none'; clipPop.hidden = true; updateClip(); });
+body.allLoaded.then(updateClip);
 
-// --- búsqueda ----------------------------------------------------------------
-const searchEl = $('#search'), resultsEl = $('#search-results');
+// --- búsqueda ------------------------------------------------------------------------------
+const searchEl = $('#search'), resultsEl = $('#search-results'), clearBtn = $('#search-clear');
 let results = [], cursor = 0;
 function renderResults() {
-  resultsEl.hidden = !results.length;
-  resultsEl.innerHTML = results.map((p, i) =>
-    `<li data-id="${p.id}" class="${i === cursor ? 'sel' : ''}">${displayName(p)}<small>${p.es ? p.en : ''}${p.la ? ' · ' + p.la : ''} · ${body.systems[p.system]}</small></li>`).join('');
+  const q = searchEl.value.trim();
+  clearBtn.hidden = !q;
+  if (!q) { resultsEl.hidden = true; return; }
+  resultsEl.hidden = false;
+  resultsEl.innerHTML = results.length
+    ? results.map((p, i) => `<li data-id="${p.id}" class="${i === cursor ? 'sel' : ''}"><span class="dot" style="background:${SYSTEM_COLORS[p.system]}"></span><span>${esc(displayName(p))}${p.la ? `<small>${esc(p.la)}</small>` : ''}</span></li>`).join('')
+    : '<li class="empty">Sin resultados</li>';
 }
 function pickResult(p) {
   if (!p) return;
   resultsEl.hidden = true;
   searchEl.value = displayName(p);
+  searchEl.blur();
   body.reveal(p.id);
   seeThrough(p);
-  syncSystems();
+  renderLayers();
   selectBody(p.id, { focus: true });
 }
-// si la estructura está debajo de músculos/piel, volverlos semitransparentes
-function seeThrough(p) {
-  const covers = { esqueletico: ['muscular', 'piel'], articular: ['muscular', 'piel'], muscular: ['piel'] }[p.system]
-    || ['muscular', 'piel', 'esqueletico'];
-  for (const s of covers) {
-    if (body.state.sysVisible[s] && body.state.sysOpacity[s] > 0.3) body.setSystemOpacity(s, s === 'esqueletico' ? 0.35 : 0.2);
-  }
-}
-searchEl.addEventListener('input', () => { results = body.search(searchEl.value); cursor = 0; renderResults(); });
+searchEl.addEventListener('input', () => { results = body.search(searchEl.value, 20); cursor = 0; renderResults(); });
+searchEl.addEventListener('focus', () => { if (searchEl.value) renderResults(); });
 searchEl.addEventListener('keydown', (e) => {
   if (e.key === 'ArrowDown') { cursor = Math.min(cursor + 1, results.length - 1); renderResults(); e.preventDefault(); }
   if (e.key === 'ArrowUp') { cursor = Math.max(cursor - 1, 0); renderResults(); e.preventDefault(); }
   if (e.key === 'Enter') pickResult(results[cursor]);
   if (e.key === 'Escape') { resultsEl.hidden = true; searchEl.blur(); }
 });
-resultsEl.addEventListener('mousedown', (e) => {
-  const li = e.target.closest('li');
-  if (li) pickResult(body.byId.get(li.dataset.id));
+resultsEl.addEventListener('pointerdown', (e) => {
+  const li = e.target.closest('li[data-id]');
+  if (li) { e.preventDefault(); pickResult(body.byId.get(li.dataset.id)); }
 });
 searchEl.addEventListener('blur', () => setTimeout(() => { resultsEl.hidden = true; }, 150));
+clearBtn.addEventListener('click', () => { searchEl.value = ''; results = []; renderResults(); searchEl.focus(); });
 
-// --- órganos HuBMAP ----------------------------------------------------------
+// --- órganos HuBMAP ------------------------------------------------------------------------
 const [hubmap, terms] = await Promise.all([
-  fetch(`data/hubmap.json?v=${window.ATLAS_V || ''}`).then((r) => r.json()),
-  fetch(`data/terms.json?v=${window.ATLAS_V || ''}`).then((r) => r.json()),
+  fetch(`data/hubmap.json?v=${V}`).then((r) => r.json()),
+  fetch(`data/terms.json?v=${V}`).then((r) => r.json()),
 ]);
 organs = createOrgans(viewer, terms, {
-  onProgress: (f) => progress(f, `Descargando órgano desde HuBMAP… ${Math.round(Math.min(f, 1) * 100)}%`),
+  onProgress: (f) => progress(f, `Descargando órgano… ${Math.round(Math.min(f, 1) * 100)}%`),
 });
-const organList = $('#organ-list');
-let sexFilter = 'all', currentOrgan = null;
-const mb = (b) => (b ? `${(b / 1e6).toFixed(b < 1e7 ? 1 : 0)} MB` : '');
-const organSelect = $('#organ-select');
-function renderOrgans() {
-  const list = hubmap.filter((o) => sexFilter === 'all' || o.sex === sexFilter);
-  organList.innerHTML = list.map((o) => `
-    <li data-id="${o.id}" class="${currentOrgan?.id === o.id ? 'active' : ''}">
-      <span>${o.es} <span class="tag">${o.sex === 'F' ? '♀' : '♂'}</span></span><small>${mb(o.bytes)}</small>
-    </li>`).join('');
-  // en móvil se usa este selector compacto en vez de la lista
-  organSelect.innerHTML = list.map((o) =>
-    `<option value="${o.id}" ${currentOrgan?.id === o.id ? 'selected' : ''}>${o.es} ${o.sex === 'F' ? '♀' : '♂'} · ${mb(o.bytes)}</option>`).join('');
+let sex = 'F', currentOrgan = null;
+const organChips = $('#organ-chips');
+function renderOrganChips() {
+  const list = hubmap.filter((o) => o.sex === sex);
+  organChips.innerHTML = list.map((o) =>
+    `<button class="chip ${currentOrgan?.id === o.id ? 'on' : ''}" data-id="${o.id}">${esc(o.es)}</button>`).join('');
+  organChips.querySelector('.on')?.scrollIntoView({ inline: 'center', block: 'nearest' });
 }
+$('#sex-filter').addEventListener('click', (e) => {
+  const b = e.target.closest('[data-sex]');
+  if (!b) return;
+  sex = b.dataset.sex;
+  document.querySelectorAll('#sex-filter button').forEach((x) => x.classList.toggle('active', x === b));
+  // abrir el mismo órgano en el otro sexo si existe
+  const same = currentOrgan && hubmap.find((o) => o.es === currentOrgan.es && o.sex === sex);
+  renderOrganChips();
+  if (same) openOrgan(same);
+});
+organChips.addEventListener('click', (e) => {
+  const b = e.target.closest('[data-id]');
+  if (b) openOrgan(hubmap.find((o) => o.id === b.dataset.id));
+});
 async function openOrgan(organ) {
   if (!organ) return;
   currentOrgan = organ;
-  renderOrgans();
-  infoEmpty.hidden = false; infoCard.hidden = true;
-  infoEmpty.querySelector('p').innerHTML = `<strong>Descargando ${organ.es}…</strong> (${mb(organ.bytes)} desde HuBMAP)`;
+  renderOrganChips();
+  openSheet(`<p class="kicker"><i style="background:var(--accent)"></i>Órgano · HuBMAP</p><h2>${esc(organ.es)}</h2><p class="latin">Descargando…</p>`, { kind: 'loading' });
   try {
     const entry = await organs.show(organ);
     loaderDone();
-    if (entry && currentOrgan === organ) { showOrganSummary(organ, entry); updateClip(); }
+    if (entry && currentOrgan === organ) { showOrganSummary(); updateClip(); updateShowAll(); }
   } catch (err) {
-    progress(0, `No se pudo descargar ${organ.es}: ${err.message}`);
-    infoEmpty.querySelector('p').innerHTML = `<strong>No se pudo descargar ${organ.es}.</strong> Revisa la conexión e inténtalo de nuevo.`;
+    loaderDone();
+    openSheet(`<h2>${esc(organ.es)}</h2><p class="latin">No se pudo descargar. Revisa tu conexión.</p>`, { kind: 'error' });
   }
 }
-organSelect.addEventListener('change', () => openOrgan(hubmap.find((o) => o.id === organSelect.value)));
-renderOrgans();
-document.querySelectorAll('[data-sex]').forEach((b) => b.addEventListener('click', () => {
-  sexFilter = b.dataset.sex;
-  document.querySelectorAll('[data-sex]').forEach((x) => x.classList.toggle('active', x === b));
-  renderOrgans();
-}));
-organList.addEventListener('click', (e) => {
-  const li = e.target.closest('li');
-  if (li) openOrgan(hubmap.find((o) => o.id === li.dataset.id));
-});
-function showOrganSummary(organ, entry, activeGk = null) {
-  infoTarget = { kind: 'organ-root' };
-  infoEmpty.hidden = true; infoCard.hidden = false;
-  $('#info-name').textContent = `${organ.es} ${organ.sex === 'F' ? '♀' : '♂'}`;
-  $('#info-system').innerHTML = '<i style="background:var(--accent)"></i>HuBMAP · Human Reference Atlas';
-  $('#info-en').textContent = organ.en;
-  $('#info-la').textContent = terms[organ.en.toLowerCase()]?.[1] || '—';
-  $('#info-id').textContent = organ.uberon.replace('_', ':');
-  $('#info-vol').textContent = organ.dims_mm.some(Boolean) ? `${organ.dims_mm.join(' × ')} mm` : '—';
-  $('#wiki-src').textContent = '';
+function showOrganSummary() {
+  const entry = organs.current;
+  if (!entry || !currentOrgan) return;
   const groups = [...entry.groups.values()].sort((a, b) => a.label.localeCompare(b.label, 'es'));
-  const wb = $('#wiki-body');
-  wb.innerHTML = `<p class="muted">${groups.length} subestructuras. Haz clic en una (aquí o en el modelo).</p>
-    <ul class="node-list">${groups.map((g) => `<li data-gk="${g.gk.replace(/"/g, '&quot;')}" class="${g.gk === activeGk ? 'active' : ''}"><span>${g.label}</span><small class="muted">${g.meshes.length > 1 ? g.meshes.length : ''}</small></li>`).join('')}</ul>`;
-  wb.querySelector('.node-list').addEventListener('click', (ev) => {
-    const l = ev.target.closest('li');
-    if (l) selectOrganGroup(l.dataset.gk, true);
-  });
+  const target = { kind: 'organ', id: currentOrgan.id };
+  openSheet(`
+    <p class="kicker"><i style="background:var(--accent)"></i>Órgano ${currentOrgan.sex === 'F' ? 'femenino' : 'masculino'}</p>
+    <h2>${esc(currentOrgan.es)}</h2>
+    <p class="latin">${esc(terms[currentOrgan.en.toLowerCase()]?.[1] || currentOrgan.en)}</p>
+    <div class="section-title">Partes · toca una</div>
+    <div class="parts">${groups.map((g) => `<button data-gk="${esc(g.gk)}">${esc(g.label)}</button>`).join('')}</div>
+    <div class="section-title" style="margin-top:16px">Descripción</div><div class="desc" id="desc"><div class="skeleton"></div><div class="skeleton" style="width:70%"></div></div>`, target);
+  fillDesc(currentOrgan.es, currentOrgan.en, target);
 }
-function selectOrganGroup(gk, focus = false) {
+function selectOrganPart(gk, focus = false) {
   const g = organs.select(gk);
-  if (!g) { if (organs.current) showOrganSummary(currentOrgan, organs.current); return; }
+  if (!g) return showOrganSummary();
   if (focus) organs.focus(gk);
-  showInfo({
-    kind: 'organ', gk, name: g.label, es: g.es, en: g.key.charAt(0).toUpperCase() + g.key.slice(1), la: g.la,
-    idText: `${currentOrgan.es} · HuBMAP`, color: 'var(--accent)', systemLabel: `${currentOrgan.es} · HuBMAP`,
-  });
-  const back = document.createElement('button');
-  back.className = 'small';
-  back.textContent = `← Todas las partes de ${currentOrgan.es}`;
-  back.style.marginBottom = '10px';
-  back.addEventListener('click', () => { organs.select(null); showOrganSummary(currentOrgan, organs.current, gk); });
-  $('#info-card').prepend(back);
-  back.dataset.temp = '1';
+  const target = { kind: 'organ-part', gk };
+  openSheet(`
+    <p class="kicker"><i style="background:var(--accent)"></i>${esc(currentOrgan.es)}</p>
+    <h2>${esc(g.label)}</h2>
+    <p class="latin">${esc(g.la || g.key)}</p>
+    ${actionsHtml()}
+    <button class="link" data-back style="margin-bottom:14px">← Todas las partes</button>
+    ${descHtml()}`, target);
+  sheetBody.querySelector('[data-back]').addEventListener('click', () => { organs.select(null); showOrganSummary(); });
+  fillDesc(g.es, g.key, target);
 }
 
-// --- quiz ------------------------------------------------------------------
+// --- quiz ------------------------------------------------------------------------------------
 const quizBox = $('#quiz-box');
-// en móvil la caja del quiz va debajo del visor para no tapar la estructura resaltada
-const mobileMq = matchMedia('(max-width: 900px)');
-function placeQuizBox() {
-  const stage = $('#stage');
-  if (mobileMq.matches) stage.after(quizBox); else stage.append(quizBox);
-}
-mobileMq.addEventListener('change', placeQuizBox);
-placeQuizBox();
-const quiz = createQuiz(body, quizBox, { onAnswer: (p) => showBodyPart(p), onQuestion: (p) => { seeThrough(p); syncSystems(); } });
+const quiz = createQuiz(body, quizBox);
 
-// --- modos -------------------------------------------------------------------
+// --- modos ------------------------------------------------------------------------------------
 function setMode(m) {
+  if (mode === 'quiz' && m !== 'quiz') { quiz.stop(); renderLayers(); }
   mode = m;
-  document.body.dataset.mode = m; // el CSS móvil usa esto (p. ej. Fuentes sin visor 3D)
+  document.body.dataset.mode = m;
   document.querySelectorAll('.tab').forEach((t) => t.classList.toggle('active', t.dataset.mode === m));
-  document.querySelectorAll('.sidebar .panel').forEach((p) => { p.hidden = !p.dataset.for.split(' ').includes(m); });
   body.root.visible = m === 'body' || m === 'quiz';
   organs.root.visible = m === 'organs';
+  $('#search-pill').hidden = m !== 'body';
+  $('#tools').hidden = m === 'quiz' || m === 'sources';
+  $('#layers').hidden = m !== 'body';
+  $('#organ-bar').hidden = m !== 'organs';
+  $('.dock').hidden = m === 'quiz' || m === 'sources';
   quizBox.hidden = m !== 'quiz';
   $('#sources-page').hidden = m !== 'sources';
-  $('#info').style.visibility = m === 'sources' ? 'hidden' : '';
-  document.querySelectorAll('#info-card [data-temp]').forEach((x) => x.remove());
-  showInfo(null);
+  clipPop.hidden = true;
+  closeSheet();
   body.select(null);
-  updateClip();
-  if (m === 'body' || m === 'quiz') viewer.fitTo(body.bodyBox, VIEWS.front, { instant: true });
+  if (m === 'body') viewer.fitTo(body.bodyBox, VIEWS.front, { instant: true });
   if (m === 'organs') {
-    if (organs.current) { organs.frame(VIEWS.front); showOrganSummary(currentOrgan, organs.current); }
+    renderOrganChips();
+    if (organs.current) { organs.frame(VIEWS.front); showOrganSummary(); }
     else openOrgan(hubmap.find((o) => o.id === '3d-vh-f-heart') || hubmap[0]); // nunca abrir vacío
-  } else {
-    infoEmpty.querySelector('p').innerHTML = '<strong>Toca o haz clic en una estructura</strong> para ver su ficha.';
   }
-  if (m === 'quiz') quiz.next();
+  if (m === 'quiz') quiz.start();
   if (m === 'sources') renderSources($('#sources-page'));
+  updateClip();
+  updateShowAll();
+  layout();
   viewer.requestRender();
 }
-document.querySelectorAll('.tab').forEach((t) => t.addEventListener('click', () => setMode(t.dataset.mode)));
+document.querySelectorAll('.tab').forEach((t) => t.addEventListener('click', () => { if (t.dataset.mode !== mode) setMode(t.dataset.mode); }));
 
-// --- puntero -----------------------------------------------------------------
-const hoverLabel = $('#hover-label');
-let down = null, hoverQueued = false, lastMove = null;
-const activeMeshes = () => (mode === 'organs' ? organs.meshes() : [...body.meshes.values()]);
-canvas.addEventListener('pointerdown', (e) => { down = { x: e.clientX, y: e.clientY }; });
-canvas.addEventListener('pointerup', (e) => {
-  if (!down || Math.hypot(e.clientX - down.x, e.clientY - down.y) > 5 || e.button !== 0) return;
-  const hit = viewer.pick(e.clientX, e.clientY, activeMeshes());
-  document.querySelectorAll('#info-card [data-temp]').forEach((x) => x.remove());
-  if (mode === 'organs') {
-    if (hit) selectOrganGroup(hit.object.userData.group);
-    else if (organs.current) { organs.select(null); showOrganSummary(currentOrgan, organs.current); }
-  } else if (mode === 'body') {
-    selectBody(hit ? hit.object.userData.part.id : null);
+// la ficha tapa parte de la pantalla: correr el centro de la vista hacia la zona libre
+function layout() {
+  document.body.classList.toggle('sheet-open', !sheet.hidden);
+  const cam = viewer.camera;
+  const w = canvas.clientWidth, h = canvas.clientHeight;
+  const panel = !sheet.hidden ? sheet : (!quizBox.hidden ? quizBox : null);
+  let dx = 0, dy = 0;
+  if (panel) {
+    if (isMobile()) dy = Math.min(panel.offsetHeight, h * 0.6) / 2;
+    else dx = (panel.offsetWidth + 16) / 2;
   }
+  if (dx || dy) cam.setViewOffset(w, h, dx, dy, w, h); else cam.clearViewOffset();
+  cam.updateProjectionMatrix();
+  viewer.requestRender();
+}
+new ResizeObserver(() => layout()).observe(sheet);
+new ResizeObserver(() => layout()).observe(quizBox);
+window.addEventListener('resize', layout);
+
+// --- puntero -----------------------------------------------------------------------------------
+const hoverLabel = $('#hover-label');
+let down = null, hoverQueued = false, lastMove = null, lastTap = 0;
+const activeMeshes = () => (mode === 'organs' ? organs.meshes() : [...body.meshes.values()]);
+canvas.addEventListener('pointerdown', (e) => {
+  down = { x: e.clientX, y: e.clientY };
+  if (!resultsEl.hidden) searchEl.blur();
+  if (!clipPop.hidden && e.target === canvas) clipPop.hidden = true;
 });
-canvas.addEventListener('dblclick', (e) => {
+canvas.addEventListener('pointerup', (e) => {
+  if (!down || Math.hypot(e.clientX - down.x, e.clientY - down.y) > 8 || e.button !== 0) return;
+  if (mode === 'quiz' || mode === 'sources') return;
   const hit = viewer.pick(e.clientX, e.clientY, activeMeshes());
-  if (!hit) return;
-  if (mode === 'organs') { selectOrganGroup(hit.object.userData.group, true); }
-  else if (mode === 'body') selectBody(hit.object.userData.part.id, { focus: true });
+  const now = performance.now(), dbl = now - lastTap < 320;
+  lastTap = now;
+  if (mode === 'organs') {
+    if (hit) selectOrganPart(hit.object.userData.group, dbl);
+    else if (organs.current) { organs.select(null); showOrganSummary(); }
+  } else {
+    if (hit) selectBody(hit.object.userData.part.id, { focus: dbl });
+    else { body.select(null); closeSheet(); }
+  }
 });
 canvas.addEventListener('pointermove', (e) => {
   lastMove = e;
@@ -360,12 +439,11 @@ canvas.addEventListener('pointermove', (e) => {
     const ev = lastMove;
     const hit = viewer.pick(ev.clientX, ev.clientY, activeMeshes(), { buildTrees: false });
     if (!hit) { hoverLabel.hidden = true; return; }
-    const r = canvas.getBoundingClientRect();
     hoverLabel.textContent = mode === 'organs'
       ? organs.current?.groups.get(hit.object.userData.group)?.label
       : displayName(hit.object.userData.part);
-    hoverLabel.style.left = `${ev.clientX - r.left}px`;
-    hoverLabel.style.top = `${ev.clientY - r.top}px`;
+    hoverLabel.style.left = `${ev.clientX}px`;
+    hoverLabel.style.top = `${ev.clientY}px`;
     hoverLabel.hidden = false;
   });
 });
@@ -374,11 +452,11 @@ canvas.addEventListener('pointerleave', () => { hoverLabel.hidden = true; });
 window.addEventListener('keydown', (e) => {
   if (e.target.matches('input, select, textarea')) return;
   const k = e.key.toLowerCase();
-  if (k === 'escape') { body.select(null); organs.select(null); showInfo(null); }
-  if (k === 'h') $('#act-hide').click();
-  if (k === 'i') $('#act-isolate').click();
-  if (k === 'f') $('#act-focus').click();
+  if (k === 'escape') { body.select(null); organs.select(null); closeSheet(); }
+  if (k === '/' && mode === 'body') { e.preventDefault(); searchEl.focus(); }
+  const act = { h: 'hide', i: 'isolate', f: 'focus' }[k];
+  if (act) sheetBody.querySelector(`[data-act="${act}"]`)?.click();
 });
 
 setMode('body');
-window.__atlas = { viewer, body, organs }; // depuración y medición de rendimiento
+window.__atlas = { viewer, body, organs, quiz }; // depuración y pruebas

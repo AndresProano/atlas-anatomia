@@ -2,13 +2,14 @@
 <html lang="es">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#eef2f6">
   <title>Atlas Anatómico 3D</title>
-  <meta name="description" content="Atlas 3D del cuerpo humano para estudio, construido con datos abiertos: BodyParts3D, HuBMAP Human Reference Atlas, Z-Anatomy y Wikipedia.">
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><circle cx='16' cy='7' r='5' fill='%23c0392b'/><rect x='11' y='13' width='10' height='17' rx='4' fill='%23c0392b'/></svg>">
+  <meta name="description" content="Atlas 3D del cuerpo humano para estudiantes de medicina, con datos abiertos (BodyParts3D, HuBMAP, Z-Anatomy, Wikipedia).">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%230d9488'/><circle cx='16' cy='9' r='4' fill='white'/><rect x='12' y='14' width='8' height='12' rx='3' fill='white'/></svg>">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css?v=dd263107">
+  <link rel="stylesheet" href="styles.css?v=d68bc1b1">
   <script type="importmap">
   {
     "imports": {
@@ -19,137 +20,104 @@
   }
   </script>
 </head>
-<body>
-  <header class="topbar">
-    <div class="brand">
-      <span class="logo" aria-hidden="true"></span>
-      <div>
-        <h1>Atlas Anatómico 3D</h1>
-        <p>Datos abiertos · uso de estudio</p>
-      </div>
-    </div>
-    <nav class="tabs" role="tablist">
-      <button class="tab active" data-mode="body" role="tab"><span class="l">Cuerpo completo</span><span class="s">Cuerpo</span></button>
-      <button class="tab" data-mode="organs" role="tab"><span class="l">Órganos en detalle</span><span class="s">Órganos</span></button>
-      <button class="tab" data-mode="quiz" role="tab">Quiz</button>
-      <button class="tab" data-mode="sources" role="tab">Fuentes</button>
-    </nav>
-    <button class="icon-btn" id="theme-btn" title="Cambiar tema" aria-label="Cambiar tema">◐</button>
-  </header>
-
-  <main class="layout">
-    <!-- Panel izquierdo: cambia según el modo -->
-    <aside class="sidebar" id="sidebar">
-      <section class="panel p-search" data-for="body quiz">
-        <div class="search">
-          <input id="search" type="search" placeholder="Buscar estructura (español, inglés o latín)…" autocomplete="off">
-          <ul id="search-results" class="results" hidden></ul>
-        </div>
-      </section>
-
-      <section class="panel p-presets" data-for="body quiz">
-        <h2>Capas rápidas</h2>
-        <div class="presets" id="presets">
-          <button data-preset="todo">Todo</button>
-          <button data-preset="esqueleto">Esqueleto</button>
-          <button data-preset="musculos">Músculos</button>
-          <button data-preset="organos">Órganos</button>
-          <button data-preset="vasos">Vasos</button>
-          <button data-preset="nervios">Nervios</button>
-        </div>
-      </section>
-
-      <section class="panel grow p-systems" data-for="body quiz">
-        <h2>Sistemas <span class="muted" id="load-status"></span></h2>
-        <ul class="systems" id="systems"></ul>
-      </section>
-
-      <section class="panel p-clip" data-for="body organs">
-        <h2>Corte</h2>
-        <div class="clip">
-          <select id="clip-axis" aria-label="Plano de corte">
-            <option value="none">Sin corte</option>
-            <option value="sagital">Sagital (izq.–der.)</option>
-            <option value="coronal">Coronal (frente–espalda)</option>
-            <option value="axial">Axial (arriba–abajo)</option>
-          </select>
-          <input id="clip-pos" type="range" min="0" max="1" step="0.001" value="0.5" disabled aria-label="Posición del corte">
-          <button id="clip-flip" class="small" disabled title="Invertir lado">⇄</button>
-        </div>
-      </section>
-
-      <section class="panel grow p-organs" data-for="organs" hidden>
-        <h2>Órganos de referencia <span class="muted">HuBMAP</span></h2>
-        <select id="organ-select" class="organ-select" aria-label="Elegir órgano"></select>
-        <div class="seg" id="sex-filter">
-          <button data-sex="all" class="active">Todos</button>
-          <button data-sex="F">Femenino</button>
-          <button data-sex="M">Masculino</button>
-        </div>
-        <ul class="organ-list" id="organ-list"></ul>
-      </section>
-
-      <section class="panel grow p-about" data-for="sources" hidden>
-        <h2>Sobre este atlas</h2>
-        <p class="muted">Junta varias bases de datos anatómicas abiertas en un solo visor. Todo el contenido es de licencia libre; las atribuciones de cada fuente están en esta página.</p>
-      </section>
-    </aside>
-
-    <!-- Centro: visor 3D -->
-    <section class="stage" id="stage">
-      <canvas id="canvas"></canvas>
-      <div class="hud">
-        <div class="views">
-          <button data-view="front" title="Vista anterior"><span class="l">Anterior</span><span class="s">Ant.</span></button>
-          <button data-view="back" title="Vista posterior"><span class="l">Posterior</span><span class="s">Post.</span></button>
-          <button data-view="left" title="Vista lateral izquierda"><span class="l">Lat. izq.</span><span class="s">Izq.</span></button>
-          <button data-view="right" title="Vista lateral derecha"><span class="l">Lat. der.</span><span class="s">Der.</span></button>
-          <button data-view="top" title="Vista superior"><span class="l">Superior</span><span class="s">Sup.</span></button>
-        </div>
-        <div class="views">
-          <button id="show-all" title="Mostrar todo lo oculto"><span class="l">Mostrar ocultos</span><span class="s">Ver todo</span></button>
-          <button id="reset-view" title="Restablecer cámara">⟲</button>
-        </div>
-      </div>
-      <div class="loader" id="loader"><div class="bar"><span id="loader-bar"></span></div><p id="loader-text">Cargando…</p></div>
-      <div class="hover-label" id="hover-label" hidden></div>
-      <div class="quiz-box" id="quiz-box" hidden></div>
-      <article class="sources-page" id="sources-page" hidden></article>
-    </section>
-
-    <!-- Derecha: ficha de la estructura -->
-    <aside class="info" id="info">
-      <div class="empty" id="info-empty">
-        <p><strong>Toca o haz clic en una estructura</strong> para ver su ficha.</p>
-        <ul class="tips">
-          <li><span class="l">Arrastrar: rotar · Rueda: zoom · Clic derecho: mover</span><span class="s">Un dedo: rotar · Pellizcar: zoom · Dos dedos: mover</span></li>
-          <li><span class="l">Doble clic: centrar en la pieza</span><span class="s">Doble toque: centrar en la pieza</span></li>
-          <li class="desk-only"><kbd>H</kbd> ocultar selección · <kbd>I</kbd> aislar · <kbd>Esc</kbd> limpiar</li>
-        </ul>
-      </div>
-      <div id="info-card" hidden>
-        <p class="sys-chip" id="info-system"></p>
-        <h2 id="info-name"></h2>
-        <dl class="meta">
-          <dt>Inglés</dt><dd id="info-en"></dd>
-          <dt>Latín</dt><dd id="info-la"></dd>
-          <dt>ID</dt><dd id="info-id"></dd>
-          <dt>Volumen</dt><dd id="info-vol"></dd>
-        </dl>
-        <div class="actions">
-          <button id="act-focus">Centrar</button>
-          <button id="act-isolate">Aislar</button>
-          <button id="act-hide">Ocultar</button>
-        </div>
-        <section class="wiki">
-          <h3>Descripción <span class="muted" id="wiki-src"></span></h3>
-          <div id="wiki-body" class="muted">—</div>
-        </section>
-      </div>
-    </aside>
+<body data-mode="body">
+  <!-- Visor 3D a pantalla completa -->
+  <main class="stage" id="stage">
+    <canvas id="canvas" aria-label="Modelo 3D del cuerpo humano"></canvas>
+    <div class="hover-label" id="hover-label" hidden></div>
   </main>
 
-  <script>window.ATLAS_V = 'dd263107';</script>
-  <script type="module" src="js/main.js?v=dd263107"></script>
+  <!-- Buscador flotante -->
+  <header class="top">
+    <div class="search-pill" id="search-pill">
+      <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+      <input id="search" type="search" placeholder="Buscar estructura…" autocomplete="off" enterkeyhint="search">
+      <button class="clear" id="search-clear" aria-label="Borrar búsqueda" hidden>
+        <svg class="ico" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"/></svg>
+      </button>
+      <ul id="search-results" class="results" hidden></ul>
+    </div>
+    <button class="round" id="theme-btn" aria-label="Cambiar tema">
+      <svg class="ico" viewBox="0 0 24 24"><path d="M12 3a9 9 0 1 0 9 9 7 7 0 0 1-9-9z"/></svg>
+    </button>
+  </header>
+
+  <!-- Herramientas flotantes -->
+  <div class="tools" id="tools">
+    <button class="round" id="view-btn" aria-label="Girar vista" title="Girar vista">
+      <svg class="ico" viewBox="0 0 24 24"><path d="M21 12a9 9 0 1 1-3-6.7"/><path d="M21 4v5h-5"/></svg>
+    </button>
+    <button class="round" id="clip-btn" aria-label="Corte" title="Corte">
+      <svg class="ico" viewBox="0 0 24 24"><circle cx="6" cy="7" r="3"/><circle cx="6" cy="17" r="3"/><path d="M8.5 8.5 20 18M8.5 15.5 20 6"/></svg>
+    </button>
+    <button class="round" id="show-all" aria-label="Mostrar todo" title="Mostrar todo lo oculto" hidden>
+      <svg class="ico" viewBox="0 0 24 24"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg>
+    </button>
+  </div>
+
+  <!-- Corte -->
+  <div class="pop" id="clip-pop" hidden>
+    <div class="seg" id="clip-axis">
+      <button data-axis="sagital">Sagital</button>
+      <button data-axis="coronal">Coronal</button>
+      <button data-axis="axial">Axial</button>
+    </div>
+    <input id="clip-pos" type="range" min="0" max="1" step="0.001" value="0.5" aria-label="Posición del corte">
+    <button class="link" id="clip-off">Quitar corte</button>
+  </div>
+
+  <!-- Capas (cuerpo) / órganos (HuBMAP) -->
+  <div class="dock">
+    <div class="chips" id="layers"></div>
+    <div class="organ-bar" id="organ-bar" hidden>
+      <div class="sex" id="sex-filter">
+        <button data-sex="F" class="active" aria-label="Femenino">♀</button>
+        <button data-sex="M" aria-label="Masculino">♂</button>
+      </div>
+      <div class="chips" id="organ-chips"></div>
+    </div>
+  </div>
+
+  <!-- Ficha de la estructura (hoja inferior en móvil, tarjeta en escritorio) -->
+  <section class="sheet" id="sheet" hidden aria-live="polite">
+    <button class="handle" id="sheet-handle" aria-label="Expandir ficha"></button>
+    <button class="round close" id="sheet-close" aria-label="Cerrar ficha">
+      <svg class="ico" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"/></svg>
+    </button>
+    <div id="sheet-body"></div>
+  </section>
+
+  <!-- Quiz -->
+  <section class="sheet quiz" id="quiz-box" hidden></section>
+
+  <!-- Fuentes -->
+  <article class="page" id="sources-page" hidden></article>
+
+  <!-- Carga y avisos -->
+  <div class="loader" id="loader"><div class="bar"><span id="loader-bar"></span></div><p id="loader-text">Cargando…</p></div>
+  <div class="toast" id="toast" hidden></div>
+
+  <!-- Barra de pestañas -->
+  <nav class="tabbar" role="tablist">
+    <button class="tab active" data-mode="body" role="tab">
+      <svg class="ico" viewBox="0 0 24 24"><circle cx="12" cy="4.5" r="2.5"/><path d="M12 8v7M7 10h10M12 15l-3 6M12 15l3 6"/></svg>
+      <span>Cuerpo</span>
+    </button>
+    <button class="tab" data-mode="organs" role="tab">
+      <svg class="ico" viewBox="0 0 24 24"><path d="M12 20s-7-4.5-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.5-7 10-7 10z"/></svg>
+      <span>Órganos</span>
+    </button>
+    <button class="tab" data-mode="quiz" role="tab">
+      <svg class="ico" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9.5 9.5a2.5 2.5 0 1 1 3.5 2.3c-.6.3-1 .9-1 1.6V14M12 17.5v.01"/></svg>
+      <span>Quiz</span>
+    </button>
+    <button class="tab" data-mode="sources" role="tab">
+      <svg class="ico" viewBox="0 0 24 24"><path d="M4 5a2 2 0 0 1 2-2h12v16H6a2 2 0 0 0-2 2z"/><path d="M4 21V5M8 7h6"/></svg>
+      <span>Fuentes</span>
+    </button>
+  </nav>
+
+  <script>window.ATLAS_V = 'd68bc1b1';</script>
+  <script type="module" src="js/main.js?v=d68bc1b1"></script>
 </body>
 </html>

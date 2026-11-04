@@ -6,4 +6,4 @@ compatibility_date = "2025-10-01"
 # El id se obtiene con:  npx wrangler kv namespace create ATLAS
 [[kv_namespaces]]
 binding = "ATLAS"
-id = "REEMPLAZAR_CON_EL_ID_DEL_NAMESPACE"
+id = "46dbcf18717141d88fa764e95d004f5d"

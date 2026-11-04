@@ -6,7 +6,8 @@
     "download": "sh scripts/download.sh",
     "data": "python -I scripts/classify.py data-raw web/data/parts.json && python -I scripts/terms.py data-raw web/data/terms.json && python -I scripts/hubmap.py data-raw/hubmap/reference-organs.json data-raw/hubmap/sizes.json web/data/hubmap.json",
     "models": "node scripts/build-models.mjs 0.25 0.01",
-    "serve": "python -I scripts/serve.py 5173"
+    "serve": "python -I scripts/serve.py 5173",
+    "publish": "sh scripts/publish.sh"
   },
   "devDependencies": {
     "@gltf-transform/core": "4.5.1",

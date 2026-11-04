@@ -48,7 +48,7 @@ npm run models    # web/models/*.glb
 npm run serve     # http://127.0.0.1:5173
 ```
 
-Publicarlo es copiar `web/` a cualquier hosting estático (GitHub Pages, Vercel, Netlify).
+**Publicar cambios:** hacer commit y luego `npm run publish`. Copia `web/` a la rama `gh-pages`, que GitHub Pages sirve en https://andresproano.github.io/atlas-anatomia/.
 
 ## Licencia
 

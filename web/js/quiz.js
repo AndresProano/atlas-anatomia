@@ -3,7 +3,7 @@
 //  - Escribir: se resalta una estructura y escribes el nombre (se califica con tolerancia).
 //  - Señalar: te dan el nombre y tocas la estructura en el modelo.
 // Repetición espaciada (cajas de Leitner): lo que fallas vuelve antes, lo que dominas sale menos.
-import { displayName } from './body.js?v=3fd73cb6';
+import { displayName } from './body.js?v=4f7d79da';
 
 export const QUIZ_GROUPS = {
   all: { label: 'Todo el cuerpo', systems: ['esqueletico', 'muscular', 'digestivo', 'respiratorio', 'urogenital', 'reproductor', 'endocrino', 'cardiovascular', 'nervioso'] },
@@ -69,16 +69,16 @@ export function gradeText(input, p) {
 }
 
 // --- progreso (localStorage, por navegador) -------------------------------------------------
-const KEY = 'atlas-progress-v1';
-function loadProgress() { try { return JSON.parse(localStorage.getItem(KEY)) || {}; } catch { return {}; } }
-function saveProgress(p) { try { localStorage.setItem(KEY, JSON.stringify(p)); } catch { /* sin almacenamiento */ } }
+// el progreso vive en el perfil de cada persona (web/js/profiles.js)
+const esc = (s) => String(s ?? '').replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
 const WEIGHT = [6, 3, 1.5, 0.6, 0.25]; // caja 0 (nuevo/fallado) … caja 4 (dominado)
 const MASTERED = 2; // a partir de esta caja cuenta como dominado
 
-export function createQuiz(body, box, { onAnswer } = {}) {
+export function createQuiz(body, box, { onAnswer, profiles } = {}) {
   let score = 0, total = 0, group = 'all', mode = 'choice', review = false;
   let current = null, saved = null, answered = false, hintLevel = 0;
-  const progress = loadProgress();
+  let progress = profiles.loadProgress();
+  const saveProgress = (p) => profiles.saveProgress(p);
   const sex = body.female ? 'F' : 'M';
   const baseName = (p) => displayName(p).replace(/\s*\((izq|der)\.\)/, '');
   const keyOf = (p) => `${sex}:${baseName(p)}`;
@@ -163,7 +163,9 @@ export function createQuiz(body, box, { onAnswer } = {}) {
   function header() {
     const st = stats(group);
     const pct = st.total ? Math.round((st.mastered / st.total) * 100) : 0;
+    const who = profiles.current;
     return `
+      <button class="who" id="quiz-who" title="Cambiar de persona"><i style="background:${who?.color || 'var(--accent)'}">${esc((who?.name || '?')[0].toUpperCase())}</i>${esc(who?.name || 'Elegir persona')}</button>
       <div class="seg quiz-modes">${Object.entries(MODES).map(([k, l]) => `<button data-mode="${k}" class="${k === mode ? 'active' : ''}">${l}</button>`).join('')}</div>
       <div class="progress-line">
         <div class="bar"><span style="width:${pct}%"></span></div>
@@ -223,6 +225,7 @@ export function createQuiz(body, box, { onAnswer } = {}) {
     box.querySelector('#quiz-group').addEventListener('change', (e) => { group = e.target.value; next(); });
     box.querySelector('#quiz-review').addEventListener('click', () => { review = !review; next(); });
     box.querySelector('#quiz-stats').addEventListener('click', showStats);
+    box.querySelector('#quiz-who')?.addEventListener('click', showStats);
     box.querySelector('#type-form')?.addEventListener('submit', (e) => { e.preventDefault(); answerText(); });
     box.querySelector('#quiz-hint')?.addEventListener('click', hint);
   }
@@ -244,7 +247,9 @@ export function createQuiz(body, box, { onAnswer } = {}) {
   function feedback(kind, title) {
     const el = box.querySelector('#quiz-feedback');
     el.innerHTML = `<div class="explain ${kind}"><strong>${title}</strong>
-      <span>${baseName(current)}</span>${current.la ? `<em>${current.la}</em>` : ''}</div>`;
+      <span>${baseName(current)}</span>${current.la ? `<em>${current.la}</em>` : ''}</div>
+      ${profiles.backupDue() ? '<button class="backup-nudge" id="nudge">Guarda una copia de tu progreso para no perderlo →</button>' : ''}`;
+    el.querySelector('#nudge')?.addEventListener('click', showStats);
     const skip = box.querySelector('#quiz-skip');
     skip.textContent = 'Siguiente'; skip.className = 'btn';
     box.querySelector('.score').textContent = `${Math.round(score * 10) / 10} / ${total}${review ? ' · repaso' : ''}`;
@@ -313,12 +318,49 @@ export function createQuiz(body, box, { onAnswer } = {}) {
     }).join('');
     const all = Object.entries(progress).filter(([k]) => k.startsWith(`${sex}:`)).map(([, r]) => r);
     const att = all.reduce((a, r) => a + r.a, 0), cor = all.reduce((a, r) => a + r.c, 0);
-    box.innerHTML = `<h3>Mi progreso <span class="sub">· cuerpo ${body.female ? 'femenino' : 'masculino'}</span></h3>
-      <p class="sub">Una estructura queda "dominada" cuando la aciertas 2 veces seguidas. Se guarda en este navegador.</p>
+    const me = profiles.current;
+    box.innerHTML = `<h3>Progreso de ${esc(me?.name || '…')} <span class="sub">· cuerpo ${body.female ? 'femenino' : 'masculino'}</span></h3>
+      <div class="people">${profiles.list.map((p) => `<button data-pid="${p.id}" class="${p.id === me?.id ? 'active' : ''}"><i style="background:${p.color}">${esc(p.name[0].toUpperCase())}</i>${esc(p.name)}</button>`).join('')}
+        <button data-new class="add">+ Otra persona</button></div>
+      <p class="sub">Una estructura queda "dominada" cuando la aciertas 2 veces seguidas.</p>
       <ul class="stats">${rows}</ul>
       <p class="sub">${att} respuestas en total · ${att ? Math.round((cor / att) * 100) : 0}% de aciertos</p>
+      <div class="backup">
+        <div class="section-title">Copia de seguridad</div>
+        <p class="sub">El progreso se guarda en este navegador. Haz una copia para pasarlo a otro dispositivo o por si se borran los datos.${me?.lastBackup ? ` Última copia: ${new Date(me.lastBackup).toLocaleDateString('es')}.` : ''}</p>
+        <div class="row wrap">
+          <button class="btn ghost" id="bk-file">Descargar archivo</button>
+          <button class="btn ghost" id="bk-code">Copiar código</button>
+          <button class="btn ghost" id="bk-restore">Restaurar</button>
+        </div>
+        <div id="bk-area"></div>
+      </div>
       <div class="row"><button class="link danger" id="quiz-reset">Borrar progreso</button><button class="btn" id="quiz-back">Seguir practicando</button></div>`;
     box.querySelector('#quiz-back').addEventListener('click', next);
+    box.querySelectorAll('[data-pid]').forEach((b) => b.addEventListener('click', () => { profiles.use(b.dataset.pid); progress = profiles.loadProgress(); showStats(); }));
+    box.querySelector('[data-new]').addEventListener('click', () => showWelcome(true));
+    box.querySelector('#bk-file').addEventListener('click', () => { profiles.downloadBackup(); showStats(); });
+    box.querySelector('#bk-code').addEventListener('click', async () => {
+      const code = await profiles.backupCode();
+      const area = box.querySelector('#bk-area');
+      area.innerHTML = '<textarea readonly rows="3"></textarea><p class="sub">Copiado. Pégalo en un chat contigo misma o en tus notas; en otro dispositivo usa «Restaurar».</p>';
+      const ta = area.querySelector('textarea'); ta.value = code;
+      try { await navigator.clipboard.writeText(code); } catch { ta.select(); }
+      profiles.markBackup();
+    });
+    box.querySelector('#bk-restore').addEventListener('click', () => {
+      const area = box.querySelector('#bk-area');
+      area.innerHTML = `<textarea id="bk-in" rows="3" placeholder="Pega aquí el código (ATLAS1…)"></textarea>
+        <div class="row wrap"><button class="btn" id="bk-go">Restaurar código</button><label class="btn ghost file">Elegir archivo<input type="file" id="bk-filein" accept=".json,application/json" hidden></label></div>
+        <p class="sub" id="bk-msg"></p>`;
+      const done = (r) => { progress = profiles.loadProgress(); box.querySelector('#bk-msg').textContent = `Listo: ${r.items} estructuras restauradas en el perfil de ${r.name}.`; setTimeout(showStats, 1400); };
+      const fail = (e) => { box.querySelector('#bk-msg').textContent = 'No se pudo restaurar: ' + e.message; };
+      area.querySelector('#bk-go').addEventListener('click', () => profiles.restore(area.querySelector('#bk-in').value).then(done, fail));
+      area.querySelector('#bk-filein').addEventListener('change', async (e) => {
+        const f = e.target.files[0]; if (!f) return;
+        profiles.restore(await f.text()).then(done, fail);
+      });
+    });
     box.querySelector('#quiz-reset').addEventListener('click', (e) => {
       if (e.target.dataset.confirm) {
         for (const k of Object.keys(progress)) if (k.startsWith(`${sex}:`)) delete progress[k];
@@ -327,9 +369,33 @@ export function createQuiz(body, box, { onAnswer } = {}) {
     });
   }
 
+  function showWelcome(adding = false) {
+    box.innerHTML = `<h3>${adding ? 'Nueva persona' : '¿Quién va a estudiar?'}</h3>
+      <p class="sub">Cada persona guarda su propio progreso en este dispositivo.</p>
+      <form class="type-answer" id="who-form" autocomplete="off">
+        <input id="who-name" type="text" placeholder="Tu nombre" maxlength="24" enterkeyhint="done">
+        <button class="btn" type="submit">Empezar</button>
+      </form>
+      ${adding ? '<button class="link" id="who-cancel">Cancelar</button>' : ''}`;
+    box.querySelector('#who-form').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const name = box.querySelector('#who-name').value.trim();
+      if (!name) return;
+      if (adding || !profiles.current) profiles.add(name); else profiles.rename(name);
+      progress = profiles.loadProgress();
+      next();
+    });
+    box.querySelector('#who-cancel')?.addEventListener('click', showStats);
+    if (!matchMedia('(max-width: 899px)').matches) box.querySelector('#who-name').focus();
+  }
+
   return {
     next, tap,
-    start() { saved = body.snapshot(); next(); },
+    start() {
+      saved = body.snapshot();
+      progress = profiles.loadProgress();
+      if (profiles.needsName()) { stage(poolFor(group)[0] || body.catalog.parts[0]); showWelcome(); } else next();
+    },
     stop() { if (saved) body.restore(saved); saved = null; current = null; body.select(null); body.setOverlay(null); },
     get current() { return current; },
     get mode() { return mode; },

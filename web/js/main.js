@@ -1,11 +1,12 @@
 // Interfaz tipo app: visor a pantalla completa, buscador flotante, capas en chips,
 // ficha como hoja inferior (móvil) o tarjeta lateral (escritorio) y barra de pestañas.
-import { createViewer, VIEWS } from './scene.js?v=3fd73cb6';
-import { createBody, SYSTEM_COLORS, displayName } from './body.js?v=3fd73cb6';
-import { createOrgans } from './organs.js?v=3fd73cb6';
-import { createQuiz } from './quiz.js?v=3fd73cb6';
-import { renderSources } from './sources.js?v=3fd73cb6';
-import { wikiFor } from './wiki.js?v=3fd73cb6';
+import { createViewer, VIEWS } from './scene.js?v=4f7d79da';
+import { createBody, SYSTEM_COLORS, displayName } from './body.js?v=4f7d79da';
+import { createOrgans } from './organs.js?v=4f7d79da';
+import { createProfiles } from './profiles.js?v=4f7d79da';
+import { createQuiz } from './quiz.js?v=4f7d79da';
+import { renderSources } from './sources.js?v=4f7d79da';
+import { wikiFor } from './wiki.js?v=4f7d79da';
 
 const $ = (s) => document.querySelector(s);
 const V = window.ATLAS_V || '';
@@ -354,7 +355,8 @@ function selectOrganPart(gk, focus = false) {
 
 // --- quiz ------------------------------------------------------------------------------------
 const quizBox = $('#quiz-box');
-let quiz = createQuiz(body, quizBox);
+const profiles = createProfiles();
+let quiz = createQuiz(body, quizBox, { profiles });
 
 // --- cuerpo masculino / femenino ----------------------------------------------------------------
 const bodies = { M: body };
@@ -385,7 +387,7 @@ async function switchBody(sx) {
   body = bodies[sx];
   body.root.visible = mode === 'body' || mode === 'quiz';
   xray = false;
-  quiz = createQuiz(body, quizBox);
+  quiz = createQuiz(body, quizBox, { profiles });
   closeSheet();
   searchEl.value = ''; results = []; renderResults();
   renderLayers();

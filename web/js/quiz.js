@@ -2,8 +2,10 @@
 //  - Opciones: se resalta una estructura y eliges su nombre entre 4.
 //  - Escribir: se resalta una estructura y escribes el nombre (se califica con tolerancia).
 //  - Señalar: te dan el nombre y tocas la estructura en el modelo.
+//  - Función / Enfermedades (Comprender): respondes con tus palabras y se califica por ideas clave.
 // Repetición espaciada (cajas de Leitner): lo que fallas vuelve antes, lo que dominas sale menos.
-import { displayName } from './body.js?v=4f7d79da';
+import { displayName } from './body.js?v=a60fd833';
+import { gradeConcepts, gradeDisease } from './clinica.js?v=a60fd833';
 
 export const QUIZ_GROUPS = {
   all: { label: 'Todo el cuerpo', systems: ['esqueletico', 'muscular', 'digestivo', 'respiratorio', 'urogenital', 'reproductor', 'endocrino', 'cardiovascular', 'nervioso'] },
@@ -15,6 +17,7 @@ export const QUIZ_GROUPS = {
   nervios: { label: 'Sistema nervioso', systems: ['nervioso'] },
 };
 const MODES = { choice: 'Opciones', type: 'Escribir', point: 'Señalar' };
+const COMP = { func: 'Función', disease: 'Enfermedades' };
 // qué se ve en pantalla según el sistema de la pregunta
 const SCENE = {
   esqueletico: { show: ['esqueletico', 'articular'] },
@@ -74,21 +77,25 @@ const esc = (s) => String(s ?? '').replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<
 const WEIGHT = [6, 3, 1.5, 0.6, 0.25]; // caja 0 (nuevo/fallado) … caja 4 (dominado)
 const MASTERED = 2; // a partir de esta caja cuenta como dominado
 
-export function createQuiz(body, box, { onAnswer, profiles } = {}) {
+export function createQuiz(body, box, { onAnswer, profiles, clinica } = {}) {
   let score = 0, total = 0, group = 'all', mode = 'choice', review = false;
   let current = null, saved = null, answered = false, hintLevel = 0;
   let progress = profiles.loadProgress();
   const saveProgress = (p) => profiles.saveProgress(p);
   const sex = body.female ? 'F' : 'M';
   const baseName = (p) => displayName(p).replace(/\s*\((izq|der)\.\)/, '');
-  const keyOf = (p) => `${sex}:${baseName(p)}`;
+  const isComp = () => mode in COMP;
+  const entryOf = (p) => (p && clinica ? clinica.forName(baseName(p)) : null);
+  // identificar se guarda por nombre y cuerpo; comprender, por concepto (igual en ambos cuerpos)
+  const keyOf = (p) => (isComp() ? `c:${mode}:${entryOf(p)?.id}` : `${sex}:${baseName(p)}`);
+  let compChoices = false, lastRec = null;
   const rec = (p) => progress[keyOf(p)] || { a: 0, c: 0, box: 0 };
 
   // estructuras "de examen": con nombre conocido y tamaño visible
   function poolFor(g) {
     const sys = QUIZ_GROUPS[g].systems;
     return body.catalog.parts.filter((p) => p.es && (p.la || body.female) && body.meshes.has(p.id) && body.state.loaded.has(p.system)
-      && sys.includes(p.system) && (p.vol ?? 0) >= 1.5);
+      && sys.includes(p.system) && (p.vol ?? 0) >= 1.5 && (!isComp() || entryOf(p)));
   }
   // un elemento por nombre (izquierdo y derecho cuentan como uno)
   function uniqueByName(list) {
@@ -135,6 +142,8 @@ export function createQuiz(body, box, { onAnswer, profiles } = {}) {
       if (failed.length) ps = failed;
       else { review = false; }
     }
+    if (isComp() && ps.length < 4 && group !== 'all') { group = 'all'; ps = poolFor(group); }
+    compChoices = false; lastRec = null;
     if (ps.length < 4) {
       box.innerHTML = '<h3>Preparando el quiz…</h3><p class="sub">Los modelos se están cargando. Inténtalo en unos segundos.</p>';
       return;
@@ -166,10 +175,14 @@ export function createQuiz(body, box, { onAnswer, profiles } = {}) {
     const who = profiles.current;
     return `
       <button class="who" id="quiz-who" title="Cambiar de persona"><i style="background:${who?.color || 'var(--accent)'}">${esc((who?.name || '?')[0].toUpperCase())}</i>${esc(who?.name || 'Elegir persona')}</button>
-      <div class="seg quiz-modes">${Object.entries(MODES).map(([k, l]) => `<button data-mode="${k}" class="${k === mode ? 'active' : ''}">${l}</button>`).join('')}</div>
+      <div class="seg quiz-family">
+        <button data-family="id" class="${isComp() ? '' : 'active'}">Identificar</button>
+        <button data-family="comp" class="${isComp() ? 'active' : ''}">Comprender</button>
+      </div>
+      <div class="seg quiz-modes">${Object.entries(isComp() ? COMP : MODES).map(([k, l]) => `<button data-mode="${k}" class="${k === mode ? 'active' : ''}">${l}</button>`).join('')}</div>
       <div class="progress-line">
         <div class="bar"><span style="width:${pct}%"></span></div>
-        <span>${st.mastered}/${st.total} dominadas</span>
+        <span>${st.mastered}/${st.total} ${isComp() ? 'conceptos' : 'dominadas'}</span>
       </div>`;
   }
   function footer() {
@@ -208,6 +221,25 @@ export function createQuiz(body, box, { onAnswer, profiles } = {}) {
           <button class="btn" type="submit">Calificar</button>
         </form>
         <button class="link" id="quiz-hint">Pista</button><span class="hint" id="hint-text"></span>`;
+    } else if (mode === 'func') {
+      q = `<h3>¿Qué función tiene?</h3>
+        <p class="target-name">${esc(baseName(current))}</p>
+        <p class="sub">Responde con tus palabras: qué hace o de qué se encarga.</p>
+        ${compChoices ? `<div class="opts">${compOptions().map((o) => `<button data-copt="${o.id}">${esc(o.text)}</button>`).join('')}</div>` : `
+        <form class="type-answer col" id="type-form" autocomplete="off">
+          <textarea id="type-input" rows="3" placeholder="Ej.: bombea la sangre a todo el cuerpo…"></textarea>
+          <div class="row"><button class="link" type="button" id="comp-opts">Prefiero opciones</button><button class="btn" type="submit">Calificar</button></div>
+        </form>`}`;
+    } else if (mode === 'disease') {
+      q = `<h3>Nombra una enfermedad o lesión de:</h3>
+        <p class="target-name">${esc(baseName(current))}</p>
+        <p class="sub">Cualquiera de las frecuentes vale.</p>
+        ${compChoices ? `<div class="opts">${compOptions().map((o) => `<button data-copt="${o.id}">${esc(o.text)}</button>`).join('')}</div>` : `
+        <form class="type-answer" id="type-form" autocomplete="off">
+          <input id="type-input" type="text" placeholder="Ej.: fractura, hepatitis…" autocapitalize="off" spellcheck="false" enterkeyhint="done">
+          <button class="btn" type="submit">Calificar</button>
+        </form>
+        <button class="link" type="button" id="comp-opts">Prefiero opciones</button>`}`;
     } else {
       q = `<h3>Señala en el modelo:</h3>
         <p class="target-name">${baseName(current)}</p>
@@ -220,19 +252,28 @@ export function createQuiz(body, box, { onAnswer, profiles } = {}) {
 
   function wire() {
     box.querySelectorAll('.quiz-modes [data-mode]').forEach((b) => b.addEventListener('click', () => { mode = b.dataset.mode; next(); }));
+    box.querySelectorAll('.quiz-family [data-family]').forEach((b) => b.addEventListener('click', () => {
+      const comp = b.dataset.family === 'comp';
+      if (comp === isComp()) return;
+      mode = comp ? 'func' : 'choice'; next();
+    }));
+    box.querySelector('#comp-opts')?.addEventListener('click', () => { compChoices = true; render(); });
+    box.querySelectorAll('[data-copt]').forEach((b) => b.addEventListener('click', () => answerCompChoice(b)));
     box.querySelectorAll('[data-opt]').forEach((b) => b.addEventListener('click', () => answerChoice(b)));
     box.querySelector('#quiz-skip').addEventListener('click', next);
     box.querySelector('#quiz-group').addEventListener('change', (e) => { group = e.target.value; next(); });
     box.querySelector('#quiz-review').addEventListener('click', () => { review = !review; next(); });
     box.querySelector('#quiz-stats').addEventListener('click', showStats);
     box.querySelector('#quiz-who')?.addEventListener('click', showStats);
-    box.querySelector('#type-form')?.addEventListener('submit', (e) => { e.preventDefault(); answerText(); });
+    box.querySelector('#type-form')?.addEventListener('submit', (e) => { e.preventDefault(); if (isComp()) answerComp(); else answerText(); });
+    if (isComp()) box.querySelector('textarea#type-input')?.addEventListener('keydown', (e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); answerComp(); } });
     box.querySelector('#quiz-hint')?.addEventListener('click', hint);
   }
 
   // --- registrar resultado ------------------------------------------------------------------
   function record(points) {
     const r = rec(current);
+    lastRec = { key: keyOf(current), prev: { ...r }, points };
     r.a++;
     if (points >= 1) { r.c++; r.box = Math.min(r.box + 1, 4); }
     else if (points > 0) { r.box = Math.max(r.box, 1); }
@@ -280,6 +321,82 @@ export function createQuiz(body, box, { onAnswer, profiles } = {}) {
     const titles = { ok: hintLevel ? '¡Correcto! (con pista, medio punto)' : '¡Correcto!', almost: 'Casi: revisa cómo se escribe', bad: 'No. La respuesta es:' };
     feedback(grade, titles[grade]);
     body.pulse(current.id, 1200);
+  }
+
+  // --- comprender -----------------------------------------------------------------------------
+  function compOptions() {
+    const e = entryOf(current);
+    const others = clinica.list.filter((x) => x.id !== e.id);
+    const pick = (arr, n) => arr.sort(() => Math.random() - 0.5).slice(0, n);
+    if (mode === 'func') {
+      return pick([{ id: e.id, text: e.funcion }, ...pick(others, 3).map((x) => ({ id: x.id, text: x.funcion }))], 4);
+    }
+    const right = pick([...e.enfermedades], 1)[0];
+    // distractores: enfermedades de otras estructuras que no se repitan en esta
+    const own = new Set(e.enfermedades.map((d) => d.nombre.toLowerCase()));
+    const pool = others.flatMap((x) => x.enfermedades.map((d) => ({ id: `x:${x.id}`, text: d.nombre }))).filter((d) => !own.has(d.text.toLowerCase()));
+    return pick([{ id: e.id, text: right.nombre }, ...pick(pool, 3)], 4);
+  }
+  function modelAnswer(e, extra = '') {
+    const list = mode === 'disease'
+      ? `<ul class="dz">${e.enfermedades.map((d) => `<li><b>${esc(d.nombre)}</b>: ${esc(d.nota)}</li>`).join('')}</ul>`
+      : `<p>${esc(e.funcion)}</p>`;
+    return `${extra}${list}${e.dato ? `<p class="dato">${esc(e.dato)}</p>` : ''}`;
+  }
+  function compFeedback(kind, title, extra = '') {
+    const e = entryOf(current);
+    const el = box.querySelector('#quiz-feedback');
+    el.innerHTML = `<div class="explain ${kind}"><strong>${title}</strong>${modelAnswer(e, extra)}
+      ${kind !== 'ok' && !compChoices ? '<button class="link" id="override">Mi respuesta estaba bien</button>' : ''}</div>`;
+    el.querySelector('#override')?.addEventListener('click', overrideOk);
+    const skip = box.querySelector('#quiz-skip');
+    skip.textContent = 'Siguiente'; skip.className = 'btn';
+    box.querySelector('.score').textContent = `${Math.round(score * 10) / 10} / ${total}${review ? ' · repaso' : ''}`;
+    const st = stats(group);
+    box.querySelector('.progress-line').innerHTML = `<div class="bar"><span style="width:${st.total ? Math.round((st.mastered / st.total) * 100) : 0}%"></span></div><span>${st.mastered}/${st.total} conceptos</span>`;
+  }
+  function answerComp() {
+    if (!current || answered) return;
+    const input = box.querySelector('#type-input');
+    const e = entryOf(current);
+    let grade, extra = '';
+    if (mode === 'func') {
+      const g = gradeConcepts(input.value, e);
+      grade = g.grade;
+      extra = `<p class="sub">Mencionaste ${g.hit} de ${g.total} ideas clave. Respuesta modelo:</p>`;
+    } else {
+      const g = gradeDisease(input.value, e);
+      grade = g.grade;
+      extra = g.match ? `<p class="sub">Sí: ${esc(g.match.nombre)}. Todas las frecuentes:</p>` : '<p class="sub">Las frecuentes son:</p>';
+    }
+    record(grade === 'ok' ? 1 : grade === 'almost' ? 0.5 : 0);
+    input.disabled = true;
+    input.classList.add(grade);
+    compFeedback(grade, { ok: '¡Bien!', almost: 'Vas bien, pero te faltaron ideas', bad: mode === 'func' ? 'No del todo' : 'No es de las frecuentes' }[grade], extra);
+  }
+  function answerCompChoice(btn) {
+    if (!current || answered) return;
+    const e = entryOf(current);
+    const ok = btn.dataset.copt === e.id;
+    btn.classList.add(ok ? 'ok' : 'bad');
+    if (!ok) btn.parentElement.querySelector(`[data-copt="${CSS.escape(e.id)}"]`)?.classList.add('ok');
+    record(ok ? 0.5 + 0.5 : 0); // con opciones también cuenta, pero sin pistas
+    compFeedback(ok ? 'ok' : 'bad', ok ? '¡Correcto!' : 'No:');
+  }
+  // si la calificación automática no reconoció una respuesta válida
+  function overrideOk() {
+    if (!lastRec) return;
+    const r = { ...lastRec.prev };
+    r.a++; r.c++; r.box = Math.min(r.box + 1, 4); r.t = Date.now();
+    progress[lastRec.key] = r;
+    saveProgress(progress);
+    score += 1 - lastRec.points;
+    lastRec.points = 1;
+    const ex = box.querySelector('#quiz-feedback .explain');
+    ex.className = 'explain ok';
+    ex.querySelector('strong').textContent = 'Anotado como correcta';
+    box.querySelector('#override')?.remove();
+    box.querySelector('.score').textContent = `${Math.round(score * 10) / 10} / ${total}${review ? ' · repaso' : ''}`;
   }
 
   function hint() {

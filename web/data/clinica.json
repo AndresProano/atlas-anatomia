@@ -1,0 +1,6417 @@
+[
+ {
+  "id": "corazon",
+  "nombres": [
+   "Corazón"
+  ],
+  "funcion": "Bomba muscular que impulsa la sangre: el lado derecho hacia los pulmones y el izquierdo hacia todo el cuerpo.",
+  "conceptos": [
+   [
+    "bombe",
+    "bomba",
+    "impuls",
+    "contra",
+    "late",
+    "latir"
+   ],
+   [
+    "sangre"
+   ],
+   [
+    "cuerpo",
+    "organismo",
+    "circulacion",
+    "tejidos",
+    "pulmon",
+    "arteria"
+   ]
+  ],
+  "enfermedades": [
+   {
+    "nombre": "Infarto agudo de miocardio",
+    "claves": [
+     "infarto",
+     "iam",
+     "ataque cardiaco",
+     "ataque al corazon"
+    ],
+    "nota": "Necrosis del músculo cardíaco por obstrucción de una arteria coronaria."
+   },
+   {
+    "nombre": "Insuficiencia cardíaca",
+    "claves": [
+     "insuficiencia cardiaca",
+     "falla cardiaca",
+     "icc"
+    ],
+    "nota": "El corazón no bombea suficiente sangre para las necesidades del organismo."
+   },
+   {
+    "nombre": "Fibrilación auricular",
+    "claves": [
+     "fibrilacion auricular",
+     "fibrilacion",
+     "arritmia"
+    ],
+    "nota": "Arritmia frecuente; aumenta el riesgo de trombos y accidente cerebrovascular."
+   }
+  ],
+  "dato": "Está en el mediastino medio, rodeado por el pericardio; su irrigación depende de las arterias coronarias derecha e izquierda."
+ },
+ {
+  "id": "valvula_mitral",
+  "nombres": [
+   "Válvula mitral"
+  ],
+  "funcion": "Válvula bicúspide entre atrio y ventrículo izquierdos; impide que la sangre regrese al atrio durante la sístole.",
+  "conceptos": [
+   [
+    "valvula",
+    "cierra",
+    "impide",
+    "evita",
+    "unidireccional"
+   ],
+   [
+    "reflujo",
+    "retorno",
+    "regres",
+    "devuelva"
+   ],
+   [
+    "atrio",
+    "auricula",
+    "ventriculo",
+    "izquierd"
+   ]
+  ],
+  "enfermedades": [
+   {
+    "nombre": "Estenosis mitral",
+    "claves": [
+     "estenosis mitral",
+     "estenosis"
+    ],
+    "nota": "Estrechamiento de la válvula, típicamente secuela de fiebre reumática."
+   },
+   {
+    "nombre": "Insuficiencia mitral",
+    "claves": [
+     "insuficiencia mitral",
+     "regurgitacion mitral",
+     "insuficiencia"
+    ],
+    "nota": "Cierre incompleto con reflujo de sangre al atrio izquierdo."
+   },
+   {
+    "nombre": "Prolapso de la válvula mitral",
+    "claves": [
+     "prolapso",
+     "prolapso mitral"
+    ],
+    "nota": "Las valvas se abomban hacia el atrio izquierdo en la sístole."
+   }
+  ],
+  "dato": "Tiene dos valvas (anterior y posterior) sujetas por cuerdas tendinosas a los músculos papilares anterolateral y posteromedial."
+ },
+ {
+  "id": "valva_aortica",
+  "nombres": [
+   "Valva aórtica"
+  ],
+  "funcion": "Válvula semilunar entre ventrículo izquierdo y aorta; impide que la sangre regrese al ventrículo en la diástole.",
+  "conceptos": [
+   [
+    "valvula",
+    "valva",
+    "cierra",
+    "impide",
+    "evita"
+   ],
+   [
+    "reflujo",
+    "retorno",
+    "regres"
+   ],
+   [
+    "aorta",
+    "ventriculo",
+    "izquierd"
+   ]
+  ],
+  "enfermedades": [
+   {
+    "nombre": "Estenosis aórtica",
+    "claves": [
+     "estenosis aortica",
+     "estenosis"
+    ],
+    "nota": "Estrechamiento, frecuente por calcificación en ancianos; causa síncope, angina y disnea."
+   },
+   {
+    "nombre": "Insuficiencia aórtica",
+    "claves": [
+     "insuficiencia aortica",
+     "regurgitacion aortica",
+     "insuficiencia"
+    ],
+    "nota": "Reflujo diastólico de sangre hacia el ventrículo izquierdo."
+   }
+  ],
+  "dato": "Tiene tres valvas semilunares; de los senos aórticos derecho e izquierdo nacen las arterias coronarias."
+ },
+ {
+  "id": "arteria_coronaria",
+  "nombres": [
+   "Arteria coronaria"
+  ],
+  "funcion": "Irriga el propio músculo cardíaco (miocardio), aportándole oxígeno y nutrientes.",
+  "conceptos": [
+   [
+    "irriga",
+    "lleva",
+    "aporta",
+    "suministra",
+    "nutre"
+   ],
+   [
+    "sangre",
+    "oxigeno",
+    "nutrientes"
+   ],
+   [
+    "corazon",
+    "miocardio",
+    "cardiac"
+   ]
+  ],
+  "enfermedades": [
+   {
+    "nombre": "Enfermedad coronaria / aterosclerosis",
+    "claves": [
+     "aterosclerosis",
+     "ateroesclerosis",
+     "enfermedad coronaria",
+     "cardiopatia isquemica",
+     "placa"
+    ],
+    "nota": "Placas que estrechan la luz y reducen el flujo al miocardio."
+   },
+   {
+    "nombre": "Angina de pecho",
+    "claves": [
+     "angina"
+    ],
+    "nota": "Dolor torácico por isquemia miocárdica transitoria."
+   },
+   {
+    "nombre": "Infarto agudo de miocardio",
+    "claves": [
+     "infarto",
+     "iam"
+    ],
+    "nota": "Oclusión coronaria, generalmente por trombo sobre una placa rota."
+   }
+  ],
+  "dato": "Las coronarias derecha e izquierda nacen de los senos aórticos; la izquierda se llena principalmente durante la diástole."
+ },
+ {
+  "id": "arteria_descendente_anterior",
+  "nombres": [
+   "Arteria descendente anterior"
+  ],
+  "funcion": "Rama de la coronaria izquierda que irriga la pared anterior del ventrículo izquierdo y los dos tercios anteriores del septo interventricular.",
+  "conceptos": [
+   [
+    "irriga",
+    "lleva",
+    "aporta",
+    "nutre"
+   ],
+   [
+    "ventriculo izquierdo",
+    "pared anterior",
+    "anterior"
+   ],
+   [
+    "septo",
+    "tabique",
+    "interventricular"
+   ]
+  ],
+  "enfermedades": [
+   {
+    "nombre": "Infarto de pared anterior",
+    "claves": [
+     "infarto anterior",
+     "infarto",
+     "iam"
+    ],
+    "nota": "Su oclusión proximal causa infartos extensos; la llaman la arteria 'viuda'."
+   },
+   {
+    "nombre": "Aterosclerosis coronaria",
+    "claves": [
+     "aterosclerosis",
+     "ateroesclerosis",
+     "placa",
+     "estenosis"
+    ],
+    "nota": "Es la arteria coronaria que con más frecuencia se obstruye."
+   }
+  ],
+  "dato": "Recorre el surco interventricular anterior y da ramas diagonales y septales."
+ },
+ {
+  "id": "tronco_pulmonar",
+  "nombres": [
+   "Tronco pulmonar"
+  ],
+  "funcion": "Lleva sangre desoxigenada del ventrículo derecho hacia los pulmones; se divide en arterias pulmonares derecha e izquierda.",
+  "conceptos": [
+   [
+    "lleva",
+    "conduce",
+    "transporta",
+    "sale"
+   ],
+   [
+    "sangre desoxigenada",
+    "venosa",
+    "poco oxigeno",
+    "desoxigen",
+    "sangre"
+   ],
+   [
+    "pulmon",
+    "ventriculo derecho"
+   ]
+  ],
+  "enfermedades": [
+   {
+    "nombre": "Embolia pulmonar",
+    "claves": [
+     "embolia pulmonar",
+     "tromboembolia pulmonar",
+     "tep",
+     "embolia"
+    ],
+    "nota": "Trombo, casi siempre de venas profundas de la pierna, que obstruye las arterias pulmonares."
+   },
+   {
+    "nombre": "Hipertensión pulmonar",
+    "claves": [
+     "hipertension pulmonar"
+    ],
+    "nota": "Presión elevada en la circulación pulmonar que sobrecarga el ventrículo derecho."
+   }
+  ],
+  "dato": "Se une al arco aórtico por el ligamento arterioso, resto del conducto arterioso fetal."
+ },
+ {
+  "id": "aorta_ascendente",
+  "nombres": [
+   "Aorta ascendente"
+  ],
+  "funcion": "Primer segmento de la aorta; recibe la sangre del ventrículo izquierdo y da origen a las arterias coronarias.",
+  "conceptos": [
+   [
+    "sale",
+    "recibe",
+    "lleva",
+    "conduce"
+   ],
+   [
+    "sangre",
+    "oxigenada"
+   ],
+   [
+    "ventriculo izquierdo",
+    "coronaria",
+    "corazon"
+   ]
+  ],
+  "enfermedades": [
+   {
+    "nombre": "Aneurisma de aorta ascendente",
+    "claves": [
+     "aneurisma"
+    ],
+    "nota": "Dilatación permanente; asociada a hipertensión, Marfan o válvula aórtica bicúspide."
+   },
+   {
+    "nombre": "Disección aórtica tipo A",
+    "claves": [
+     "diseccion aortica",
+     "diseccion"
+    ],
+    "nota": "Desgarro de la íntima con falsa luz; emergencia quirúrgica."
+   }
+  ],
+  "dato": "Está dentro del saco pericárdico; sus únicas ramas son las arterias coronarias derecha e izquierda."
+ },
+ {
+  "id": "arco_aortico",
+  "nombres": [
+   "Arco aórtico"
+  ],
+  "funcion": "Segmento curvo de la aorta que distribuye sangre a cabeza, cuello y miembros superiores a través de sus tres ramas.",
+  "conceptos": [
+   [
+    "distribuye",
+    "irriga",
+    "lleva",
+    "ramas"
+   ],
+   [
+    "sangre"
+   ],
+   [
+    "cabeza",
+    "cuello",
+    "brazo",
+    "miembro superior",
+    "cerebro"
+   ]
+  ],
+  "enfermedades": [
+   {
+    "nombre": "Coartación de aorta",
+    "claves": [
+     "coartacion"
+    ],
+    "nota": "Estrechamiento congénito cerca del ligamento arterioso; hipertensión en brazos y pulsos femorales débiles."
+   },
+   {
+    "nombre": "Aneurisma del arco aórtico",
+    "claves": [
+     "aneurisma"
+    ],
+    "nota": "Puede comprimir el nervio laríngeo recurrente izquierdo y causar disfonía."
+   }
+  ],
+  "dato": "Ramas en orden: tronco braquiocefálico, carótida común izquierda y subclavia izquierda. El laríngeo recurrente izquierdo pasa bajo él."
+ },
+ {
+  "id": "aorta_descendente",
+  "nombres": [
+   "Aorta descendente"
+  ],
+  "funcion": "Continúa el arco aórtico por el tórax y lleva sangre oxigenada a la pared torácica, esófago, bronquios y, más abajo, al abdomen.",
+  "conceptos": [
+   [
+    "lleva",
+    "conduce",
+    "distribuye",
+    "irriga"
+   ],
+   [
+    "sangre",
+    "oxigenada"
+   ],
+   [
+    "torax",
+    "abdomen",
+    "cuerpo",
+    "intercostal"
+   ]
+  ],
+  "enfermedades": [
+   {
+    "nombre": "Disección aórtica tipo B",
+    "claves": [
+     "diseccion aortica",
+     "diseccion"
+    ],
+    "nota": "Desgarro distal a la subclavia izquierda; dolor torácico que irradia a la espalda."
+   },
+   {
+    "nombre": "Aneurisma de aorta torácica",
+    "claves": [
+     "aneurisma"
+    ],
+    "nota": "Dilatación asociada a aterosclerosis e hipertensión."
+   }
+  ],
+  "dato": "Atraviesa el diafragma por el hiato aórtico a nivel de T12 y pasa a ser aorta abdominal."
+ },
+ {
+  "id": "aorta_abdominal",
+  "nombres": [
+   "Aorta abdominal"
+  ],
+  "funcion": "Lleva sangre oxigenada a vísceras abdominales, pared abdominal y, al bifurcarse, a pelvis y miembros inferiores.",
+  "conceptos": [
+   [
+    "lleva",
+    "conduce",
+    "distribuye",
+    "irriga"
+   ],
+   [
+    "sangre",
+    "oxigenada"
+   ],
+   [
+    "abdomen",
+    "visceras",
+    "rinon",
+    "intestino",
+    "piernas",
+    "pelvis"
+   ]
+  ],
+  "enfermedades": [
+   {
+    "nombre": "Aneurisma de aorta abdominal",
+    "claves": [
+     "aneurisma",
+     "aaa"
+    ],
+    "nota": "Dilatación mayor de 3 cm, típica en varones fumadores mayores; su rotura es mortal."
+   },
+   {
+    "nombre": "Aterosclerosis aortoilíaca",
+    "claves": [
+     "aterosclerosis",
+     "ateroesclerosis",
+     "leriche"
+    ],
+    "nota": "Obstrucción que produce claudicación de glúteos y piernas."
+   }
+  ],
+  "dato": "Ramas principales: tronco celíaco, mesentérica superior, renales y mesentérica inferior; se bifurca en ilíacas comunes a nivel de L4."
+ },
+ {
+  "id": "carotida_comun",
+  "nombres": [
+   "Arteria carótida común"
+  ],
+  "funcion": "Lleva sangre oxigenada a la cabeza y el cuello; se divide en carótida interna (encéfalo) y externa (cara y cuello).",
+  "conceptos": [
+   [
+    "lleva",
+    "irriga",
+    "conduce"
+   ],
+   [
+    "sangre",
+    "oxigenada"
+   ],
+   [
+    "cabeza",
+    "cuello",
+    "cerebro",
+    "encefalo",
+    "cara"
+   ]
+  ],
+  "enfermedades": [
+   {
+    "nombre": "Estenosis carotídea",
+    "claves": [
+     "estenosis carotidea",
+     "estenosis",
+     "aterosclerosis",
+     "placa"
+    ],
+    "nota": "Placa en la bifurcación; fuente de émbolos que causan ictus."
+   },
+   {
+    "nombre": "Accidente cerebrovascular isquémico",
+    "claves": [
+     "acv",
+     "ictus",
+     "derrame",
+     "ataque cerebrovascular",
+     "ecv"
+    ],
+    "nota": "Embolia desde placas carotídeas."
+   }
+  ],
+  "dato": "Se bifurca a nivel del borde superior del cartílago tiroides (C3–C4), donde están el seno y el cuerpo carotídeos. Su pulso se palpa junto al esternocleidomastoideo."
+ },
+ {
+  "id": "arteria_subclavia",
+  "nombres": [
+   "Arteria subclavia"
+  ],
+  "funcion": "Irriga el miembro superior y da ramas a cuello, encéfalo (vertebral) y pared torácica (torácica interna).",
+  "conceptos": [
+   [
+    "irriga",
+    "lleva",
+    "conduce"
+   ],
+   [
+    "sangre"
+   ],
+   [
+    "brazo",
+    "miembro superior",
+    "cuello",
+    "vertebral",
+    "encefalo"
+   ]
+  ],
+  "enfermedades": [
+   {
+    "nombre": "Síndrome del robo de la subclavia",
+    "claves": [
+     "robo de la subclavia",
+     "robo subclavio"
+    ],
+    "nota": "Estenosis proximal: el brazo 'roba' sangre de la vertebral y causa mareo."
+   },
+   {
+    "nombre": "Síndrome del desfiladero torácico",
+    "claves": [
+     "desfiladero toracico",
+     "operculo toracico",
+     "compresion"
+    ],
+    "nota": "Compresión entre escalenos o por costilla cervical."
+   }
+  ],
+  "dato": "Pasa entre los escalenos anterior y medio; en el borde lateral de la primera costilla pasa a llamarse arteria axilar."
+ },
+ {
+  "id": "arteria_braquial",
+  "nombres": [
+   "Arteria braquial"
+  ],
+  "funcion": "Principal arteria del brazo; irriga sus músculos y se divide en el codo en arterias radial y ulnar.",
+  "conceptos": [
+   [
+    "irriga",
+    "lleva",
+    "conduce"
+   ],
+   [
+    "sangre"
+   ],
+   [
+    "brazo",
+    "codo",
+    "antebrazo"
+   ]
+  ],
+  "enfermedades": [
+   {
+    "nombre": "Lesión en fractura supracondílea de húmero",
+    "claves": [
+     "fractura supracondilea",
+     "lesion",
+     "fractura"
+    ],
+    "nota": "Típica en niños; puede causar isquemia del antebrazo (contractura de Volkmann)."
+   },
+   {
+    "nombre": "Síndrome compartimental",
+    "claves": [
+     "sindrome compartimental",
+     "compartimental"
+    ],
+    "nota": "Isquemia por aumento de presión en el antebrazo."
+   }
+  ],
+  "dato": "Se usa para medir la presión arterial; su pulso se palpa medial al tendón del bíceps en la fosa del codo, junto al nervio mediano."
+ },
+ {
+  "id": "arteria_radial",
+  "nombres": [
+   "Arteria radial"
+  ],
+  "funcion": "Irriga la región lateral del antebrazo y la mano; forma principalmente el arco palmar profundo.",
+  "conceptos": [
+   [
+    "irriga",
+    "lleva"
+   ],
+   [
+    "sangre"
+   ],
+   [
+    "antebrazo",
+    "mano",
+    "muneca",
+    "pulgar"
+   ]
+  ],
+  "enfermedades": [
+   {
+    "nombre": "Lesión por cortes en la muñeca",
+    "claves": [
+     "corte",
+     "lesion",
+     "herida"
+    ],
+    "nota": "Es superficial en la muñeca y fácil de lesionar."
+   },
+   {
+    "nombre": "Oclusión tras cateterismo",
+    "claves": [
+     "oclusion",
+     "trombosis"
+    ],
+    "nota": "Complicación del acceso radial para cateterismo."
+   }
+  ],
+  "dato": "Su pulso se toma lateral al tendón del flexor radial del carpo; se usa para gasometría arterial (con prueba de Allen previa)."
+ },
+ {
+  "id": "arteria_femoral",
+  "nombres": [
+   "Arteria femoral"
+  ],
+  "funcion": "Principal arteria del miembro inferior; irriga el muslo y continúa como arteria poplítea.",
+  "conceptos": [
+   [
+    "irriga",
+    "lleva",
+    "conduce"
+   ],
+   [
+    "sangre"
+   ],
+   [
+    "muslo",
+    "pierna",
+    "miembro inferior"
+   ]
+  ],
+  "enfermedades": [
+   {
+    "nombre": "Enfermedad arterial periférica",
+    "claves": [
+     "enfermedad arterial periferica",
+     "aterosclerosis",
+     "claudicacion",
+     "estenosis"
+    ],
+    "nota": "Estenosis que causa dolor al caminar (claudicación intermitente)."
+   },
+   {
+    "nombre": "Pseudoaneurisma tras punción",
+    "claves": [
+     "pseudoaneurisma",
+     "aneurisma"
+    ],
+    "nota": "Complicación del acceso femoral en cateterismos."
+   }
+  ],
+  "dato": "Pasa por el triángulo femoral (de lateral a medial: nervio, arteria, vena); su pulso se palpa bajo el ligamento inguinal."
+ },
+ {
+  "id": "arteria_poplitea",
+  "nombres": [
+   "Arteria poplítea"
+  ],
+  "funcion": "Continuación de la femoral detrás de la rodilla; irriga la rodilla y se divide en tibiales anterior y posterior.",
+  "conceptos": [
+   [
+    "irriga",
+    "lleva"
+   ],
+   [
+    "sangre"
+   ],
+   [
+    "rodilla",
+    "pierna"
+   ]
+  ],
+  "enfermedades": [
+   {
+    "nombre": "Aneurisma poplíteo",
+    "claves": [
+     "aneurisma"
+    ],
+    "nota": "Aneurisma periférico más frecuente; puede trombosarse y causar isquemia."
+   },
+   {
+    "nombre": "Lesión por luxación de rodilla",
+    "claves": [
+     "luxacion",
+     "lesion",
+     "trauma"
+    ],
+    "nota": "Está fija y próxima al hueso, por lo que se lesiona en luxaciones."
+   }
+  ],
+  "dato": "Es la estructura más profunda de la fosa poplítea; su pulso es difícil de palpar."
+ },
+ {
+  "id": "arteria_renal",
+  "nombres": [
+   "Arteria renal"
+  ],
+  "funcion": "Lleva sangre de la aorta al riñón para que sea filtrada.",
+  "conceptos": [
+   [
+    "lleva",
+    "irriga",
+    "conduce"
+   ],
+   [
+    "sangre"
+   ],
+   [
+    "rinon",
+    "filtr"
+   ]
+  ],
+  "enfermedades": [
+   {
+    "nombre": "Estenosis de arteria renal",
+    "claves": [
+     "estenosis",
+     "estenosis renal",
+     "hipertension renovascular",
+     "aterosclerosis"
+    ],
+    "nota": "Causa hipertensión renovascular por activación de renina."
+   },
+   {
+    "nombre": "Displasia fibromuscular",
+    "claves": [
+     "displasia fibromuscular"
+    ],
+    "nota": "Estenosis en mujeres jóvenes, aspecto 'en collar de cuentas'."
+   }
+  ],
+  "dato": "Nace de la aorta a nivel de L1–L2; la derecha es más larga y pasa detrás de la vena cava inferior."
+ },
+ {
+  "id": "mesenterica_superior",
+  "nombres": [
+   "Arteria mesentérica superior"
+  ],
+  "funcion": "Irriga el intestino delgado (desde parte del duodeno), el ciego, el colon ascendente y gran parte del transverso.",
+  "conceptos": [
+   [
+    "irriga",
+    "lleva"
+   ],
+   [
+    "sangre"
+   ],
+   [
+    "intestino delgado",
+    "yeyuno",
+    "ileon",
+    "colon",
+    "ciego"
+   ]
+  ],
+  "enfermedades": [
+   {
+    "nombre": "Isquemia mesentérica aguda",
+    "claves": [
+     "isquemia mesenterica",
+     "embolia",
+     "isquemia intestinal"
+    ],
+    "nota": "Émbolo o trombo; dolor abdominal desproporcionado a la exploración."
+   },
+   {
+    "nombre": "Síndrome de la arteria mesentérica superior",
+    "claves": [
+     "sindrome de wilkie",
+     "pinza aortomesenterica"
+    ],
+    "nota": "Compresión de la tercera porción del duodeno entre ella y la aorta."
+   }
+  ],
+  "dato": "Nace de la aorta a nivel de L1; pasa por delante de la vena renal izquierda y de la tercera porción del duodeno."
+ },
+ {
+  "id": "mesenterica_inferior",
+  "nombres": [
+   "Arteria mesentérica inferior"
+  ],
+  "funcion": "Irriga el tercio distal del colon transverso, el colon descendente, el sigmoide y la parte superior del recto.",
+  "conceptos": [
+   [
+    "irriga",
+    "lleva"
+   ],
+   [
+    "sangre"
+   ],
+   [
+    "colon",
+    "sigmoide",
+    "recto"
+   ]
+  ],
+  "enfermedades": [
+   {
+    "nombre": "Colitis isquémica",
+    "claves": [
+     "colitis isquemica",
+     "isquemia"
+    ],
+    "nota": "Isquemia del colon, típica en la flexura esplénica (zona de unión de territorios)."
+   },
+   {
+    "nombre": "Ligadura en cirugía de aneurisma aórtico",
+    "claves": [
+     "ligadura",
+     "isquemia"
+    ],
+    "nota": "Puede causar isquemia del sigmoide."
+   }
+  ],
+  "dato": "Nace de la aorta a nivel de L3; termina como arteria rectal superior."
+ },
+ {
+  "id": "arteria_uterina",
+  "nombres": [
+   "Arteria uterina"
+  ],
+  "funcion": "Rama de la ilíaca interna que irriga el útero; en el embarazo aumenta mucho su flujo para nutrir la placenta.",
+  "conceptos": [
+   [
+    "irriga",
+    "lleva"
+   ],
+   [
+    "sangre"
+   ],
+   [
+    "utero",
+    "placenta",
+    "matriz"
+   ]
+  ],
+  "enfermedades": [
+   {
+    "nombre": "Hemorragia posparto",
+    "claves": [
+     "hemorragia posparto",
+     "hemorragia"
+    ],
+    "nota": "Puede requerir ligadura o embolización de las arterias uterinas."
+   },
+   {
+    "nombre": "Lesión del uréter en histerectomía",
+    "claves": [
+     "lesion ureter",
+     "ligadura ureter"
+    ],
+    "nota": "El uréter pasa por debajo de ella: 'el agua pasa bajo el puente'."
+   }
+  ],
+  "dato": "Discurre en la base del ligamento ancho y cruza por encima del uréter cerca del cuello uterino."
+ },
+ {
+  "id": "vena_cava_superior",
+  "nombres": [
+   "Vena cava superior"
+  ],
+  "funcion": "Devuelve al atrio derecho la sangre venosa de cabeza, cuello, miembros superiores y tórax.",
+  "conceptos": [
+   [
+    "devuelve",
+    "drena",
+    "retorna",
+    "lleva"
+   ],
+   [
+    "sangre venosa",
+    "venosa",
+    "desoxigen",
+    "sangre"
+   ],
+   [
+    "atrio derecho",
+    "auricula derecha",
+    "corazon"
+   ]
+  ],
+  "enfermedades": [
+   {
+    "nombre": "Síndrome de vena cava superior",
+    "claves": [
+     "sindrome de vena cava superior",
+     "obstruccion",
+     "compresion"
+    ],
+    "nota": "Obstrucción, a menudo por tumor pulmonar o linfoma; edema de cara y brazos."
+   },
+   {
+    "nombre": "Trombosis por catéter",
+    "claves": [
+     "trombosis",
+     "cateter"
+    ],
+    "nota": "Complicación de catéteres venosos centrales."
+   }
+  ],
+  "dato": "Se forma por la unión de las dos venas braquiocefálicas y recibe la vena ácigos antes de entrar al corazón."
+ },
+ {
+  "id": "vena_cava_inferior",
+  "nombres": [
+   "Vena cava inferior"
+  ],
+  "funcion": "Devuelve al atrio derecho la sangre venosa de miembros inferiores, pelvis y abdomen.",
+  "conceptos": [
+   [
+    "devuelve",
+    "drena",
+    "retorna",
+    "lleva"
+   ],
+   [
+    "sangre venosa",
+    "venosa",
+    "desoxigen",
+    "sangre"
+   ],
+   [
+    "atrio derecho",
+    "auricula derecha",
+    "corazon"
+   ]
+  ],
+  "enfermedades": [
+   {
+    "nombre": "Trombosis de vena cava inferior",
+    "claves": [
+     "trombosis"
+    ],
+    "nota": "A menudo extensión de una trombosis venosa profunda ilíaca."
+   },
+   {
+    "nombre": "Compresión por útero grávido",
+    "claves": [
+     "compresion",
+     "hipotension supina",
+     "sindrome supino"
+    ],
+    "nota": "En decúbito supino el útero la comprime y baja la presión."
+   }
+  ],
+  "dato": "Es la vena más grande; está a la derecha de la aorta y atraviesa el diafragma a nivel de T8."
+ },
+ {
+  "id": "yugular_interna",
+  "nombres": [
+   "Vena yugular interna"
+  ],
+  "funcion": "Drena la sangre del encéfalo, la cara y el cuello hacia la vena braquiocefálica.",
+  "conceptos": [
+   [
+    "drena",
+    "devuelve",
+    "retorna",
+    "recoge"
+   ],
+   [
+    "sangre",
+    "venosa"
+   ],
+   [
+    "encefalo",
+    "cerebro",
+    "cabeza",
+    "cara",
+    "cuello"
+   ]
+  ],
+  "enfermedades": [
+   {
+    "nombre": "Trombosis yugular",
+    "claves": [
+     "trombosis",
+     "lemierre"
+    ],
+    "nota": "Puede complicar infecciones faríngeas (síndrome de Lemierre) o catéteres."
+   },
+   {
+    "nombre": "Ingurgitación yugular",
+    "claves": [
+     "ingurgitacion yugular",
+     "distension yugular"
+    ],
+    "nota": "Signo de presión venosa central elevada, p. ej. insuficiencia cardíaca derecha."
+   }
+  ],
+  "dato": "Viaja en la vaina carotídea con la carótida y el nervio vago; vía habitual para catéter venoso central."
+ },
+ {
+  "id": "vena_porta",
+  "nombres": [
+   "Vena porta hepática"
+  ],
+  "funcion": "Lleva al hígado la sangre venosa del tubo digestivo, bazo y páncreas, rica en nutrientes, para su procesamiento.",
+  "conceptos": [
+   [
+    "lleva",
+    "conduce",
+    "drena"
+   ],
+   [
+    "sangre",
+    "nutrientes"
+   ],
+   [
+    "higado",
+    "intestino",
+    "bazo",
+    "digestiv"
+   ]
+  ],
+  "enfermedades": [
+   {
+    "nombre": "Hipertensión portal",
+    "claves": [
+     "hipertension portal"
+    ],
+    "nota": "Por cirrosis; produce várices esofágicas, ascitis y esplenomegalia."
+   },
+   {
+    "nombre": "Trombosis de vena porta",
+    "claves": [
+     "trombosis portal",
+     "trombosis"
+    ],
+    "nota": "Obstrucción que también causa hipertensión portal."
+   }
+  ],
+  "dato": "Se forma detrás del cuello del páncreas por unión de la mesentérica superior y la esplénica; aporta ~75% del flujo hepático."
+ },
+ {
+  "id": "gran_safena",
+  "nombres": [
+   "Gran vena safena"
+  ],
+  "funcion": "Vena superficial más larga del cuerpo; drena la piel y tejido subcutáneo del lado medial del miembro inferior hacia la vena femoral.",
+  "conceptos": [
+   [
+    "drena",
+    "recoge",
+    "devuelve"
+   ],
+   [
+    "sangre",
+    "venosa"
+   ],
+   [
+    "pierna",
+    "muslo",
+    "miembro inferior",
+    "superficial"
+   ]
+  ],
+  "enfermedades": [
+   {
+    "nombre": "Várices",
+    "claves": [
+     "varices",
+     "insuficiencia venosa"
+    ],
+    "nota": "Dilatación por válvulas insuficientes."
+   },
+   {
+    "nombre": "Tromboflebitis superficial",
+    "claves": [
+     "tromboflebitis",
+     "flebitis",
+     "trombosis"
+    ],
+    "nota": "Inflamación con trombo en una vena superficial."
+   }
+  ],
+  "dato": "Pasa delante del maléolo medial y desemboca en la vena femoral en el hiato safeno; se usa como injerto en el bypass coronario."
+ },
+ {
+  "id": "vena_femoral",
+  "nombres": [
+   "Vena femoral"
+  ],
+  "funcion": "Principal vena profunda del muslo; devuelve la sangre del miembro inferior hacia la ilíaca externa.",
+  "conceptos": [
+   [
+    "drena",
+    "devuelve",
+    "retorna"
+   ],
+   [
+    "sangre",
+    "venosa"
+   ],
+   [
+    "muslo",
+    "pierna",
+    "miembro inferior",
+    "profund"
+   ]
+  ],
+  "enfermedades": [
+   {
+    "nombre": "Trombosis venosa profunda",
+    "claves": [
+     "trombosis venosa profunda",
+     "tvp",
+     "trombosis"
+    ],
+    "nota": "Trombo en venas profundas; riesgo de embolia pulmonar."
+   },
+   {
+    "nombre": "Punción para acceso venoso",
+    "claves": [
+     "cateter",
+     "puncion"
+    ],
+    "nota": "Se punciona medial a la arteria femoral en el triángulo femoral."
+   }
+  ],
+  "dato": "Está medial a la arteria femoral bajo el ligamento inguinal; recibe la gran safena."
+ },
+ {
+  "id": "pulmones",
+  "nombres": [
+   "Pulmones"
+  ],
+  "funcion": "Órganos del intercambio gaseoso: captan oxígeno del aire hacia la sangre y eliminan dióxido de carbono.",
+  "conceptos": [
+   [
+    "intercambio",
+    "respir",
+    "captan",
+    "oxigena"
+   ],
+   [
+    "oxigeno",
+    "o2"
+   ],
+   [
+    "dioxido de carbono",
+    "co2",
+    "carbonico"
+   ],
+   [
+    "sangre",
+    "aire",
+    "alveol"
+   ]
+  ],
+  "enfermedades": [
+   {
+    "nombre": "Neumonía",
+    "claves": [
+     "neumonia",
+     "pulmonia"
+    ],
+    "nota": "Infección del parénquima pulmonar con consolidación."
+   },
+   {
+    "nombre": "EPOC",
+    "claves": [
+     "epoc",
+     "enfisema",
+     "bronquitis cronica"
+    ],
+    "nota": "Obstrucción crónica al flujo aéreo, ligada sobre todo al tabaco."
+   },
+   {
+    "nombre": "Cáncer de pulmón",
+    "claves": [
+     "cancer de pulmon",
+     "carcinoma",
+     "tumor pulmonar"
+    ],
+    "nota": "Principal causa de muerte por cáncer; el tabaco es el mayor factor de riesgo."
+   },
+   {
+    "nombre": "Neumotórax",
+    "claves": [
+     "neumotorax"
+    ],
+    "nota": "Aire en el espacio pleural que colapsa el pulmón."
+   }
+  ],
+  "dato": "El derecho tiene 3 lóbulos y 10 segmentos; el izquierdo 2 lóbulos, língula y escotadura cardíaca."
+ },
+ {
+  "id": "laringe",
+  "nombres": [
+   "Laringe"
+  ],
+  "funcion": "Órgano de la fonación que protege la vía aérea al tragar y conduce el aire entre faringe y tráquea.",
+  "conceptos": [
+   [
+    "voz",
+    "fonacion",
+    "habla",
+    "sonido",
+    "cuerdas vocales"
+   ],
+   [
+    "protege",
+    "cierra",
+    "deglucion",
+    "tragar"
+   ],
+   [
+    "aire",
+    "via aerea",
+    "respir"
+   ]
+  ],
+  "enfermedades": [
+   {
+    "nombre": "Laringitis",
+    "claves": [
+     "laringitis",
+     "ronquera",
+     "disfonia"
+    ],
+    "nota": "Inflamación que causa ronquera."
+   },
+   {
+    "nombre": "Cáncer de laringe",
+    "claves": [
+     "cancer de laringe",
+     "carcinoma"
+    ],
+    "nota": "Asociado a tabaco y alcohol; disfonía persistente."
+   },
+   {
+    "nombre": "Crup (laringotraqueítis)",
+    "claves": [
+     "crup",
+     "laringotraqueitis"
+    ],
+    "nota": "Infección viral infantil con tos perruna y estridor."
+   }
+  ],
+  "dato": "Los músculos intrínsecos los inerva el laríngeo recurrente, salvo el cricotiroideo (rama externa del laríngeo superior)."
+ },
+ {
+  "id": "traquea",
+  "nombres": [
+   "Tráquea"
+  ],
+  "funcion": "Conducto que lleva el aire desde la laringe hasta los bronquios principales.",
+  "conceptos": [
+   [
+    "conduce",
+    "lleva",
+    "conducto",
+    "tubo",
+    "paso"
+   ],
+   [
+    "aire"
+   ],
+   [
+    "bronquio",
+    "pulmon",
+    "laringe"
+   ]
+  ],
+  "enfermedades": [
+   {
+    "nombre": "Estenosis traqueal",
+    "claves": [
+     "estenosis traqueal",
+     "estenosis"
+    ],
+    "nota": "Estrechamiento, a menudo tras intubación prolongada."
+   },
+   {
+    "nombre": "Traqueostomía",
+    "claves": [
+     "traqueostomia"
+    ],
+    "nota": "Abertura quirúrgica de la tráquea para asegurar la vía aérea."
+   }
+  ],
+  "dato": "Se mantiene abierta por anillos cartilaginosos en 'C' abiertos hacia atrás, donde está el músculo traqueal; se bifurca a nivel de T4–T5."
+ },
+ {
+  "id": "bronquios_principales",
+  "nombres": [
+   "Bronquios principales"
+  ],
+  "funcion": "Llevan el aire desde la tráquea a cada pulmón, donde se ramifican en bronquios lobares.",
+  "conceptos": [
+   [
+    "llevan",
+    "conducen",
+    "distribuyen"
+   ],
+   [
+    "aire"
+   ],
+   [
+    "pulmon",
+    "traquea",
+    "lobar"
+   ]
+  ],
+  "enfermedades": [
+   {
+    "nombre": "Aspiración de cuerpo extraño",
+    "claves": [
+     "cuerpo extrano",
+     "aspiracion"
+    ],
+    "nota": "Va con más frecuencia al bronquio derecho por ser más ancho, corto y vertical."
+   },
+   {
+    "nombre": "Asma",
+    "claves": [
+     "asma",
+     "broncoespasmo"
+    ],
+    "nota": "Inflamación y broncoconstricción reversible."
+   },
+   {
+    "nombre": "Bronquitis",
+    "claves": [
+     "bronquitis"
+    ],
+    "nota": "Inflamación de los bronquios, aguda o crónica."
+   }
+  ],
+  "dato": "El derecho es más corto, ancho y vertical que el izquierdo."
+ },
+ {
+  "id": "diafragma",
+  "nombres": [
+   "Diafragma"
+  ],
+  "funcion": "Principal músculo de la inspiración: al contraerse desciende y aumenta el volumen del tórax; separa tórax y abdomen.",
+  "conceptos": [
+   [
+    "respir",
+    "inspiracion",
+    "inhal"
+   ],
+   [
+    "contrae",
+    "desciende",
+    "baja"
+   ],
+   [
+    "torax",
+    "abdomen",
+    "separa",
+    "volumen"
+   ]
+  ],
+  "enfermedades": [
+   {
+    "nombre": "Hernia hiatal",
+    "claves": [
+     "hernia hiatal",
+     "hernia de hiato"
+    ],
+    "nota": "Paso del estómago al tórax por el hiato esofágico."
+   },
+   {
+    "nombre": "Parálisis diafragmática",
+    "claves": [
+     "paralisis diafragmatica",
+     "paralisis",
+     "lesion frenico"
+    ],
+    "nota": "Por lesión del nervio frénico; hemidiafragma elevado."
+   },
+   {
+    "nombre": "Hernia diafragmática congénita",
+    "claves": [
+     "hernia diafragmatica",
+     "bochdalek"
+    ],
+    "nota": "Defecto posterolateral con hipoplasia pulmonar en el recién nacido."
+   }
+  ],
+  "dato": "Inervación: nervio frénico (C3–C5). Orificios: cava (T8), esófago (T10), aorta (T12). Su dolor se refiere al hombro."
+ },
+ {
+  "id": "boca",
+  "nombres": [
+   "Boca"
+  ],
+  "funcion": "Inicia la digestión: recibe el alimento, lo mastica, lo mezcla con saliva y forma el bolo para tragar; también participa en el habla.",
+  "conceptos": [
+   [
+    "mastica",
+    "tritura",
+    "digestion",
+    "digier"
+   ],
+   [
+    "saliva",
+    "insaliva"
+   ],
+   [
+    "alimento",
+    "comida",
+    "bolo"
+   ],
+   [
+    "habla",
+    "lenguaje"
+   ]
+  ],
+  "enfermedades": [
+   {
+    "nombre": "Caries dental",
+    "claves": [
+     "caries"
+    ],
+    "nota": "Destrucción del esmalte por bacterias y azúcares."
+   },
+   {
+    "nombre": "Cáncer oral",
+    "claves": [
+     "cancer oral",
+     "cancer de boca",
+     "carcinoma"
+    ],
+    "nota": "Ligado a tabaco y alcohol; lesión ulcerada que no cicatriza."
+   },
+   {
+    "nombre": "Candidiasis oral",
+    "claves": [
+     "candidiasis",
+     "algodoncillo",
+     "muguet"
+    ],
+    "nota": "Infección por hongos con placas blancas."
+   }
+  ],
+  "dato": "Las glándulas salivales mayores son parótida, submandibular y sublingual."
+ },
+ {
+  "id": "lengua",
+  "nombres": [
+   "Lengua"
+  ],
+  "funcion": "Órgano muscular que mueve el alimento durante la masticación y la deglución, percibe el gusto y es clave para articular el habla.",
+  "conceptos": [
+   [
+    "mueve",
+    "deglucion",
+    "tragar",
+    "mastic"
+   ],
+   [
+    "gusto",
+    "sabor"
+   ],
+   [
+    "habla",
+    "articula",
+    "lenguaje"
+   ]
+  ],
+  "enfermedades": [
+   {
+    "nombre": "Parálisis del hipogloso",
+    "claves": [
+     "lesion hipogloso",
+     "paralisis",
+     "desviacion"
+    ],
+    "nota": "Al sacar la lengua se desvía hacia el lado lesionado."
+   },
+   {
+    "nombre": "Cáncer de lengua",
+    "claves": [
+     "cancer de lengua",
+     "carcinoma"
+    ],
+    "nota": "Más frecuente en bordes laterales."
+   }
+  ],
+  "dato": "Músculos inervados por el hipogloso (XII), salvo el palatogloso (vago). Gusto 2/3 anteriores: cuerda del tímpano (VII); 1/3 posterior: glosofaríngeo (IX)."
+ },
+ {
+  "id": "parotida",
+  "nombres": [
+   "Glándula parótida"
+  ],
+  "funcion": "Glándula salival más grande; produce saliva serosa que vierte a la boca por el conducto parotídeo.",
+  "conceptos": [
+   [
+    "produce",
+    "secreta"
+   ],
+   [
+    "saliva"
+   ],
+   [
+    "boca",
+    "digestion"
+   ]
+  ],
+  "enfermedades": [
+   {
+    "nombre": "Parotiditis (paperas)",
+    "claves": [
+     "parotiditis",
+     "paperas"
+    ],
+    "nota": "Infección viral con inflamación de las parótidas."
+   },
+   {
+    "nombre": "Adenoma pleomorfo",
+    "claves": [
+     "adenoma pleomorfo",
+     "tumor",
+     "tumor parotideo"
+    ],
+    "nota": "Tumor benigno más frecuente de glándulas salivales."
+   }
+  ],
+  "dato": "El nervio facial la atraviesa; su secreción la controla el glosofaríngeo vía ganglio ótico. El conducto desemboca frente al segundo molar superior."
+ },
+ {
+  "id": "submandibular",
+  "nombres": [
+   "Glándula submandibular"
+  ],
+  "funcion": "Glándula salival mixta que produce la mayor parte de la saliva en reposo y la vierte al piso de la boca.",
+  "conceptos": [
+   [
+    "produce",
+    "secreta"
+   ],
+   [
+    "saliva"
+   ],
+   [
+    "boca",
+    "piso"
+   ]
+  ],
+  "enfermedades": [
+   {
+    "nombre": "Sialolitiasis",
+    "claves": [
+     "sialolitiasis",
+     "calculo salival",
+     "litiasis"
+    ],
+    "nota": "Cálculos salivales; la submandibular es la más afectada."
+   },
+   {
+    "nombre": "Sialoadenitis",
+    "claves": [
+     "sialoadenitis",
+     "infeccion"
+    ],
+    "nota": "Inflamación o infección de la glándula."
+   }
+  ],
+  "dato": "Su conducto (de Wharton) desemboca en la carúncula sublingual; inervación secretora por la cuerda del tímpano (VII)."
+ },
+ {
+  "id": "tonsila_palatina",
+  "nombres": [
+   "Tonsila palatina",
+   "Amígdala palatina derecha",
+   "Amígdala palatina izquierda"
+  ],
+  "funcion": "Tejido linfoide en la orofaringe que participa en la defensa inmunitaria frente a microorganismos que entran por boca y nariz.",
+  "conceptos": [
+   [
+    "defensa",
+    "inmun",
+    "protege",
+    "linf"
+   ],
+   [
+    "microorganismos",
+    "bacterias",
+    "virus",
+    "infeccion"
+   ],
+   [
+    "boca",
+    "garganta",
+    "faringe"
+   ]
+  ],
+  "enfermedades": [
+   {
+    "nombre": "Amigdalitis",
+    "claves": [
+     "amigdalitis",
+     "faringoamigdalitis",
+     "anginas"
+    ],
+    "nota": "Infección viral o por estreptococo del grupo A."
+   },
+   {
+    "nombre": "Absceso periamigdalino",
+    "claves": [
+     "absceso periamigdalino",
+     "absceso"
+    ],
+    "nota": "Complicación con trismo y desviación de la úvula."
+   }
+  ],
+  "dato": "Está entre los arcos palatogloso y palatofaríngeo; tras la amigdalectomía puede alterarse el gusto por lesión del glosofaríngeo."
+ },
+ {
+  "id": "estomago",
+  "nombres": [
+   "Estómago"
+  ],
+  "funcion": "Almacena el alimento, lo mezcla y lo digiere parcialmente con ácido clorhídrico y pepsina, formando el quimo.",
+  "conceptos": [
+   [
+    "almacen",
+    "reservorio",
+    "guarda"
+   ],
+   [
+    "digier",
+    "digestion",
+    "mezcla",
+    "tritura"
+   ],
+   [
+    "acido",
+    "jugo gastrico",
+    "pepsina",
+    "quimo"
+   ]
+  ],
+  "enfermedades": [
+   {
+    "nombre": "Úlcera péptica",
+    "claves": [
+     "ulcera peptica",
+     "ulcera gastrica",
+     "ulcera"
+    ],
+    "nota": "Asociada a Helicobacter pylori y AINEs."
+   },
+   {
+    "nombre": "Gastritis",
+    "claves": [
+     "gastritis"
+    ],
+    "nota": "Inflamación de la mucosa gástrica."
+   },
+   {
+    "nombre": "Cáncer gástrico",
+    "claves": [
+     "cancer gastrico",
+     "cancer de estomago",
+     "adenocarcinoma"
+    ],
+    "nota": "Relacionado con H. pylori; suele detectarse tarde."
+   }
+  ],
+  "dato": "Partes: cardias, fondo, cuerpo y porción pilórica. Irrigado por ramas del tronco celíaco (gástricas y gastroomentales)."
+ },
+ {
+  "id": "intestino_delgado",
+  "nombres": [
+   "Intestino delgado"
+  ],
+  "funcion": "Principal sitio de digestión final y absorción de nutrientes; comprende duodeno, yeyuno e íleon.",
+  "conceptos": [
+   [
+    "absorb",
+    "absorcion"
+   ],
+   [
+    "digestion",
+    "digier"
+   ],
+   [
+    "nutrientes",
+    "alimento",
+    "comida"
+   ]
+  ],
+  "enfermedades": [
+   {
+    "nombre": "Obstrucción intestinal",
+    "claves": [
+     "obstruccion intestinal",
+     "obstruccion",
+     "ileo"
+    ],
+    "nota": "Frecuente por adherencias o hernias."
+   },
+   {
+    "nombre": "Enfermedad celíaca",
+    "claves": [
+     "celiaca",
+     "celiaquia"
+    ],
+    "nota": "Intolerancia al gluten con atrofia de vellosidades."
+   },
+   {
+    "nombre": "Enfermedad de Crohn",
+    "claves": [
+     "crohn"
+    ],
+    "nota": "Inflamación crónica transmural, típica en el íleon terminal."
+   }
+  ],
+  "dato": "Mide unos 6 m; los pliegues circulares, vellosidades y microvellosidades aumentan enormemente la superficie de absorción."
+ },
+ {
+  "id": "duodeno",
+  "nombres": [
+   "Duodeno"
+  ],
+  "funcion": "Primera porción del intestino delgado; recibe bilis y jugo pancreático y neutraliza el ácido del quimo para continuar la digestión.",
+  "conceptos": [
+   [
+    "recibe",
+    "mezcla",
+    "neutraliza",
+    "digestion"
+   ],
+   [
+    "bilis",
+    "jugo pancreatico",
+    "pancrea",
+    "enzimas"
+   ],
+   [
+    "quimo",
+    "acido",
+    "estomago"
+   ]
+  ],
+  "enfermedades": [
+   {
+    "nombre": "Úlcera duodenal",
+    "claves": [
+     "ulcera duodenal",
+     "ulcera peptica",
+     "ulcera"
+    ],
+    "nota": "Más frecuente en la porción superior; ligada a H. pylori."
+   },
+   {
+    "nombre": "Atresia duodenal",
+    "claves": [
+     "atresia duodenal",
+     "doble burbuja"
+    ],
+    "nota": "Malformación congénita con signo de 'doble burbuja'; asociada a síndrome de Down."
+   }
+  ],
+  "dato": "Tiene forma de 'C' alrededor de la cabeza del páncreas; la ampolla hepatopancreática desemboca en su porción descendente."
+ },
+ {
+  "id": "yeyuno",
+  "nombres": [
+   "Yeyuno"
+  ],
+  "funcion": "Porción media del intestino delgado, principal lugar de absorción de nutrientes como azúcares, aminoácidos y grasas.",
+  "conceptos": [
+   [
+    "absorb",
+    "absorcion"
+   ],
+   [
+    "nutrientes",
+    "azucares",
+    "aminoacidos",
+    "grasas",
+    "alimento"
+   ],
+   [
+    "intestino delgado"
+   ]
+  ],
+  "enfermedades": [
+   {
+    "nombre": "Obstrucción intestinal",
+    "claves": [
+     "obstruccion",
+     "ileo"
+    ],
+    "nota": "Por adherencias, hernias o vólvulos."
+   },
+   {
+    "nombre": "Isquemia mesentérica",
+    "claves": [
+     "isquemia mesenterica",
+     "isquemia"
+    ],
+    "nota": "Compromiso de la mesentérica superior."
+   }
+  ],
+  "dato": "Comparado con el íleon: más ancho, pared más gruesa, más pliegues circulares, pocas arcadas vasculares y vasos rectos largos."
+ },
+ {
+  "id": "ileon",
+  "nombres": [
+   "Íleon",
+   "Íleon terminal"
+  ],
+  "funcion": "Porción final del intestino delgado; absorbe vitamina B12 y sales biliares y desemboca en el ciego.",
+  "conceptos": [
+   [
+    "absorb",
+    "absorcion"
+   ],
+   [
+    "vitamina b12",
+    "b12",
+    "sales biliares",
+    "bilis"
+   ],
+   [
+    "ciego",
+    "intestino grueso",
+    "final"
+   ]
+  ],
+  "enfermedades": [
+   {
+    "nombre": "Enfermedad de Crohn",
+    "claves": [
+     "crohn"
+    ],
+    "nota": "Afecta con más frecuencia al íleon terminal."
+   },
+   {
+    "nombre": "Divertículo de Meckel",
+    "claves": [
+     "meckel",
+     "diverticulo de meckel"
+    ],
+    "nota": "Resto del conducto onfalomesentérico; regla de los 2."
+   },
+   {
+    "nombre": "Déficit de vitamina B12",
+    "claves": [
+     "deficit de b12",
+     "anemia megaloblastica",
+     "anemia"
+    ],
+    "nota": "Tras resección o enfermedad ileal."
+   }
+  ],
+  "dato": "Tiene placas de Peyer (tejido linfoide) abundantes; termina en la válvula ileocecal."
+ },
+ {
+  "id": "intestino_grueso",
+  "nombres": [
+   "Intestino grueso"
+  ],
+  "funcion": "Absorbe agua y electrolitos, forma y almacena las heces; alberga la microbiota intestinal.",
+  "conceptos": [
+   [
+    "absorb",
+    "absorcion"
+   ],
+   [
+    "agua",
+    "electrolitos",
+    "sales"
+   ],
+   [
+    "heces",
+    "deposiciones",
+    "materia fecal"
+   ],
+   [
+    "microbiota",
+    "bacterias"
+   ]
+  ],
+  "enfermedades": [
+   {
+    "nombre": "Cáncer colorrectal",
+    "claves": [
+     "cancer colorrectal",
+     "cancer de colon",
+     "adenocarcinoma"
+    ],
+    "nota": "Frecuente; se origina a partir de pólipos adenomatosos."
+   },
+   {
+    "nombre": "Diverticulosis / diverticulitis",
+    "claves": [
+     "diverticulitis",
+     "diverticulosis",
+     "diverticulos"
+    ],
+    "nota": "Sacos en la pared, sobre todo en el sigmoide."
+   },
+   {
+    "nombre": "Colitis ulcerosa",
+    "claves": [
+     "colitis ulcerosa",
+     "colitis"
+    ],
+    "nota": "Inflamación continua de la mucosa desde el recto."
+   }
+  ],
+  "dato": "Comprende ciego, apéndice, colon, recto y canal anal; tiene tenias, haustras y apéndices omentales."
+ },
+ {
+  "id": "ciego",
+  "nombres": [
+   "Ciego"
+  ],
+  "funcion": "Primera porción del intestino grueso; recibe el contenido del íleon y de él nace el apéndice vermiforme.",
+  "conceptos": [
+   [
+    "recibe",
+    "inicio",
+    "primera"
+   ],
+   [
+    "ileon",
+    "intestino delgado"
+   ],
+   [
+    "apendice",
+    "intestino grueso"
+   ]
+  ],
+  "enfermedades": [
+   {
+    "nombre": "Vólvulo de ciego",
+    "claves": [
+     "volvulo"
+    ],
+    "nota": "Torsión del ciego móvil con obstrucción."
+   },
+   {
+    "nombre": "Cáncer de ciego",
+    "claves": [
+     "cancer de colon",
+     "cancer",
+     "adenocarcinoma"
+    ],
+    "nota": "Suele manifestarse con anemia ferropénica."
+   }
+  ],
+  "dato": "Está en la fosa ilíaca derecha; la válvula ileocecal regula el paso desde el íleon."
+ },
+ {
+  "id": "apendice",
+  "nombres": [
+   "Apéndice vermiforme"
+  ],
+  "funcion": "Divertículo del ciego con abundante tejido linfoide; participa en la inmunidad intestinal.",
+  "conceptos": [
+   [
+    "linfoide",
+    "inmun",
+    "defensa"
+   ],
+   [
+    "intestino",
+    "ciego"
+   ]
+  ],
+  "enfermedades": [
+   {
+    "nombre": "Apendicitis aguda",
+    "claves": [
+     "apendicitis"
+    ],
+    "nota": "Dolor periumbilical que migra a fosa ilíaca derecha; urgencia quirúrgica frecuente."
+   },
+   {
+    "nombre": "Apéndice perforado / peritonitis",
+    "claves": [
+     "perforacion",
+     "peritonitis"
+    ],
+    "nota": "Complicación de la apendicitis no tratada."
+   }
+  ],
+  "dato": "Punto de McBurney: unión del tercio lateral y medio entre la espina ilíaca anterosuperior y el ombligo. Irrigado por la arteria apendicular (de la ileocólica)."
+ },
+ {
+  "id": "colon_ascendente",
+  "nombres": [
+   "Colon ascendente"
+  ],
+  "funcion": "Porción del colon que sube por el lado derecho del abdomen; absorbe agua y electrolitos del contenido intestinal.",
+  "conceptos": [
+   [
+    "absorb",
+    "absorcion"
+   ],
+   [
+    "agua",
+    "electrolitos",
+    "liquido"
+   ],
+   [
+    "heces",
+    "contenido"
+   ],
+   [
+    "derecho",
+    "sube",
+    "colon"
+   ]
+  ],
+  "enfermedades": [
+   {
+    "nombre": "Cáncer de colon derecho",
+    "claves": [
+     "cancer de colon",
+     "cancer colorrectal",
+     "adenocarcinoma"
+    ],
+    "nota": "Suele causar anemia y pérdida de peso más que obstrucción."
+   },
+   {
+    "nombre": "Diverticulitis derecha",
+    "claves": [
+     "diverticulitis"
+    ],
+    "nota": "Menos frecuente en occidente; puede simular apendicitis."
+   }
+  ],
+  "dato": "Es secundariamente retroperitoneal; irrigado por las arterias cólica derecha e ileocólica (mesentérica superior)."
+ },
+ {
+  "id": "colon_transverso",
+  "nombres": [
+   "Colon transverso"
+  ],
+  "funcion": "Porción del colon que cruza el abdomen de derecha a izquierda; continúa la absorción de agua y forma las heces.",
+  "conceptos": [
+   [
+    "absorb",
+    "absorcion"
+   ],
+   [
+    "agua",
+    "electrolitos"
+   ],
+   [
+    "heces",
+    "contenido"
+   ],
+   [
+    "cruza",
+    "transvers",
+    "colon"
+   ]
+  ],
+  "enfermedades": [
+   {
+    "nombre": "Cáncer de colon transverso",
+    "claves": [
+     "cancer de colon",
+     "cancer colorrectal"
+    ],
+    "nota": "Puede invadir estómago o páncreas por vecindad."
+   },
+   {
+    "nombre": "Colitis isquémica en flexura esplénica",
+    "claves": [
+     "colitis isquemica",
+     "isquemia"
+    ],
+    "nota": "Zona de unión entre territorios de ambas mesentéricas."
+   }
+  ],
+  "dato": "Es intraperitoneal y móvil (mesocolon transverso); irrigado por la cólica media (mesentérica superior)."
+ },
+ {
+  "id": "colon_descendente",
+  "nombres": [
+   "Colon descendente"
+  ],
+  "funcion": "Porción del colon que baja por el lado izquierdo; almacena y transporta las heces hacia el sigmoide.",
+  "conceptos": [
+   [
+    "almacen",
+    "transport",
+    "conduce"
+   ],
+   [
+    "heces",
+    "contenido"
+   ],
+   [
+    "izquierdo",
+    "baja",
+    "colon",
+    "sigmoide"
+   ]
+  ],
+  "enfermedades": [
+   {
+    "nombre": "Diverticulitis",
+    "claves": [
+     "diverticulitis",
+     "diverticulos"
+    ],
+    "nota": "Frecuente en colon izquierdo y sigmoide."
+   },
+   {
+    "nombre": "Cáncer de colon izquierdo",
+    "claves": [
+     "cancer de colon",
+     "cancer colorrectal"
+    ],
+    "nota": "Tiende a producir obstrucción y cambios del ritmo intestinal."
+   }
+  ],
+  "dato": "Es secundariamente retroperitoneal; irrigado por la cólica izquierda (mesentérica inferior)."
+ },
+ {
+  "id": "colon_sigmoideo",
+  "nombres": [
+   "Colon sigmoideo"
+  ],
+  "funcion": "Porción en 'S' que une el colon descendente con el recto y almacena las heces antes de la defecación.",
+  "conceptos": [
+   [
+    "almacen",
+    "reservorio",
+    "guarda"
+   ],
+   [
+    "heces",
+    "contenido"
+   ],
+   [
+    "recto",
+    "une",
+    "descendente"
+   ]
+  ],
+  "enfermedades": [
+   {
+    "nombre": "Diverticulitis",
+    "claves": [
+     "diverticulitis",
+     "diverticulos"
+    ],
+    "nota": "El sigmoide es el sitio más frecuente de divertículos."
+   },
+   {
+    "nombre": "Vólvulo de sigmoide",
+    "claves": [
+     "volvulo"
+    ],
+    "nota": "Torsión sobre su mesocolon; imagen en 'grano de café'."
+   },
+   {
+    "nombre": "Cáncer de sigmoide",
+    "claves": [
+     "cancer colorrectal",
+     "cancer de colon"
+    ],
+    "nota": "Sitio frecuente de cáncer colorrectal."
+   }
+  ],
+  "dato": "Es intraperitoneal con mesocolon sigmoideo; irrigado por las arterias sigmoideas (mesentérica inferior)."
+ },
+ {
+  "id": "recto",
+  "nombres": [
+   "Recto"
+  ],
+  "funcion": "Porción final del intestino grueso; almacena las heces y, al distenderse, desencadena el deseo de defecar.",
+  "conceptos": [
+   [
+    "almacen",
+    "reservorio",
+    "guarda"
+   ],
+   [
+    "heces",
+    "deposiciones"
+   ],
+   [
+    "defeca",
+    "evacua",
+    "expulsa"
+   ]
+  ],
+  "enfermedades": [
+   {
+    "nombre": "Cáncer de recto",
+    "claves": [
+     "cancer de recto",
+     "cancer colorrectal",
+     "adenocarcinoma"
+    ],
+    "nota": "Sangrado rectal y cambio del hábito intestinal; a veces se palpa en el tacto rectal."
+   },
+   {
+    "nombre": "Hemorroides",
+    "claves": [
+     "hemorroides"
+    ],
+    "nota": "Dilatación de plexos venosos del canal anal."
+   },
+   {
+    "nombre": "Prolapso rectal",
+    "claves": [
+     "prolapso"
+    ],
+    "nota": "Salida del recto por el ano."
+   }
+  ],
+  "dato": "Irrigado por arterias rectales superior (mesentérica inferior), media e inferior; zona de anastomosis portocava."
+ },
+ {
+  "id": "higado",
+  "nombres": [
+   "Hígado"
+  ],
+  "funcion": "Glándula más grande: metaboliza nutrientes y fármacos, produce bilis y proteínas plasmáticas, almacena glucógeno y desintoxica la sangre.",
+  "conceptos": [
+   [
+    "metabol",
+    "procesa",
+    "desintox",
+    "detox",
+    "filtra"
+   ],
+   [
+    "bilis"
+   ],
+   [
+    "proteinas",
+    "albumina",
+    "coagulacion"
+   ],
+   [
+    "gluc",
+    "almacen",
+    "glucogeno"
+   ]
+  ],
+  "enfermedades": [
+   {
+    "nombre": "Cirrosis",
+    "claves": [
+     "cirrosis"
+    ],
+    "nota": "Fibrosis difusa por alcohol, hepatitis viral o hígado graso; lleva a hipertensión portal."
+   },
+   {
+    "nombre": "Hepatitis",
+    "claves": [
+     "hepatitis"
+    ],
+    "nota": "Inflamación hepática, a menudo viral (A, B, C)."
+   },
+   {
+    "nombre": "Hígado graso",
+    "claves": [
+     "higado graso",
+     "esteatosis",
+     "esteatosis hepatica",
+     "masld"
+    ],
+    "nota": "Acumulación de grasa, ligada a obesidad y alcohol."
+   },
+   {
+    "nombre": "Carcinoma hepatocelular",
+    "claves": [
+     "hepatocarcinoma",
+     "carcinoma hepatocelular",
+     "cancer de higado"
+    ],
+    "nota": "Cáncer que suele aparecer sobre un hígado cirrótico."
+   }
+  ],
+  "dato": "Doble irrigación: vena porta (~75%) y arteria hepática (~25%). Drena por las venas hepáticas a la cava inferior."
+ },
+ {
+  "id": "vesicula_biliar",
+  "nombres": [
+   "Vesícula biliar"
+  ],
+  "funcion": "Almacena y concentra la bilis producida por el hígado y la libera al duodeno al comer grasas.",
+  "conceptos": [
+   [
+    "almacen",
+    "guarda",
+    "concentra",
+    "reservorio"
+   ],
+   [
+    "bilis"
+   ],
+   [
+    "libera",
+    "duodeno",
+    "grasas",
+    "digestion"
+   ]
+  ],
+  "enfermedades": [
+   {
+    "nombre": "Colelitiasis",
+    "claves": [
+     "colelitiasis",
+     "calculos",
+     "piedras en la vesicula",
+     "litiasis biliar"
+    ],
+    "nota": "Cálculos biliares, muy frecuentes."
+   },
+   {
+    "nombre": "Colecistitis aguda",
+    "claves": [
+     "colecistitis"
+    ],
+    "nota": "Inflamación por obstrucción del cístico; signo de Murphy positivo."
+   },
+   {
+    "nombre": "Cáncer de vesícula",
+    "claves": [
+     "cancer de vesicula"
+    ],
+    "nota": "Asociado a cálculos de larga evolución."
+   }
+  ],
+  "dato": "Se contrae por la colecistocinina; irrigada por la arteria cística (triángulo hepatocístico de Calot). Su dolor puede referirse al hombro derecho."
+ },
+ {
+  "id": "coledoco",
+  "nombres": [
+   "Conducto colédoco"
+  ],
+  "funcion": "Lleva la bilis desde la unión de los conductos hepático común y cístico hasta el duodeno.",
+  "conceptos": [
+   [
+    "lleva",
+    "conduce",
+    "transporta"
+   ],
+   [
+    "bilis"
+   ],
+   [
+    "duodeno",
+    "intestino"
+   ]
+  ],
+  "enfermedades": [
+   {
+    "nombre": "Coledocolitiasis",
+    "claves": [
+     "coledocolitiasis",
+     "calculo",
+     "litiasis"
+    ],
+    "nota": "Cálculo en el colédoco; ictericia obstructiva."
+   },
+   {
+    "nombre": "Colangitis aguda",
+    "claves": [
+     "colangitis"
+    ],
+    "nota": "Infección por obstrucción: fiebre, ictericia y dolor (tríada de Charcot)."
+   },
+   {
+    "nombre": "Obstrucción por cáncer de cabeza de páncreas",
+    "claves": [
+     "cancer de pancreas",
+     "obstruccion",
+     "ictericia"
+    ],
+    "nota": "Ictericia indolora con vesícula palpable."
+   }
+  ],
+  "dato": "Pasa por el ligamento hepatoduodenal y detrás de la cabeza del páncreas; se une al conducto pancreático en la ampolla hepatopancreática."
+ },
+ {
+  "id": "pancreas",
+  "nombres": [
+   "Páncreas"
+  ],
+  "funcion": "Glándula mixta: exocrina, produce jugo con enzimas digestivas; endocrina, produce insulina y glucagón que regulan la glucosa.",
+  "conceptos": [
+   [
+    "enzimas",
+    "jugo",
+    "digestiv",
+    "exocrin"
+   ],
+   [
+    "insulina",
+    "glucagon",
+    "hormonas",
+    "endocrin"
+   ],
+   [
+    "glucosa",
+    "azucar",
+    "glucemia"
+   ]
+  ],
+  "enfermedades": [
+   {
+    "nombre": "Pancreatitis aguda",
+    "claves": [
+     "pancreatitis"
+    ],
+    "nota": "Inflamación por cálculos biliares o alcohol; dolor en cinturón."
+   },
+   {
+    "nombre": "Diabetes mellitus",
+    "claves": [
+     "diabetes"
+    ],
+    "nota": "Déficit o resistencia a la insulina."
+   },
+   {
+    "nombre": "Cáncer de páncreas",
+    "claves": [
+     "cancer de pancreas",
+     "adenocarcinoma"
+    ],
+    "nota": "Muy agresivo; en la cabeza causa ictericia indolora."
+   }
+  ],
+  "dato": "Es retroperitoneal salvo la cola; partes: cabeza, cuello, cuerpo y cola. La vena porta se forma detrás del cuello."
+ },
+ {
+  "id": "bazo",
+  "nombres": [
+   "Bazo"
+  ],
+  "funcion": "Filtra la sangre, destruye glóbulos rojos viejos y participa en la respuesta inmunitaria contra bacterias.",
+  "conceptos": [
+   [
+    "filtra",
+    "depura",
+    "limpia"
+   ],
+   [
+    "globulos rojos",
+    "eritrocitos",
+    "hematies",
+    "sangre"
+   ],
+   [
+    "inmun",
+    "defensa",
+    "linfocitos",
+    "bacterias"
+   ]
+  ],
+  "enfermedades": [
+   {
+    "nombre": "Rotura esplénica",
+    "claves": [
+     "rotura de bazo",
+     "ruptura esplenica",
+     "rotura",
+     "trauma"
+    ],
+    "nota": "Órgano más lesionado en trauma abdominal cerrado; causa hemorragia interna."
+   },
+   {
+    "nombre": "Esplenomegalia",
+    "claves": [
+     "esplenomegalia",
+     "bazo grande"
+    ],
+    "nota": "Aumento de tamaño por hipertensión portal, infecciones o hemopatías."
+   },
+   {
+    "nombre": "Asplenia",
+    "claves": [
+     "asplenia",
+     "esplenectomia"
+    ],
+    "nota": "Mayor riesgo de infecciones por bacterias encapsuladas."
+   }
+  ],
+  "dato": "Está en el hipocondrio izquierdo bajo las costillas 9 a 11; irrigado por la arteria esplénica."
+ },
+ {
+  "id": "rinon",
+  "nombres": [
+   "Riñón",
+   "Riñón derecho",
+   "Riñón izquierdo"
+  ],
+  "funcion": "Filtra la sangre para formar orina, eliminando desechos; regula agua, electrolitos y presión arterial, y produce eritropoyetina.",
+  "conceptos": [
+   [
+    "filtra",
+    "depura",
+    "elimina"
+   ],
+   [
+    "sangre",
+    "desechos",
+    "toxinas"
+   ],
+   [
+    "orina"
+   ],
+   [
+    "regula",
+    "agua",
+    "electrolitos",
+    "presion",
+    "eritropoyetina"
+   ]
+  ],
+  "enfermedades": [
+   {
+    "nombre": "Enfermedad renal crónica",
+    "claves": [
+     "enfermedad renal cronica",
+     "insuficiencia renal",
+     "erc"
+    ],
+    "nota": "Pérdida progresiva de función, sobre todo por diabetes e hipertensión."
+   },
+   {
+    "nombre": "Litiasis renal",
+    "claves": [
+     "litiasis",
+     "calculos renales",
+     "piedras en el rinon",
+     "nefrolitiasis"
+    ],
+    "nota": "Cálculos que causan cólico renal."
+   },
+   {
+    "nombre": "Pielonefritis",
+    "claves": [
+     "pielonefritis",
+     "infeccion renal"
+    ],
+    "nota": "Infección del riñón con fiebre y dolor lumbar."
+   }
+  ],
+  "dato": "Retroperitoneales, entre T12 y L3; el derecho está más bajo por el hígado. Su unidad funcional es la nefrona."
+ },
+ {
+  "id": "pelvis_renal",
+  "nombres": [
+   "Pelvis renal",
+   "Pelvis renal derecha",
+   "Pelvis renal izquierda"
+  ],
+  "funcion": "Embudo que recoge la orina de los cálices renales y la conduce al uréter.",
+  "conceptos": [
+   [
+    "recoge",
+    "colecta",
+    "embudo",
+    "conduce"
+   ],
+   [
+    "orina"
+   ],
+   [
+    "caliz",
+    "calices",
+    "ureter"
+   ]
+  ],
+  "enfermedades": [
+   {
+    "nombre": "Obstrucción de la unión pieloureteral",
+    "claves": [
+     "obstruccion pieloureteral",
+     "estenosis",
+     "hidronefrosis"
+    ],
+    "nota": "Causa frecuente de hidronefrosis congénita."
+   },
+   {
+    "nombre": "Litiasis en pelvis renal",
+    "claves": [
+     "litiasis",
+     "calculo coraliforme",
+     "calculo"
+    ],
+    "nota": "Cálculos que pueden ocupar la pelvis y los cálices."
+   },
+   {
+    "nombre": "Pielonefritis",
+    "claves": [
+     "pielonefritis"
+    ],
+    "nota": "Infección que afecta la pelvis y el parénquima renal."
+   }
+  ],
+  "dato": "Sale por el hilio renal, por detrás de la vena y la arteria renales."
+ },
+ {
+  "id": "ureter",
+  "nombres": [
+   "Uréter",
+   "Uréter derecho",
+   "Uréter izquierdo"
+  ],
+  "funcion": "Conducto muscular que lleva la orina del riñón a la vejiga mediante ondas peristálticas.",
+  "conceptos": [
+   [
+    "lleva",
+    "conduce",
+    "transporta",
+    "peristal"
+   ],
+   [
+    "orina"
+   ],
+   [
+    "rinon",
+    "vejiga"
+   ]
+  ],
+  "enfermedades": [
+   {
+    "nombre": "Cólico renoureteral",
+    "claves": [
+     "colico renal",
+     "colico",
+     "litiasis ureteral",
+     "calculo"
+    ],
+    "nota": "Dolor intenso por cálculo atascado en el uréter."
+   },
+   {
+    "nombre": "Lesión iatrogénica",
+    "claves": [
+     "lesion ureter",
+     "ligadura"
+    ],
+    "nota": "Riesgo en histerectomía por su relación con la arteria uterina."
+   }
+  ],
+  "dato": "Estrecheces donde se atascan cálculos: unión pieloureteral, cruce de vasos ilíacos y entrada a la vejiga."
+ },
+ {
+  "id": "vejiga_urinaria",
+  "nombres": [
+   "Vejiga urinaria"
+  ],
+  "funcion": "Órgano muscular que almacena la orina y la expulsa al contraerse durante la micción.",
+  "conceptos": [
+   [
+    "almacen",
+    "reservorio",
+    "guarda"
+   ],
+   [
+    "orina"
+   ],
+   [
+    "expulsa",
+    "miccion",
+    "orinar",
+    "vacia"
+   ]
+  ],
+  "enfermedades": [
+   {
+    "nombre": "Cistitis",
+    "claves": [
+     "cistitis",
+     "infeccion urinaria",
+     "itu"
+    ],
+    "nota": "Infección urinaria baja, más frecuente en mujeres."
+   },
+   {
+    "nombre": "Cáncer de vejiga",
+    "claves": [
+     "cancer de vejiga",
+     "carcinoma urotelial"
+    ],
+    "nota": "Hematuria indolora; asociado al tabaco."
+   },
+   {
+    "nombre": "Vejiga neurogénica",
+    "claves": [
+     "vejiga neurogenica",
+     "incontinencia",
+     "retencion"
+    ],
+    "nota": "Alteración del control por lesión neurológica."
+   }
+  ],
+  "dato": "El músculo detrusor la vacía por estímulo parasimpático (nervios esplácnicos pélvicos S2–S4)."
+ },
+ {
+  "id": "utero",
+  "nombres": [
+   "Útero"
+  ],
+  "funcion": "Órgano muscular donde se implanta el embrión y se desarrolla el feto; su endometrio se descama en la menstruación y sus contracciones expulsan al feto.",
+  "conceptos": [
+   [
+    "embarazo",
+    "gestacion",
+    "feto",
+    "embrion",
+    "implant",
+    "bebe"
+   ],
+   [
+    "menstruacion",
+    "endometrio"
+   ],
+   [
+    "contrac",
+    "parto",
+    "expuls"
+   ]
+  ],
+  "enfermedades": [
+   {
+    "nombre": "Miomas uterinos",
+    "claves": [
+     "miomas",
+     "mioma",
+     "leiomioma",
+     "fibroma"
+    ],
+    "nota": "Tumores benignos de músculo liso muy frecuentes."
+   },
+   {
+    "nombre": "Endometriosis",
+    "claves": [
+     "endometriosis"
+    ],
+    "nota": "Tejido endometrial fuera del útero; dolor pélvico e infertilidad."
+   },
+   {
+    "nombre": "Cáncer de endometrio",
+    "claves": [
+     "cancer de endometrio",
+     "cancer de utero"
+    ],
+    "nota": "El sangrado posmenopáusico es el síntoma típico."
+   }
+  ],
+  "dato": "Partes: fondo, cuerpo, istmo y cuello. Posición habitual: anteversión y anteflexión. Irrigado por las arterias uterinas."
+ },
+ {
+  "id": "cuello_utero",
+  "nombres": [
+   "Cuello del útero"
+  ],
+  "funcion": "Porción inferior del útero que comunica con la vagina; produce moco y se dilata durante el parto.",
+  "conceptos": [
+   [
+    "comunica",
+    "une",
+    "conecta"
+   ],
+   [
+    "vagina"
+   ],
+   [
+    "moco",
+    "dilata",
+    "parto"
+   ]
+  ],
+  "enfermedades": [
+   {
+    "nombre": "Cáncer de cuello uterino",
+    "claves": [
+     "cancer de cuello uterino",
+     "cancer cervicouterino",
+     "cancer de cervix"
+    ],
+    "nota": "Causado por el virus del papiloma humano; se previene con vacuna y citología."
+   },
+   {
+    "nombre": "Insuficiencia cervical",
+    "claves": [
+     "insuficiencia cervical",
+     "incompetencia cervical"
+    ],
+    "nota": "Dilatación indolora que causa pérdidas gestacionales del segundo trimestre."
+   },
+   {
+    "nombre": "Cervicitis",
+    "claves": [
+     "cervicitis"
+    ],
+    "nota": "Inflamación, a menudo por clamidia o gonorrea."
+   }
+  ],
+  "dato": "La zona de transformación (unión escamocolumnar) es donde se originan las lesiones por VPH y donde se toma la citología."
+ },
+ {
+  "id": "ovario",
+  "nombres": [
+   "Ovario",
+   "Ovario derecho",
+   "Ovario izquierdo"
+  ],
+  "funcion": "Gónada femenina: produce los óvulos y las hormonas sexuales estrógenos y progesterona.",
+  "conceptos": [
+   [
+    "produce",
+    "forma",
+    "libera"
+   ],
+   [
+    "ovulo",
+    "ovocito",
+    "gameto",
+    "ovulacion"
+   ],
+   [
+    "hormona",
+    "estrogeno",
+    "progesterona"
+   ]
+  ],
+  "enfermedades": [
+   {
+    "nombre": "Quiste de ovario",
+    "claves": [
+     "quiste",
+     "quiste ovarico"
+    ],
+    "nota": "Frecuentes y generalmente benignos (funcionales)."
+   },
+   {
+    "nombre": "Síndrome de ovario poliquístico",
+    "claves": [
+     "ovario poliquistico",
+     "sop",
+     "sopq"
+    ],
+    "nota": "Anovulación, hiperandrogenismo y ovarios con múltiples folículos."
+   },
+   {
+    "nombre": "Torsión ovárica",
+    "claves": [
+     "torsion ovarica",
+     "torsion"
+    ],
+    "nota": "Urgencia con dolor pélvico agudo."
+   },
+   {
+    "nombre": "Cáncer de ovario",
+    "claves": [
+     "cancer de ovario"
+    ],
+    "nota": "Suele diagnosticarse tarde por síntomas inespecíficos."
+   }
+  ],
+  "dato": "Su arteria ovárica nace de la aorta y llega por el ligamento suspensorio del ovario. La vena ovárica derecha drena a la cava y la izquierda a la renal izquierda."
+ },
+ {
+  "id": "trompa_uterina",
+  "nombres": [
+   "Trompa uterina derecha",
+   "Trompa uterina izquierda"
+  ],
+  "funcion": "Capta el óvulo liberado por el ovario y lo transporta hacia el útero; en ella ocurre la fecundación.",
+  "conceptos": [
+   [
+    "capta",
+    "transport",
+    "lleva",
+    "conduce"
+   ],
+   [
+    "ovulo",
+    "ovocito"
+   ],
+   [
+    "fecundacion",
+    "fertilizacion",
+    "espermatozoide"
+   ],
+   [
+    "utero"
+   ]
+  ],
+  "enfermedades": [
+   {
+    "nombre": "Embarazo ectópico",
+    "claves": [
+     "embarazo ectopico",
+     "ectopico"
+    ],
+    "nota": "Implantación fuera del útero, sobre todo en la trompa; riesgo de rotura y hemorragia."
+   },
+   {
+    "nombre": "Salpingitis / enfermedad inflamatoria pélvica",
+    "claves": [
+     "salpingitis",
+     "enfermedad inflamatoria pelvica",
+     "epi"
+    ],
+    "nota": "Infección (clamidia, gonorrea) que puede causar infertilidad."
+   }
+  ],
+  "dato": "Partes: infundíbulo con fimbrias, ampolla, istmo y porción uterina. Está en el borde superior del ligamento ancho (mesosálpinx)."
+ },
+ {
+  "id": "vagina",
+  "nombres": [
+   "Vagina"
+  ],
+  "funcion": "Conducto fibromuscular que comunica el útero con el exterior; recibe el pene en el coito y forma el canal del parto.",
+  "conceptos": [
+   [
+    "conducto",
+    "canal",
+    "comunica"
+   ],
+   [
+    "utero",
+    "exterior"
+   ],
+   [
+    "coito",
+    "relacion sexual",
+    "parto",
+    "menstruacion"
+   ]
+  ],
+  "enfermedades": [
+   {
+    "nombre": "Vaginitis / vaginosis",
+    "claves": [
+     "vaginitis",
+     "vaginosis",
+     "candidiasis",
+     "tricomoniasis"
+    ],
+    "nota": "Infecciones con flujo anormal."
+   },
+   {
+    "nombre": "Prolapso genital",
+    "claves": [
+     "prolapso",
+     "cistocele",
+     "rectocele"
+    ],
+    "nota": "Descenso de órganos pélvicos hacia la vagina."
+   }
+  ],
+  "dato": "Su fondo de saco posterior se relaciona con el fondo de saco rectouterino (de Douglas), el punto más bajo de la cavidad peritoneal femenina."
+ },
+ {
+  "id": "glandula_mamaria",
+  "nombres": [
+   "Glándula mamaria derecha",
+   "Glándula mamaria izquierda"
+  ],
+  "funcion": "Produce y secreta leche para alimentar al recién nacido (lactancia).",
+  "conceptos": [
+   [
+    "produce",
+    "secreta"
+   ],
+   [
+    "leche"
+   ],
+   [
+    "lactancia",
+    "amamantar",
+    "bebe",
+    "recien nacido"
+   ]
+  ],
+  "enfermedades": [
+   {
+    "nombre": "Cáncer de mama",
+    "claves": [
+     "cancer de mama",
+     "carcinoma mamario"
+    ],
+    "nota": "Cáncer más frecuente en mujeres; más común en el cuadrante superoexterno."
+   },
+   {
+    "nombre": "Mastitis",
+    "claves": [
+     "mastitis"
+    ],
+    "nota": "Inflamación o infección, frecuente en la lactancia."
+   },
+   {
+    "nombre": "Fibroadenoma",
+    "claves": [
+     "fibroadenoma"
+    ],
+    "nota": "Tumor benigno móvil frecuente en mujeres jóvenes."
+   }
+  ],
+  "dato": "Cerca del 75% de su linfa drena a los ganglios axilares. La retracción del pezón o la piel de naranja sugieren cáncer."
+ },
+ {
+  "id": "placenta",
+  "nombres": [
+   "Placenta a término"
+  ],
+  "funcion": "Órgano temporal del embarazo que permite el intercambio de oxígeno, nutrientes y desechos entre madre y feto, y produce hormonas.",
+  "conceptos": [
+   [
+    "intercambio",
+    "transfiere",
+    "nutre",
+    "alimenta"
+   ],
+   [
+    "oxigeno",
+    "nutrientes",
+    "desechos"
+   ],
+   [
+    "madre",
+    "feto",
+    "bebe"
+   ],
+   [
+    "hormona",
+    "hcg",
+    "progesterona"
+   ]
+  ],
+  "enfermedades": [
+   {
+    "nombre": "Placenta previa",
+    "claves": [
+     "placenta previa"
+    ],
+    "nota": "Inserción sobre o cerca del orificio cervical; sangrado indoloro en el tercer trimestre."
+   },
+   {
+    "nombre": "Desprendimiento prematuro de placenta",
+    "claves": [
+     "desprendimiento",
+     "abruptio",
+     "dppni"
+    ],
+    "nota": "Separación antes del parto con sangrado doloroso."
+   },
+   {
+    "nombre": "Preeclampsia",
+    "claves": [
+     "preeclampsia"
+    ],
+    "nota": "Hipertensión del embarazo relacionada con placentación anormal."
+   }
+  ],
+  "dato": "Al término pesa unos 500 g; el cordón umbilical normal tiene dos arterias y una vena."
+ },
+ {
+  "id": "prostata",
+  "nombres": [
+   "Próstata"
+  ],
+  "funcion": "Glándula masculina que rodea la uretra y produce parte del líquido seminal que nutre y protege a los espermatozoides.",
+  "conceptos": [
+   [
+    "produce",
+    "secreta"
+   ],
+   [
+    "liquido seminal",
+    "semen",
+    "secrecion"
+   ],
+   [
+    "espermatozoides",
+    "nutre"
+   ],
+   [
+    "uretra",
+    "rodea"
+   ]
+  ],
+  "enfermedades": [
+   {
+    "nombre": "Hiperplasia prostática benigna",
+    "claves": [
+     "hiperplasia prostatica",
+     "hpb",
+     "crecimiento prostatico"
+    ],
+    "nota": "Crecimiento de la zona de transición que dificulta la micción en mayores."
+   },
+   {
+    "nombre": "Cáncer de próstata",
+    "claves": [
+     "cancer de prostata",
+     "adenocarcinoma"
+    ],
+    "nota": "Frecuente en varones mayores; nace sobre todo en la zona periférica, palpable al tacto rectal."
+   },
+   {
+    "nombre": "Prostatitis",
+    "claves": [
+     "prostatitis"
+    ],
+    "nota": "Inflamación o infección prostática."
+   }
+  ],
+  "dato": "Se palpa por tacto rectal; el antígeno prostático específico (PSA) se usa en su evaluación."
+ },
+ {
+  "id": "testiculo",
+  "nombres": [
+   "Testículo"
+  ],
+  "funcion": "Gónada masculina: produce los espermatozoides y la testosterona.",
+  "conceptos": [
+   [
+    "produce",
+    "forma"
+   ],
+   [
+    "espermatozoides",
+    "esperma",
+    "gametos"
+   ],
+   [
+    "testosterona",
+    "hormona",
+    "androgeno"
+   ]
+  ],
+  "enfermedades": [
+   {
+    "nombre": "Torsión testicular",
+    "claves": [
+     "torsion testicular",
+     "torsion"
+    ],
+    "nota": "Urgencia: dolor escrotal agudo; hay que operar en pocas horas."
+   },
+   {
+    "nombre": "Cáncer de testículo",
+    "claves": [
+     "cancer de testiculo",
+     "seminoma"
+    ],
+    "nota": "Cáncer sólido más frecuente en varones jóvenes."
+   },
+   {
+    "nombre": "Criptorquidia",
+    "claves": [
+     "criptorquidia",
+     "testiculo no descendido"
+    ],
+    "nota": "Testículo no descendido; aumenta el riesgo de infertilidad y cáncer."
+   }
+  ],
+  "dato": "Su arteria testicular nace de la aorta; su linfa drena a ganglios lumbares (paraaórticos), no a los inguinales."
+ },
+ {
+  "id": "encefalo",
+  "nombres": [
+   "Encéfalo"
+  ],
+  "funcion": "Centro de control del sistema nervioso: procesa información sensitiva, dirige el movimiento y sostiene pensamiento, memoria y emociones.",
+  "conceptos": [
+   [
+    "control",
+    "dirige",
+    "procesa",
+    "integra",
+    "coordina"
+   ],
+   [
+    "sensit",
+    "sentidos",
+    "informacion"
+   ],
+   [
+    "movimiento",
+    "motor"
+   ],
+   [
+    "pensamiento",
+    "memoria",
+    "emocion",
+    "conciencia"
+   ]
+  ],
+  "enfermedades": [
+   {
+    "nombre": "Accidente cerebrovascular",
+    "claves": [
+     "acv",
+     "ictus",
+     "derrame",
+     "ecv",
+     "ataque cerebrovascular"
+    ],
+    "nota": "Isquemia o hemorragia que causa déficit neurológico súbito."
+   },
+   {
+    "nombre": "Enfermedad de Alzheimer",
+    "claves": [
+     "alzheimer",
+     "demencia"
+    ],
+    "nota": "Demencia neurodegenerativa más frecuente."
+   },
+   {
+    "nombre": "Epilepsia",
+    "claves": [
+     "epilepsia",
+     "convulsiones"
+    ],
+    "nota": "Crisis recurrentes por descargas neuronales anormales."
+   },
+   {
+    "nombre": "Traumatismo craneoencefálico",
+    "claves": [
+     "tce",
+     "traumatismo craneoencefalico",
+     "conmocion"
+    ],
+    "nota": "Lesión cerebral por golpe."
+   }
+  ],
+  "dato": "Comprende cerebro, cerebelo y tronco encefálico; lo irrigan las carótidas internas y las vertebrales (polígono de Willis)."
+ },
+ {
+  "id": "cerebelo",
+  "nombres": [
+   "Cerebelo"
+  ],
+  "funcion": "Coordina el movimiento, el equilibrio y el tono muscular, y participa en el aprendizaje motor.",
+  "conceptos": [
+   [
+    "coordina",
+    "coordinacion",
+    "ajusta"
+   ],
+   [
+    "movimiento",
+    "motor"
+   ],
+   [
+    "equilibrio",
+    "postura",
+    "tono"
+   ]
+  ],
+  "enfermedades": [
+   {
+    "nombre": "Ataxia cerebelosa",
+    "claves": [
+     "ataxia"
+    ],
+    "nota": "Marcha inestable y descoordinación; puede deberse a alcohol, ictus o tumores."
+   },
+   {
+    "nombre": "Ictus cerebeloso",
+    "claves": [
+     "ictus",
+     "acv",
+     "infarto cerebeloso"
+    ],
+    "nota": "Vértigo, vómitos y ataxia; puede comprimir el tronco."
+   },
+   {
+    "nombre": "Meduloblastoma",
+    "claves": [
+     "meduloblastoma",
+     "tumor"
+    ],
+    "nota": "Tumor maligno cerebeloso frecuente en niños."
+   }
+  ],
+  "dato": "Las lesiones de un hemisferio cerebeloso producen síntomas del mismo lado (ipsilaterales)."
+ },
+ {
+  "id": "bulbo_raquideo",
+  "nombres": [
+   "Bulbo raquídeo"
+  ],
+  "funcion": "Parte inferior del tronco encefálico; controla funciones vitales como la respiración, la frecuencia cardíaca y la presión arterial.",
+  "conceptos": [
+   [
+    "control",
+    "regula"
+   ],
+   [
+    "respiracion",
+    "respir"
+   ],
+   [
+    "corazon",
+    "cardiac",
+    "frecuencia",
+    "presion"
+   ],
+   [
+    "vital",
+    "reflejos",
+    "tragar",
+    "vomito"
+   ]
+  ],
+  "enfermedades": [
+   {
+    "nombre": "Herniación amigdalina",
+    "claves": [
+     "herniacion",
+     "enclavamiento",
+     "conificacion"
+    ],
+    "nota": "Compresión del bulbo por hipertensión intracraneal; causa paro respiratorio."
+   },
+   {
+    "nombre": "Síndrome bulbar lateral (Wallenberg)",
+    "claves": [
+     "wallenberg",
+     "sindrome bulbar lateral",
+     "ictus"
+    ],
+    "nota": "Infarto por oclusión de la vertebral o la cerebelosa posteroinferior."
+   }
+  ],
+  "dato": "En sus pirámides se cruzan la mayoría de las fibras corticoespinales (decusación piramidal); contiene núcleos de los nervios IX, X y XII."
+ },
+ {
+  "id": "puente",
+  "nombres": [
+   "Puente troncoencefálico"
+  ],
+  "funcion": "Porción media del tronco encefálico; conecta el cerebro con el cerebelo y participa en el control de la respiración y el sueño.",
+  "conceptos": [
+   [
+    "conecta",
+    "comunica",
+    "relevo",
+    "une"
+   ],
+   [
+    "cerebro",
+    "cerebelo",
+    "medula"
+   ],
+   [
+    "respiracion",
+    "sueno"
+   ]
+  ],
+  "enfermedades": [
+   {
+    "nombre": "Síndrome de enclaustramiento",
+    "claves": [
+     "enclaustramiento",
+     "locked in",
+     "infarto",
+     "ictus"
+    ],
+    "nota": "Infarto de la base del puente: tetraplejia con conciencia conservada."
+   },
+   {
+    "nombre": "Mielinólisis pontina central",
+    "claves": [
+     "mielinolisis",
+     "desmielinizacion osmotica"
+    ],
+    "nota": "Por corrección demasiado rápida de una hiponatremia."
+   }
+  ],
+  "dato": "Contiene núcleos de los nervios V, VI, VII y VIII; lo irriga la arteria basilar."
+ },
+ {
+  "id": "mesencefalo",
+  "nombres": [
+   "Mesencéfalo"
+  ],
+  "funcion": "Porción superior del tronco encefálico; participa en reflejos visuales y auditivos, movimientos oculares y control motor (sustancia negra).",
+  "conceptos": [
+   [
+    "reflejo",
+    "visual",
+    "auditivo",
+    "ojo",
+    "ocular"
+   ],
+   [
+    "movimiento",
+    "motor"
+   ],
+   [
+    "sustancia negra",
+    "dopamina"
+   ]
+  ],
+  "enfermedades": [
+   {
+    "nombre": "Enfermedad de Parkinson",
+    "claves": [
+     "parkinson"
+    ],
+    "nota": "Pérdida de neuronas dopaminérgicas de la sustancia negra."
+   },
+   {
+    "nombre": "Herniación transtentorial",
+    "claves": [
+     "herniacion",
+     "uncal"
+    ],
+    "nota": "Compresión del mesencéfalo y del nervio oculomotor; pupila dilatada."
+   }
+  ],
+  "dato": "Contiene los núcleos de los nervios III y IV; el acueducto mesencefálico une el tercer y cuarto ventrículos."
+ },
+ {
+  "id": "cuerpo_calloso",
+  "nombres": [
+   "Cuerpo calloso"
+  ],
+  "funcion": "Gran haz de fibras que conecta los dos hemisferios cerebrales y permite que intercambien información.",
+  "conceptos": [
+   [
+    "conecta",
+    "comunica",
+    "une",
+    "puente"
+   ],
+   [
+    "hemisferio",
+    "izquierdo",
+    "derecho"
+   ],
+   [
+    "informacion",
+    "fibras"
+   ]
+  ],
+  "enfermedades": [
+   {
+    "nombre": "Agenesia del cuerpo calloso",
+    "claves": [
+     "agenesia"
+    ],
+    "nota": "Malformación congénita, a veces asintomática."
+   },
+   {
+    "nombre": "Síndrome de desconexión",
+    "claves": [
+     "desconexion",
+     "callosotomia",
+     "cerebro dividido"
+    ],
+    "nota": "Tras sección quirúrgica; los hemisferios no comparten información."
+   }
+  ],
+  "dato": "Es la mayor comisura cerebral; partes: rostro, rodilla, tronco y esplenio. Lo irrigan sobre todo las arterias cerebrales anteriores."
+ },
+ {
+  "id": "talamo",
+  "nombres": [
+   "Tálamo"
+  ],
+  "funcion": "Estación de relevo que recibe casi toda la información sensitiva (excepto el olfato) y la envía a la corteza; también interviene en alerta y movimiento.",
+  "conceptos": [
+   [
+    "relevo",
+    "estacion",
+    "filtra",
+    "transmite",
+    "envia"
+   ],
+   [
+    "sensit",
+    "sensorial",
+    "informacion",
+    "sentidos"
+   ],
+   [
+    "corteza"
+   ],
+   [
+    "alerta",
+    "conciencia",
+    "motor"
+   ]
+  ],
+  "enfermedades": [
+   {
+    "nombre": "Síndrome talámico",
+    "claves": [
+     "infarto talamico",
+     "ictus",
+     "dolor talamico",
+     "dejerine roussy"
+    ],
+    "nota": "Pérdida sensitiva contralateral y a veces dolor central tras un infarto."
+   },
+   {
+    "nombre": "Hemorragia talámica",
+    "claves": [
+     "hemorragia",
+     "acv hemorragico"
+    ],
+    "nota": "Sitio frecuente de hemorragia hipertensiva."
+   }
+  ],
+  "dato": "Forma las paredes laterales del tercer ventrículo; núcleos clave: ventral posterolateral (cuerpo), ventral posteromedial (cara), geniculados lateral (visión) y medial (audición)."
+ },
+ {
+  "id": "hipocampo",
+  "nombres": [
+   "Hipocampo"
+  ],
+  "funcion": "Estructura del sistema límbico esencial para formar nuevas memorias y para la orientación espacial.",
+  "conceptos": [
+   [
+    "memoria",
+    "recuerdo",
+    "aprendizaje"
+   ],
+   [
+    "nueva",
+    "formar",
+    "consolida"
+   ],
+   [
+    "espacial",
+    "orientacion"
+   ]
+  ],
+  "enfermedades": [
+   {
+    "nombre": "Enfermedad de Alzheimer",
+    "claves": [
+     "alzheimer",
+     "demencia"
+    ],
+    "nota": "Una de las primeras áreas en atrofiarse."
+   },
+   {
+    "nombre": "Epilepsia del lóbulo temporal",
+    "claves": [
+     "epilepsia",
+     "esclerosis mesial",
+     "esclerosis del hipocampo"
+    ],
+    "nota": "La esclerosis hipocampal es causa frecuente."
+   },
+   {
+    "nombre": "Amnesia anterógrada",
+    "claves": [
+     "amnesia"
+    ],
+    "nota": "Incapacidad de formar recuerdos nuevos tras lesión bilateral."
+   }
+  ],
+  "dato": "Está en el lóbulo temporal medial, en el suelo del asta inferior del ventrículo lateral; su principal vía de salida es el fórnix."
+ },
+ {
+  "id": "putamen",
+  "nombres": [
+   "Putamen"
+  ],
+  "funcion": "Núcleo basal que, con el caudado (estriado), regula el inicio y la ejecución de los movimientos.",
+  "conceptos": [
+   [
+    "movimiento",
+    "motor",
+    "control"
+   ],
+   [
+    "regula",
+    "inicia",
+    "ejecuta"
+   ],
+   [
+    "estriado",
+    "ganglios basales"
+   ]
+  ],
+  "enfermedades": [
+   {
+    "nombre": "Enfermedad de Parkinson",
+    "claves": [
+     "parkinson"
+    ],
+    "nota": "Falta de dopamina en el estriado procedente de la sustancia negra."
+   },
+   {
+    "nombre": "Hemorragia putaminal",
+    "claves": [
+     "hemorragia",
+     "acv hemorragico",
+     "hipertension"
+    ],
+    "nota": "Localización más frecuente de hemorragia hipertensiva."
+   }
+  ],
+  "dato": "Junto con el globo pálido forma el núcleo lenticular; está lateral a la cápsula interna."
+ },
+ {
+  "id": "capsula_interna",
+  "nombres": [
+   "Capsula interna"
+  ],
+  "funcion": "Haz de sustancia blanca por donde pasan las vías motoras y sensitivas entre la corteza y el tronco encefálico o la médula.",
+  "conceptos": [
+   [
+    "fibras",
+    "vias",
+    "haz",
+    "sustancia blanca"
+   ],
+   [
+    "motora",
+    "motor",
+    "sensitiva",
+    "corticoespinal"
+   ],
+   [
+    "corteza",
+    "medula",
+    "tronco"
+   ]
+  ],
+  "enfermedades": [
+   {
+    "nombre": "Infarto lacunar",
+    "claves": [
+     "infarto lacunar",
+     "lacunar",
+     "ictus",
+     "acv"
+    ],
+    "nota": "Un infarto pequeño puede causar hemiplejia contralateral pura."
+   },
+   {
+    "nombre": "Hemorragia capsular",
+    "claves": [
+     "hemorragia",
+     "acv hemorragico"
+    ],
+    "nota": "Hemorragia hipertensiva con hemiplejia contralateral."
+   }
+  ],
+  "dato": "La vía corticoespinal pasa por el brazo posterior; la irrigan ramas lenticuloestriadas de la cerebral media."
+ },
+ {
+  "id": "giro_precentral",
+  "nombres": [
+   "Giro precentral",
+   "Corteza motora primaria"
+  ],
+  "funcion": "Corteza motora primaria: inicia los movimientos voluntarios del lado opuesto del cuerpo.",
+  "conceptos": [
+   [
+    "motor",
+    "motora",
+    "movimiento"
+   ],
+   [
+    "voluntario",
+    "inicia",
+    "controla"
+   ],
+   [
+    "opuesto",
+    "contralateral"
+   ]
+  ],
+  "enfermedades": [
+   {
+    "nombre": "Hemiparesia por ictus",
+    "claves": [
+     "hemiparesia",
+     "hemiplejia",
+     "ictus",
+     "acv"
+    ],
+    "nota": "Debilidad del lado contrario del cuerpo."
+   },
+   {
+    "nombre": "Crisis motoras focales",
+    "claves": [
+     "epilepsia",
+     "convulsion",
+     "jacksoniana"
+    ],
+    "nota": "Movimientos que pueden progresar por el cuerpo (marcha jacksoniana)."
+   }
+  ],
+  "dato": "Organizada como homúnculo motor: cara y mano ocupan mucho espacio; la pierna está en la cara medial (arteria cerebral anterior)."
+ },
+ {
+  "id": "giro_poscentral",
+  "nombres": [
+   "Giro poscentral"
+  ],
+  "funcion": "Corteza somatosensorial primaria: percibe tacto, dolor, temperatura y posición del lado opuesto del cuerpo.",
+  "conceptos": [
+   [
+    "sensitiv",
+    "sensorial",
+    "percibe",
+    "sensacion"
+   ],
+   [
+    "tacto",
+    "dolor",
+    "temperatura",
+    "posicion"
+   ],
+   [
+    "opuesto",
+    "contralateral"
+   ]
+  ],
+  "enfermedades": [
+   {
+    "nombre": "Hipoestesia contralateral por ictus",
+    "claves": [
+     "hipoestesia",
+     "perdida sensitiva",
+     "ictus",
+     "acv"
+    ],
+    "nota": "Pérdida de sensibilidad del lado opuesto."
+   },
+   {
+    "nombre": "Crisis sensitivas focales",
+    "claves": [
+     "epilepsia",
+     "crisis sensitiva",
+     "parestesias"
+    ],
+    "nota": "Hormigueo que puede extenderse por el cuerpo según el homúnculo."
+   }
+  ],
+  "dato": "Organizada como homúnculo sensitivo; está detrás del surco central, en el lóbulo parietal."
+ },
+ {
+  "id": "giro_frontal_inferior",
+  "nombres": [
+   "Giro frontal inferior"
+  ],
+  "funcion": "En el hemisferio dominante (habitualmente el izquierdo) contiene el área de Broca, responsable de la producción del lenguaje.",
+  "conceptos": [
+   [
+    "lenguaje",
+    "habla",
+    "expresion"
+   ],
+   [
+    "produccion",
+    "produce",
+    "articula"
+   ],
+   [
+    "broca"
+   ]
+  ],
+  "enfermedades": [
+   {
+    "nombre": "Afasia de Broca",
+    "claves": [
+     "afasia de broca",
+     "afasia motora",
+     "afasia expresiva",
+     "afasia"
+    ],
+    "nota": "Habla no fluida y laboriosa con comprensión relativamente conservada."
+   },
+   {
+    "nombre": "Ictus de la arteria cerebral media izquierda",
+    "claves": [
+     "ictus",
+     "acv",
+     "infarto"
+    ],
+    "nota": "Causa más frecuente de afasia de Broca, a menudo con hemiparesia derecha."
+   }
+  ],
+  "dato": "El área de Broca corresponde a sus partes opercular y triangular; la irriga la división superior de la cerebral media."
+ },
+ {
+  "id": "lobulo_occipital",
+  "nombres": [
+   "Lóbulo occipital"
+  ],
+  "funcion": "Contiene la corteza visual: recibe y procesa la información visual.",
+  "conceptos": [
+   [
+    "visual",
+    "vision",
+    "ver"
+   ],
+   [
+    "recibe",
+    "procesa",
+    "interpreta"
+   ],
+   [
+    "imagen",
+    "ojos"
+   ]
+  ],
+  "enfermedades": [
+   {
+    "nombre": "Hemianopsia homónima con respeto macular",
+    "claves": [
+     "hemianopsia",
+     "hemianopsia homonima",
+     "ictus",
+     "acv"
+    ],
+    "nota": "Por infarto de la arteria cerebral posterior."
+   },
+   {
+    "nombre": "Ceguera cortical",
+    "claves": [
+     "ceguera cortical"
+    ],
+    "nota": "Lesión bilateral de la corteza visual."
+   }
+  ],
+  "dato": "La corteza visual primaria rodea el surco calcarino; la irriga la arteria cerebral posterior."
+ },
+ {
+  "id": "ventriculo_lateral",
+  "nombres": [
+   "Ventrículo lateral"
+  ],
+  "funcion": "Cavidad dentro de cada hemisferio cerebral donde los plexos coroideos producen líquido cefalorraquídeo.",
+  "conceptos": [
+   [
+    "cavidad",
+    "espacio"
+   ],
+   [
+    "liquido cefalorraquideo",
+    "lcr",
+    "produce"
+   ],
+   [
+    "plexo coroideo",
+    "hemisferio"
+   ]
+  ],
+  "enfermedades": [
+   {
+    "nombre": "Hidrocefalia",
+    "claves": [
+     "hidrocefalia"
+    ],
+    "nota": "Acumulación de LCR con dilatación ventricular."
+   },
+   {
+    "nombre": "Hemorragia intraventricular",
+    "claves": [
+     "hemorragia intraventricular",
+     "hemorragia"
+    ],
+    "nota": "Frecuente en prematuros."
+   }
+  ],
+  "dato": "Partes: asta anterior, cuerpo, atrio, asta posterior y asta inferior; comunica con el tercer ventrículo por el foramen interventricular (de Monro)."
+ },
+ {
+  "id": "tracto_optico",
+  "nombres": [
+   "Tracto óptico"
+  ],
+  "funcion": "Lleva la información visual desde el quiasma óptico hasta el cuerpo geniculado lateral del tálamo.",
+  "conceptos": [
+   [
+    "lleva",
+    "conduce",
+    "transmite",
+    "via"
+   ],
+   [
+    "visual",
+    "vision"
+   ],
+   [
+    "quiasma",
+    "geniculado",
+    "talamo"
+   ]
+  ],
+  "enfermedades": [
+   {
+    "nombre": "Hemianopsia homónima contralateral",
+    "claves": [
+     "hemianopsia",
+     "hemianopsia homonima"
+    ],
+    "nota": "Pérdida de la misma mitad del campo visual en ambos ojos."
+   },
+   {
+    "nombre": "Ictus o tumor de la vía óptica",
+    "claves": [
+     "ictus",
+     "acv",
+     "tumor"
+    ],
+    "nota": "Lesiones vasculares o tumorales detrás del quiasma pueden afectar el tracto."
+   }
+  ],
+  "dato": "Contiene fibras de la retina temporal ipsilateral y de la retina nasal contralateral."
+ },
+ {
+  "id": "medula_espinal",
+  "nombres": [
+   "Médula espinal"
+  ],
+  "funcion": "Conduce señales entre encéfalo y cuerpo (vías sensitivas y motoras) y coordina reflejos espinales.",
+  "conceptos": [
+   [
+    "conduce",
+    "transmite",
+    "comunica",
+    "lleva"
+   ],
+   [
+    "senales",
+    "impulsos",
+    "informacion",
+    "motor",
+    "sensit"
+   ],
+   [
+    "encefalo",
+    "cerebro",
+    "cuerpo"
+   ],
+   [
+    "reflejo"
+   ]
+  ],
+  "enfermedades": [
+   {
+    "nombre": "Lesión medular",
+    "claves": [
+     "lesion medular",
+     "trauma raquimedular",
+     "paraplejia",
+     "tetraplejia",
+     "cuadriplejia"
+    ],
+    "nota": "Pérdida motora y sensitiva por debajo del nivel lesionado."
+   },
+   {
+    "nombre": "Esclerosis múltiple",
+    "claves": [
+     "esclerosis multiple"
+    ],
+    "nota": "Desmielinización del sistema nervioso central."
+   },
+   {
+    "nombre": "Espina bífida",
+    "claves": [
+     "espina bifida",
+     "mielomeningocele"
+    ],
+    "nota": "Defecto del cierre del tubo neural; se previene con ácido fólico."
+   }
+  ],
+  "dato": "En el adulto termina como cono medular a nivel L1–L2; por eso la punción lumbar se hace en L3–L4 o L4–L5."
+ },
+ {
+  "id": "ojo",
+  "nombres": [
+   "Ojo derecho",
+   "Ojo izquierdo"
+  ],
+  "funcion": "Órgano de la visión: enfoca la luz sobre la retina, que la transforma en impulsos nerviosos enviados al encéfalo por el nervio óptico.",
+  "conceptos": [
+   [
+    "vision",
+    "ver",
+    "visual"
+   ],
+   [
+    "luz",
+    "enfoca",
+    "imagen"
+   ],
+   [
+    "retina",
+    "nervio optico",
+    "impulso",
+    "cerebro"
+   ]
+  ],
+  "enfermedades": [
+   {
+    "nombre": "Glaucoma",
+    "claves": [
+     "glaucoma"
+    ],
+    "nota": "Daño del nervio óptico, a menudo por presión intraocular alta."
+   },
+   {
+    "nombre": "Catarata",
+    "claves": [
+     "catarata"
+    ],
+    "nota": "Opacificación del cristalino."
+   },
+   {
+    "nombre": "Retinopatía diabética",
+    "claves": [
+     "retinopatia diabetica",
+     "retinopatia"
+    ],
+    "nota": "Causa importante de ceguera en adultos."
+   },
+   {
+    "nombre": "Desprendimiento de retina",
+    "claves": [
+     "desprendimiento de retina"
+    ],
+    "nota": "Urgencia: destellos, moscas volantes y 'cortina' visual."
+   }
+  ],
+  "dato": "Músculos extraoculares: el recto lateral lo inerva el VI, el oblicuo superior el IV y el resto el III."
+ },
+ {
+  "id": "timo",
+  "nombres": [
+   "Timo",
+   "Lóbulo del timo"
+  ],
+  "funcion": "Órgano linfoide primario donde maduran los linfocitos T; es grande en la infancia y se atrofia en el adulto.",
+  "conceptos": [
+   [
+    "madura",
+    "maduracion",
+    "diferencia",
+    "educa"
+   ],
+   [
+    "linfocitos t",
+    "linfocitos",
+    "celulas t"
+   ],
+   [
+    "inmun",
+    "defensa"
+   ]
+  ],
+  "enfermedades": [
+   {
+    "nombre": "Timoma",
+    "claves": [
+     "timoma",
+     "tumor"
+    ],
+    "nota": "Tumor del mediastino anterior asociado a miastenia gravis."
+   },
+   {
+    "nombre": "Síndrome de DiGeorge",
+    "claves": [
+     "digeorge",
+     "aplasia timica"
+    ],
+    "nota": "Ausencia o hipoplasia del timo con inmunodeficiencia de células T."
+   }
+  ],
+  "dato": "Está en el mediastino anterosuperior, detrás del esternón."
+ },
+ {
+  "id": "piel",
+  "nombres": [
+   "Piel"
+  ],
+  "funcion": "Órgano más extenso: protege frente a agresiones y microbios, regula la temperatura, percibe estímulos y sintetiza vitamina D.",
+  "conceptos": [
+   [
+    "protege",
+    "barrera",
+    "defensa"
+   ],
+   [
+    "temperatura",
+    "termorregul",
+    "sudor"
+   ],
+   [
+    "sensacion",
+    "tacto",
+    "sensibil"
+   ],
+   [
+    "vitamina d"
+   ]
+  ],
+  "enfermedades": [
+   {
+    "nombre": "Melanoma",
+    "claves": [
+     "melanoma"
+    ],
+    "nota": "Cáncer de piel más agresivo; regla ABCDE."
+   },
+   {
+    "nombre": "Quemaduras",
+    "claves": [
+     "quemadura",
+     "quemaduras"
+    ],
+    "nota": "Se clasifican por profundidad y superficie afectada."
+   },
+   {
+    "nombre": "Dermatitis atópica",
+    "claves": [
+     "dermatitis",
+     "eccema"
+    ],
+    "nota": "Inflamación crónica con prurito."
+   }
+  ],
+  "dato": "Capas: epidermis, dermis e hipodermis; el carcinoma basocelular es el cáncer de piel más frecuente."
+ },
+ {
+  "id": "femur",
+  "nombres": [
+   "Hueso Fémur"
+  ],
+  "funcion": "Hueso más largo y fuerte del cuerpo; soporta el peso y sirve de palanca para la marcha.",
+  "conceptos": [
+   [
+    "soporta",
+    "sosten",
+    "carga",
+    "peso"
+   ],
+   [
+    "marcha",
+    "caminar",
+    "locomocion",
+    "movimiento"
+   ],
+   [
+    "largo",
+    "fuerte",
+    "muslo"
+   ]
+  ],
+  "enfermedades": [
+   {
+    "nombre": "Fractura de cadera (cuello femoral)",
+    "claves": [
+     "fractura de cadera",
+     "fractura de cuello femoral",
+     "fractura"
+    ],
+    "nota": "Típica en ancianos con osteoporosis; riesgo de necrosis de la cabeza femoral."
+   },
+   {
+    "nombre": "Fractura diafisaria de fémur",
+    "claves": [
+     "fractura diafisaria",
+     "fractura"
+    ],
+    "nota": "Por traumatismo de alta energía; gran pérdida sanguínea."
+   },
+   {
+    "nombre": "Osteoporosis",
+    "claves": [
+     "osteoporosis"
+    ],
+    "nota": "Aumenta el riesgo de fractura del extremo proximal."
+   }
+  ],
+  "dato": "Articulaciones: coxofemoral (cadera) con el acetábulo y rodilla con tibia y patela."
+ },
+ {
+  "id": "tibia",
+  "nombres": [
+   "Tibia"
+  ],
+  "funcion": "Hueso medial y principal de la pierna; transmite el peso del cuerpo del fémur al pie.",
+  "conceptos": [
+   [
+    "soporta",
+    "transmite",
+    "carga"
+   ],
+   [
+    "peso"
+   ],
+   [
+    "pierna",
+    "pie",
+    "femur"
+   ]
+  ],
+  "enfermedades": [
+   {
+    "nombre": "Fractura de tibia",
+    "claves": [
+     "fractura de tibia",
+     "fractura"
+    ],
+    "nota": "Fractura de hueso largo muy frecuente; a menudo abierta por estar subcutánea."
+   },
+   {
+    "nombre": "Síndrome compartimental",
+    "claves": [
+     "sindrome compartimental"
+    ],
+    "nota": "Complicación de la fractura tibial."
+   },
+   {
+    "nombre": "Síndrome de estrés tibial medial",
+    "claves": [
+     "periostitis",
+     "shin splints",
+     "sindrome de estres tibial medial"
+    ],
+    "nota": "Dolor en corredores por sobrecarga."
+   }
+  ],
+  "dato": "Articulaciones: rodilla (fémur), tibiofibulares y tobillo (talocrural) con el talus; el maléolo medial es parte de la tibia."
+ },
+ {
+  "id": "fibula",
+  "nombres": [
+   "Fíbula"
+  ],
+  "funcion": "Hueso lateral delgado de la pierna; da inserción a músculos y estabiliza el tobillo, casi sin carga de peso.",
+  "conceptos": [
+   [
+    "insercion",
+    "musculos"
+   ],
+   [
+    "estabiliza",
+    "tobillo",
+    "maleolo"
+   ],
+   [
+    "lateral",
+    "pierna"
+   ]
+  ],
+  "enfermedades": [
+   {
+    "nombre": "Fractura de maléolo lateral",
+    "claves": [
+     "fractura de tobillo",
+     "fractura maleolar",
+     "fractura"
+    ],
+    "nota": "Lesión común en traumatismos de tobillo."
+   },
+   {
+    "nombre": "Lesión del nervio fibular común",
+    "claves": [
+     "lesion fibular",
+     "pie caido",
+     "lesion nerviosa"
+    ],
+    "nota": "Por fractura del cuello de la fíbula: pie caído."
+   }
+  ],
+  "dato": "Articulaciones: tibiofibular proximal y distal, y tobillo (maléolo lateral). El nervio fibular común rodea su cuello."
+ },
+ {
+  "id": "patela",
+  "nombres": [
+   "Patela"
+  ],
+  "funcion": "Hueso sesamoideo en el tendón del cuádriceps; protege la rodilla y aumenta la palanca para extenderla.",
+  "conceptos": [
+   [
+    "protege",
+    "protec"
+   ],
+   [
+    "rodilla"
+   ],
+   [
+    "palanca",
+    "extension",
+    "extender",
+    "cuadriceps"
+   ]
+  ],
+  "enfermedades": [
+   {
+    "nombre": "Fractura de patela",
+    "claves": [
+     "fractura de rotula",
+     "fractura de patela",
+     "fractura"
+    ],
+    "nota": "Por caída directa sobre la rodilla."
+   },
+   {
+    "nombre": "Luxación de patela",
+    "claves": [
+     "luxacion de rotula",
+     "luxacion"
+    ],
+    "nota": "Suele desplazarse lateralmente."
+   },
+   {
+    "nombre": "Dolor patelofemoral",
+    "claves": [
+     "condromalacia",
+     "dolor patelofemoral"
+    ],
+    "nota": "Dolor anterior de rodilla frecuente en jóvenes."
+   }
+  ],
+  "dato": "Es el sesamoideo más grande; se articula con la superficie patelar del fémur. Antes llamada rótula."
+ },
+ {
+  "id": "rodilla",
+  "nombres": [
+   "Rodilla derecha",
+   "Rodilla izquierda"
+  ],
+  "funcion": "Articulación entre fémur, tibia y patela que permite flexión y extensión de la pierna y soporta el peso.",
+  "conceptos": [
+   [
+    "articulacion",
+    "une"
+   ],
+   [
+    "flexion",
+    "extension",
+    "movimiento",
+    "doblar"
+   ],
+   [
+    "peso",
+    "soporta",
+    "carga"
+   ]
+  ],
+  "enfermedades": [
+   {
+    "nombre": "Rotura del ligamento cruzado anterior",
+    "claves": [
+     "ligamento cruzado anterior",
+     "lca",
+     "rotura de ligamento"
+    ],
+    "nota": "Lesión deportiva por giro con el pie fijo; cajón anterior y Lachman positivos."
+   },
+   {
+    "nombre": "Lesión de menisco",
+    "claves": [
+     "menisco",
+     "rotura meniscal"
+    ],
+    "nota": "Dolor y bloqueo articular."
+   },
+   {
+    "nombre": "Artrosis de rodilla",
+    "claves": [
+     "artrosis",
+     "osteoartritis",
+     "gonartrosis"
+    ],
+    "nota": "Desgaste del cartílago en mayores."
+   }
+  ],
+  "dato": "Tríada desgraciada: lesión del LCA, ligamento colateral medial y menisco medial."
+ },
+ {
+  "id": "calcaneo",
+  "nombres": [
+   "Calcáneo"
+  ],
+  "funcion": "Hueso del talón, el mayor del tarso; soporta el peso al apoyar y da inserción al tendón calcáneo (de Aquiles).",
+  "conceptos": [
+   [
+    "talon"
+   ],
+   [
+    "soporta",
+    "peso",
+    "apoyo"
+   ],
+   [
+    "aquiles",
+    "tendon calcaneo",
+    "insercion"
+   ]
+  ],
+  "enfermedades": [
+   {
+    "nombre": "Fractura de calcáneo",
+    "claves": [
+     "fractura de calcaneo",
+     "fractura"
+    ],
+    "nota": "Por caída de altura sobre los pies; puede asociarse a fractura vertebral."
+   },
+   {
+    "nombre": "Fascitis plantar",
+    "claves": [
+     "fascitis plantar",
+     "espolon"
+    ],
+    "nota": "Dolor en el talón al iniciar la marcha."
+   }
+  ],
+  "dato": "Se articula con el talus (subtalar) y el cuboides (calcaneocuboidea)."
+ },
+ {
+  "id": "talus",
+  "nombres": [
+   "Hueso Talo"
+  ],
+  "funcion": "Hueso del tarso que transmite el peso de la tibia al pie y forma la articulación del tobillo.",
+  "conceptos": [
+   [
+    "transmite",
+    "soporta"
+   ],
+   [
+    "peso"
+   ],
+   [
+    "tobillo",
+    "pie",
+    "tibia"
+   ]
+  ],
+  "enfermedades": [
+   {
+    "nombre": "Fractura del cuello del talus",
+    "claves": [
+     "fractura",
+     "fractura de astragalo"
+    ],
+    "nota": "Riesgo alto de necrosis avascular."
+   },
+   {
+    "nombre": "Esguince de tobillo",
+    "claves": [
+     "esguince"
+    ],
+    "nota": "Lesión ligamentaria frecuente, sobre todo del ligamento talofibular anterior."
+   }
+  ],
+  "dato": "Articulaciones: talocrural (tibia y fíbula), subtalar (calcáneo) y talonavicular. No tiene inserciones musculares. Antes llamado astrágalo."
+ },
+ {
+  "id": "coxal",
+  "nombres": [
+   "Hueso coxal"
+  ],
+  "funcion": "Hueso de la cadera formado por ilion, isquion y pubis; une el tronco con el miembro inferior y protege las vísceras pélvicas.",
+  "conceptos": [
+   [
+    "une",
+    "conecta",
+    "transmite"
+   ],
+   [
+    "tronco",
+    "columna",
+    "miembro inferior",
+    "pierna"
+   ],
+   [
+    "protege",
+    "pelvis",
+    "visceras"
+   ]
+  ],
+  "enfermedades": [
+   {
+    "nombre": "Fractura de pelvis",
+    "claves": [
+     "fractura de pelvis",
+     "fractura pelvica",
+     "fractura"
+    ],
+    "nota": "Por trauma de alta energía; puede causar hemorragia grave."
+   },
+   {
+    "nombre": "Fractura de acetábulo",
+    "claves": [
+     "fractura de acetabulo",
+     "fractura"
+    ],
+    "nota": "Afecta la articulación de la cadera."
+   }
+  ],
+  "dato": "Articulaciones: sacroilíaca, sínfisis del pubis y coxofemoral (acetábulo, donde se unen sus tres partes)."
+ },
+ {
+  "id": "sacro",
+  "nombres": [
+   "Hueso sacro"
+  ],
+  "funcion": "Hueso formado por cinco vértebras fusionadas que transmite el peso de la columna a la pelvis.",
+  "conceptos": [
+   [
+    "fusion",
+    "fusionadas",
+    "vertebras"
+   ],
+   [
+    "transmite",
+    "peso",
+    "soporta"
+   ],
+   [
+    "columna",
+    "pelvis"
+   ]
+  ],
+  "enfermedades": [
+   {
+    "nombre": "Fractura de sacro",
+    "claves": [
+     "fractura sacra",
+     "fractura por insuficiencia",
+     "fractura"
+    ],
+    "nota": "En ancianos con osteoporosis o en trauma pélvico."
+   },
+   {
+    "nombre": "Sacroileítis",
+    "claves": [
+     "sacroileitis"
+    ],
+    "nota": "Inflamación típica de la espondilitis anquilosante."
+   }
+  ],
+  "dato": "Articulaciones: lumbosacra (L5), sacroilíacas y sacrococcígea. Sus forámenes dan salida a los nervios sacros."
+ },
+ {
+  "id": "primera_vertebra_toracica",
+  "nombres": [
+   "Primera vértebra torácica"
+  ],
+  "funcion": "Primera vértebra del tórax; protege la médula espinal, sostiene el tronco y se articula con la primera costilla.",
+  "conceptos": [
+   [
+    "protege",
+    "medula"
+   ],
+   [
+    "articula",
+    "costilla"
+   ],
+   [
+    "columna",
+    "torax",
+    "soporta"
+   ]
+  ],
+  "enfermedades": [
+   {
+    "nombre": "Fractura vertebral",
+    "claves": [
+     "fractura vertebral",
+     "fractura",
+     "aplastamiento"
+    ],
+    "nota": "Puede lesionar la médula torácica."
+   },
+   {
+    "nombre": "Compresión de la raíz T1",
+    "claves": [
+     "radiculopatia",
+     "compresion",
+     "pancoast"
+    ],
+    "nota": "Por tumor del vértice pulmonar: debilidad de músculos intrínsecos de la mano."
+   }
+  ],
+  "dato": "Las vértebras torácicas tienen fositas costales para articularse con las costillas; T1 se articula completa con la primera costilla."
+ },
+ {
+  "id": "discos_intervertebrales",
+  "nombres": [
+   "Discos intervertebrales"
+  ],
+  "funcion": "Almohadillas fibrocartilaginosas entre vértebras que amortiguan cargas y permiten la movilidad de la columna.",
+  "conceptos": [
+   [
+    "amortigua",
+    "absorbe",
+    "cojin",
+    "almohadilla"
+   ],
+   [
+    "carga",
+    "impacto",
+    "peso"
+   ],
+   [
+    "movilidad",
+    "flexibilidad",
+    "columna",
+    "vertebras"
+   ]
+  ],
+  "enfermedades": [
+   {
+    "nombre": "Hernia discal",
+    "claves": [
+     "hernia discal",
+     "hernia de disco",
+     "disco herniado"
+    ],
+    "nota": "El núcleo pulposo protruye y comprime una raíz nerviosa; más frecuente en L4–L5 y L5–S1."
+   },
+   {
+    "nombre": "Discopatía degenerativa",
+    "claves": [
+     "discopatia",
+     "degeneracion discal",
+     "lumbalgia"
+    ],
+    "nota": "Deshidratación del disco con la edad."
+   }
+  ],
+  "dato": "Constan de anillo fibroso externo y núcleo pulposo interno; la hernia suele ser posterolateral."
+ },
+ {
+  "id": "primera_costilla",
+  "nombres": [
+   "Primera costilla"
+  ],
+  "funcion": "Costilla más corta y ancha; protege el vértice pulmonar y sobre ella pasan la arteria y vena subclavias y el plexo braquial.",
+  "conceptos": [
+   [
+    "protege",
+    "pulmon",
+    "vertice"
+   ],
+   [
+    "subclavia",
+    "plexo braquial",
+    "vasos",
+    "nervios"
+   ],
+   [
+    "torax",
+    "caja toracica"
+   ]
+  ],
+  "enfermedades": [
+   {
+    "nombre": "Síndrome del desfiladero torácico",
+    "claves": [
+     "desfiladero toracico",
+     "compresion"
+    ],
+    "nota": "Compresión de vasos o nervios sobre la primera costilla."
+   },
+   {
+    "nombre": "Fractura de primera costilla",
+    "claves": [
+     "fractura"
+    ],
+    "nota": "Indica trauma de alta energía; buscar lesión vascular."
+   }
+  ],
+  "dato": "Se articula con T1 y el manubrio; su tubérculo del escaleno anterior separa el surco de la vena subclavia (anterior) del de la arteria (posterior)."
+ },
+ {
+  "id": "esternon",
+  "nombres": [
+   "Esternón"
+  ],
+  "funcion": "Hueso plano anterior del tórax que protege corazón y grandes vasos y da unión a las costillas y clavículas.",
+  "conceptos": [
+   [
+    "protege",
+    "corazon",
+    "vasos"
+   ],
+   [
+    "costillas",
+    "clavicula",
+    "une"
+   ],
+   [
+    "torax",
+    "anterior",
+    "caja toracica"
+   ]
+  ],
+  "enfermedades": [
+   {
+    "nombre": "Fractura de esternón",
+    "claves": [
+     "fractura esternal",
+     "fractura"
+    ],
+    "nota": "Trauma por volante en accidentes; descartar contusión cardíaca."
+   },
+   {
+    "nombre": "Pectus excavatum",
+    "claves": [
+     "pectus excavatum",
+     "torax en embudo"
+    ],
+    "nota": "Hundimiento congénito del esternón."
+   }
+  ],
+  "dato": "Partes: manubrio, cuerpo y proceso xifoides. El ángulo esternal (manubrio-cuerpo) marca la segunda costilla y el nivel T4–T5."
+ },
+ {
+  "id": "clavicula",
+  "nombres": [
+   "Clavícula"
+  ],
+  "funcion": "Hueso que une el miembro superior al tronco a modo de puntal, manteniendo el hombro separado del tórax.",
+  "conceptos": [
+   [
+    "une",
+    "conecta",
+    "puntal"
+   ],
+   [
+    "brazo",
+    "miembro superior",
+    "hombro"
+   ],
+   [
+    "tronco",
+    "esternon",
+    "torax"
+   ]
+  ],
+  "enfermedades": [
+   {
+    "nombre": "Fractura de clavícula",
+    "claves": [
+     "fractura de clavicula",
+     "fractura"
+    ],
+    "nota": "Una de las fracturas más frecuentes; típicamente en el tercio medio por caída sobre el hombro."
+   },
+   {
+    "nombre": "Lesión de vasos subclavios o plexo braquial",
+    "claves": [
+     "lesion vascular",
+     "lesion plexo braquial"
+    ],
+    "nota": "Complicación rara de la fractura."
+   }
+  ],
+  "dato": "Articulaciones: esternoclavicular y acromioclavicular. Es el primer hueso en comenzar a osificarse."
+ },
+ {
+  "id": "escapula",
+  "nombres": [
+   "Escápula"
+  ],
+  "funcion": "Hueso plano posterior que une el húmero a la clavícula y da inserción a los músculos del hombro y del manguito rotador.",
+  "conceptos": [
+   [
+    "une",
+    "articula"
+   ],
+   [
+    "humero",
+    "clavicula",
+    "hombro"
+   ],
+   [
+    "insercion",
+    "musculos",
+    "manguito"
+   ]
+  ],
+  "enfermedades": [
+   {
+    "nombre": "Escápula alada",
+    "claves": [
+     "escapula alada"
+    ],
+    "nota": "Por parálisis del serrato anterior (lesión del nervio torácico largo)."
+   },
+   {
+    "nombre": "Fractura de escápula",
+    "claves": [
+     "fractura de escapula",
+     "fractura"
+    ],
+    "nota": "Rara; indica trauma de alta energía."
+   }
+  ],
+  "dato": "Articulaciones: glenohumeral (cavidad glenoidea) y acromioclavicular (acromion)."
+ },
+ {
+  "id": "humero",
+  "nombres": [
+   "Húmero"
+  ],
+  "funcion": "Hueso del brazo; sirve de palanca para los movimientos del hombro y del codo.",
+  "conceptos": [
+   [
+    "palanca",
+    "movimiento"
+   ],
+   [
+    "brazo"
+   ],
+   [
+    "hombro",
+    "codo"
+   ]
+  ],
+  "enfermedades": [
+   {
+    "nombre": "Fractura del cuello quirúrgico",
+    "claves": [
+     "fractura cuello quirurgico",
+     "fractura"
+    ],
+    "nota": "Puede lesionar el nervio axilar."
+   },
+   {
+    "nombre": "Fractura de diáfisis",
+    "claves": [
+     "fractura diafisaria",
+     "fractura",
+     "mano caida"
+    ],
+    "nota": "Puede lesionar el nervio radial en su surco (mano caída)."
+   },
+   {
+    "nombre": "Fractura supracondílea",
+    "claves": [
+     "fractura supracondilea",
+     "fractura"
+    ],
+    "nota": "Típica en niños; riesgo para arteria braquial y nervio mediano."
+   }
+  ],
+  "dato": "Articulaciones: glenohumeral (hombro) y codo con radio y ulna. El nervio ulnar pasa detrás del epicóndilo medial."
+ },
+ {
+  "id": "radio",
+  "nombres": [
+   "Radio"
+  ],
+  "funcion": "Hueso lateral del antebrazo; gira sobre la ulna para la pronación y supinación y se articula ampliamente con la muñeca.",
+  "conceptos": [
+   [
+    "pronacion",
+    "supinacion",
+    "gira",
+    "rota"
+   ],
+   [
+    "munec",
+    "carpo",
+    "mano"
+   ],
+   [
+    "antebrazo",
+    "lateral"
+   ]
+  ],
+  "enfermedades": [
+   {
+    "nombre": "Fractura de Colles",
+    "claves": [
+     "fractura de colles",
+     "fractura distal de radio",
+     "fractura"
+    ],
+    "nota": "Fractura distal con desplazamiento dorsal por caída sobre la mano extendida."
+   },
+   {
+    "nombre": "Pronación dolorosa",
+    "claves": [
+     "codo de nineras",
+     "pronacion dolorosa",
+     "subluxacion"
+    ],
+    "nota": "Subluxación de la cabeza del radio en niños pequeños por tracción del brazo."
+   }
+  ],
+  "dato": "Articulaciones: humerorradial, radioulnar proximal y distal, y radiocarpiana."
+ },
+ {
+  "id": "ulna",
+  "nombres": [
+   "Ulna"
+  ],
+  "funcion": "Hueso medial del antebrazo; forma la principal articulación del codo con el húmero y sirve de eje para la rotación del radio.",
+  "conceptos": [
+   [
+    "codo",
+    "articula"
+   ],
+   [
+    "eje",
+    "estabiliza"
+   ],
+   [
+    "antebrazo",
+    "medial"
+   ]
+  ],
+  "enfermedades": [
+   {
+    "nombre": "Fractura de olécranon",
+    "claves": [
+     "fractura de olecranon",
+     "fractura"
+    ],
+    "nota": "Por caída sobre el codo."
+   },
+   {
+    "nombre": "Fractura de Monteggia",
+    "claves": [
+     "monteggia",
+     "fractura"
+    ],
+    "nota": "Fractura de la ulna proximal con luxación de la cabeza del radio."
+   }
+  ],
+  "dato": "Articulaciones: humeroulnar (codo), radioulnar proximal y distal. Antes llamada cúbito."
+ },
+ {
+  "id": "mandibula",
+  "nombres": [
+   "Mandíbula"
+  ],
+  "funcion": "Único hueso móvil del cráneo; permite masticar y hablar y aloja los dientes inferiores.",
+  "conceptos": [
+   [
+    "mastica",
+    "masticacion"
+   ],
+   [
+    "habla",
+    "hablar"
+   ],
+   [
+    "movil",
+    "dientes"
+   ]
+  ],
+  "enfermedades": [
+   {
+    "nombre": "Fractura de mandíbula",
+    "claves": [
+     "fractura de mandibula",
+     "fractura"
+    ],
+    "nota": "A menudo doble; frecuente en el cuello del cóndilo y el ángulo."
+   },
+   {
+    "nombre": "Disfunción temporomandibular",
+    "claves": [
+     "atm",
+     "trastorno temporomandibular",
+     "disfuncion"
+    ],
+    "nota": "Dolor y chasquido articular."
+   },
+   {
+    "nombre": "Luxación mandibular",
+    "claves": [
+     "luxacion"
+    ],
+    "nota": "Al bostezar; boca bloqueada abierta."
+   }
+  ],
+  "dato": "Articulación temporomandibular con el hueso temporal; el nervio alveolar inferior recorre su canal."
+ },
+ {
+  "id": "hueso_frontal",
+  "nombres": [
+   "Hueso frontal"
+  ],
+  "funcion": "Forma la frente y el techo de las órbitas; protege los lóbulos frontales.",
+  "conceptos": [
+   [
+    "frente"
+   ],
+   [
+    "orbita"
+   ],
+   [
+    "protege",
+    "lobulos frontales",
+    "cerebro"
+   ]
+  ],
+  "enfermedades": [
+   {
+    "nombre": "Fractura de seno frontal",
+    "claves": [
+     "fractura de seno frontal",
+     "fractura"
+    ],
+    "nota": "Por golpe directo en la frente."
+   },
+   {
+    "nombre": "Sinusitis frontal",
+    "claves": [
+     "sinusitis"
+    ],
+    "nota": "Infección de los senos frontales."
+   }
+  ],
+  "dato": "Se articula con los parietales por la sutura coronal; contiene los senos frontales."
+ },
+ {
+  "id": "hueso_temporal",
+  "nombres": [
+   "Hueso temporal"
+  ],
+  "funcion": "Forma parte de la pared lateral y la base del cráneo; aloja el oído medio e interno y se articula con la mandíbula.",
+  "conceptos": [
+   [
+    "pared lateral",
+    "base",
+    "craneo"
+   ],
+   [
+    "oido",
+    "audicion",
+    "equilibrio"
+   ],
+   [
+    "mandibula",
+    "articula"
+   ]
+  ],
+  "enfermedades": [
+   {
+    "nombre": "Fractura del hueso temporal",
+    "claves": [
+     "fractura",
+     "fractura temporal"
+    ],
+    "nota": "Puede causar hipoacusia y parálisis facial."
+   },
+   {
+    "nombre": "Hematoma epidural",
+    "claves": [
+     "hematoma epidural",
+     "epidural"
+    ],
+    "nota": "Por fractura en el pterion con rotura de la arteria meníngea media."
+   },
+   {
+    "nombre": "Mastoiditis",
+    "claves": [
+     "mastoiditis"
+    ],
+    "nota": "Complicación de la otitis media."
+   }
+  ],
+  "dato": "Su porción petrosa contiene el oído interno; el pterion (unión con frontal, parietal y esfenoides) es la zona más delgada del cráneo."
+ },
+ {
+  "id": "hueso_occipital",
+  "nombres": [
+   "Hueso occipital"
+  ],
+  "funcion": "Forma la parte posterior y la base del cráneo; contiene el foramen magno por donde pasa la médula espinal.",
+  "conceptos": [
+   [
+    "posterior",
+    "base",
+    "craneo"
+   ],
+   [
+    "foramen magno",
+    "medula"
+   ],
+   [
+    "protege",
+    "cerebelo"
+   ]
+  ],
+  "enfermedades": [
+   {
+    "nombre": "Malformación de Chiari",
+    "claves": [
+     "chiari"
+    ],
+    "nota": "Descenso de las amígdalas cerebelosas por el foramen magno."
+   },
+   {
+    "nombre": "Fractura de base de cráneo",
+    "claves": [
+     "fractura de base de craneo",
+     "fractura"
+    ],
+    "nota": "Puede lesionar pares craneales bajos."
+   }
+  ],
+  "dato": "Se articula con el atlas por sus cóndilos (articulación atlantooccipital, el 'sí' de la cabeza) y con los parietales por la sutura lambdoidea."
+ },
+ {
+  "id": "hueso_esfenoide",
+  "nombres": [
+   "Hueso esfenoide"
+  ],
+  "funcion": "Hueso central de la base del cráneo, en forma de mariposa; aloja la hipófisis y da paso a nervios y vasos.",
+  "conceptos": [
+   [
+    "base",
+    "craneo",
+    "central"
+   ],
+   [
+    "hipofisis",
+    "silla turca"
+   ],
+   [
+    "foramenes",
+    "orificios",
+    "nervios",
+    "paso"
+   ]
+  ],
+  "enfermedades": [
+   {
+    "nombre": "Adenoma hipofisario",
+    "claves": [
+     "adenoma hipofisario",
+     "tumor de hipofisis",
+     "prolactinoma"
+    ],
+    "nota": "Agranda la silla turca y puede comprimir el quiasma óptico (hemianopsia bitemporal)."
+   },
+   {
+    "nombre": "Fractura de base de cráneo",
+    "claves": [
+     "fractura",
+     "fractura de base de craneo"
+    ],
+    "nota": "Puede causar salida de LCR por la nariz."
+   }
+  ],
+  "dato": "La silla turca aloja la hipófisis; contiene los forámenes redondo, oval y espinoso y el canal óptico."
+ },
+ {
+  "id": "esternocleidomastoideo",
+  "nombres": [
+   "Músculo esternocleidomastoideo"
+  ],
+  "funcion": "Unilateral: inclina la cabeza hacia su lado y la gira hacia el lado opuesto; bilateral: flexiona el cuello.",
+  "conceptos": [
+   [
+    "gira",
+    "rota",
+    "rotacion"
+   ],
+   [
+    "inclina",
+    "flexiona",
+    "flexion"
+   ],
+   [
+    "cabeza",
+    "cuello"
+   ]
+  ],
+  "enfermedades": [
+   {
+    "nombre": "Tortícolis congénita",
+    "claves": [
+     "torticolis"
+    ],
+    "nota": "Acortamiento fibroso del músculo en lactantes."
+   },
+   {
+    "nombre": "Lesión del nervio accesorio",
+    "claves": [
+     "lesion accesorio",
+     "paralisis"
+    ],
+    "nota": "Debilidad para girar la cabeza (también afecta al trapecio)."
+   }
+  ],
+  "dato": "Inervación: nervio accesorio (XI) más ramos de C2–C3. Divide el cuello en triángulos anterior y posterior."
+ },
+ {
+  "id": "escaleno_anterior",
+  "nombres": [
+   "Músculo escaleno anterior"
+  ],
+  "funcion": "Eleva la primera costilla en la inspiración forzada e inclina el cuello hacia su lado.",
+  "conceptos": [
+   [
+    "eleva",
+    "levanta"
+   ],
+   [
+    "primera costilla",
+    "costilla"
+   ],
+   [
+    "inspiracion",
+    "respiracion"
+   ],
+   [
+    "inclina",
+    "cuello"
+   ]
+  ],
+  "enfermedades": [
+   {
+    "nombre": "Síndrome del escaleno anterior",
+    "claves": [
+     "desfiladero toracico",
+     "sindrome del escaleno",
+     "compresion"
+    ],
+    "nota": "Compresión del plexo braquial y la arteria subclavia."
+   },
+   {
+    "nombre": "Costilla cervical",
+    "claves": [
+     "costilla cervical"
+    ],
+    "nota": "Variante que estrecha el espacio entre los escalenos y la primera costilla."
+   }
+  ],
+  "dato": "Inervación: ramos anteriores de C4–C6. La arteria subclavia pasa detrás y la vena subclavia delante; el nervio frénico desciende sobre él."
+ },
+ {
+  "id": "supraespinoso",
+  "nombres": [
+   "Músculo supraespinoso"
+  ],
+  "funcion": "Inicia la abducción del brazo (primeros ~15°) y estabiliza la cabeza del húmero; parte del manguito rotador.",
+  "conceptos": [
+   [
+    "abduc",
+    "separa",
+    "eleva"
+   ],
+   [
+    "brazo",
+    "hombro"
+   ],
+   [
+    "estabiliza",
+    "manguito"
+   ]
+  ],
+  "enfermedades": [
+   {
+    "nombre": "Rotura del manguito rotador",
+    "claves": [
+     "rotura del manguito",
+     "manguito rotador",
+     "desgarro"
+    ],
+    "nota": "El supraespinoso es el tendón del manguito que más se rompe."
+   },
+   {
+    "nombre": "Síndrome de pinzamiento subacromial",
+    "claves": [
+     "pinzamiento",
+     "impingement",
+     "tendinitis",
+     "tendinopatia"
+    ],
+    "nota": "Dolor al elevar el brazo (arco doloroso)."
+   }
+  ],
+  "dato": "Inervación: nervio supraescapular (C5–C6)."
+ },
+ {
+  "id": "infraespinoso",
+  "nombres": [
+   "Músculo infraespinoso"
+  ],
+  "funcion": "Rota lateralmente el brazo y estabiliza la articulación del hombro; parte del manguito rotador.",
+  "conceptos": [
+   [
+    "rota",
+    "rotacion"
+   ],
+   [
+    "lateral",
+    "externa"
+   ],
+   [
+    "brazo",
+    "hombro"
+   ],
+   [
+    "estabiliza",
+    "manguito"
+   ]
+  ],
+  "enfermedades": [
+   {
+    "nombre": "Tendinopatía / rotura del manguito",
+    "claves": [
+     "manguito rotador",
+     "rotura",
+     "tendinopatia",
+     "tendinitis"
+    ],
+    "nota": "Lesión por sobreuso o degeneración."
+   },
+   {
+    "nombre": "Atrapamiento del nervio supraescapular",
+    "claves": [
+     "atrapamiento",
+     "neuropatia supraescapular",
+     "atrofia"
+    ],
+    "nota": "En la escotadura espinoglenoidea atrofia solo al infraespinoso; típico en voleibolistas."
+   }
+  ],
+  "dato": "Inervación: nervio supraescapular (C5–C6)."
+ },
+ {
+  "id": "redondo_menor",
+  "nombres": [
+   "Músculo redondo menor"
+  ],
+  "funcion": "Rota lateralmente el brazo y estabiliza el hombro; parte del manguito rotador.",
+  "conceptos": [
+   [
+    "rota",
+    "rotacion"
+   ],
+   [
+    "lateral",
+    "externa"
+   ],
+   [
+    "brazo",
+    "hombro"
+   ],
+   [
+    "estabiliza",
+    "manguito"
+   ]
+  ],
+  "enfermedades": [
+   {
+    "nombre": "Lesión del nervio axilar",
+    "claves": [
+     "lesion axilar",
+     "lesion nerviosa"
+    ],
+    "nota": "Por luxación de hombro o fractura del cuello quirúrgico del húmero."
+   },
+   {
+    "nombre": "Tendinopatía del manguito rotador",
+    "claves": [
+     "manguito rotador",
+     "tendinopatia",
+     "tendinitis",
+     "rotura"
+    ],
+    "nota": "Lesión por sobreuso del hombro; el redondo menor se afecta con menos frecuencia."
+   }
+  ],
+  "dato": "Inervación: nervio axilar (C5–C6), el mismo que inerva al deltoides."
+ },
+ {
+  "id": "subescapular",
+  "nombres": [
+   "Músculo subescapular"
+  ],
+  "funcion": "Principal rotador medial del brazo y estabilizador anterior del hombro; parte del manguito rotador.",
+  "conceptos": [
+   [
+    "rota",
+    "rotacion"
+   ],
+   [
+    "medial",
+    "interna"
+   ],
+   [
+    "brazo",
+    "hombro"
+   ],
+   [
+    "estabiliza",
+    "manguito"
+   ]
+  ],
+  "enfermedades": [
+   {
+    "nombre": "Rotura del subescapular",
+    "claves": [
+     "rotura",
+     "desgarro",
+     "manguito rotador"
+    ],
+    "nota": "Asociada a luxación anterior del hombro; prueba de despegue (lift-off) positiva."
+   },
+   {
+    "nombre": "Luxación anterior del hombro",
+    "claves": [
+     "luxacion de hombro",
+     "luxacion glenohumeral",
+     "luxacion"
+    ],
+    "nota": "El subescapular es un estabilizador anterior clave y puede lesionarse en ella."
+   }
+  ],
+  "dato": "Inervación: nervios subescapulares superior e inferior (C5–C6)."
+ },
+ {
+  "id": "serrato_anterior",
+  "nombres": [
+   "Músculo serrato anterior"
+  ],
+  "funcion": "Lleva la escápula hacia adelante (protracción), la mantiene pegada al tórax y la rota para elevar el brazo por encima de la cabeza.",
+  "conceptos": [
+   [
+    "protraccion",
+    "adelante",
+    "empuja"
+   ],
+   [
+    "escapula"
+   ],
+   [
+    "pegada",
+    "fija",
+    "torax"
+   ],
+   [
+    "rota",
+    "eleva",
+    "brazo"
+   ]
+  ],
+  "enfermedades": [
+   {
+    "nombre": "Escápula alada",
+    "claves": [
+     "escapula alada",
+     "lesion toracico largo"
+    ],
+    "nota": "Por lesión del nervio torácico largo (p. ej. en vaciamiento axilar)."
+   },
+   {
+    "nombre": "Parálisis de la mochila",
+    "claves": [
+     "lesion toracico largo",
+     "mochila",
+     "paralisis"
+    ],
+    "nota": "Compresión del nervio torácico largo por cargas pesadas sobre el hombro."
+   }
+  ],
+  "dato": "Inervación: nervio torácico largo (C5–C7)."
+ },
+ {
+  "id": "braquial",
+  "nombres": [
+   "Músculo braquial"
+  ],
+  "funcion": "Principal flexor del codo en cualquier posición del antebrazo.",
+  "conceptos": [
+   [
+    "flexion",
+    "flexiona",
+    "dobla"
+   ],
+   [
+    "codo",
+    "antebrazo"
+   ]
+  ],
+  "enfermedades": [
+   {
+    "nombre": "Miositis osificante",
+    "claves": [
+     "miositis osificante"
+    ],
+    "nota": "Calcificación tras traumatismo o luxación del codo."
+   },
+   {
+    "nombre": "Lesión del nervio musculocutáneo",
+    "claves": [
+     "lesion musculocutaneo",
+     "lesion nerviosa"
+    ],
+    "nota": "Debilidad de flexión del codo."
+   }
+  ],
+  "dato": "Inervación: nervio musculocutáneo (C5–C6), con aporte del radial. Se inserta en la tuberosidad de la ulna."
+ },
+ {
+  "id": "flexor_radial_carpo",
+  "nombres": [
+   "Flexor radial del carpo"
+  ],
+  "funcion": "Flexiona la muñeca y la desvía hacia el lado radial (abducción).",
+  "conceptos": [
+   [
+    "flexion",
+    "flexiona"
+   ],
+   [
+    "muneca",
+    "carpo"
+   ],
+   [
+    "radial",
+    "abduccion",
+    "lateral"
+   ]
+  ],
+  "enfermedades": [
+   {
+    "nombre": "Tendinitis del flexor radial del carpo",
+    "claves": [
+     "tendinitis",
+     "tendinopatia"
+    ],
+    "nota": "Dolor en la cara palmar radial de la muñeca."
+   },
+   {
+    "nombre": "Lesión del nervio mediano",
+    "claves": [
+     "lesion mediano",
+     "lesion nerviosa"
+    ],
+    "nota": "Lesiones proximales del mediano debilitan la flexión de la muñeca."
+   }
+  ],
+  "dato": "Inervación: nervio mediano. Su tendón es referencia para tomar el pulso radial (lateral a él)."
+ },
+ {
+  "id": "flexor_superficial_dedos",
+  "nombres": [
+   "Flexor superficial de los dedos"
+  ],
+  "funcion": "Flexiona las falanges medias de los dedos 2–5 (interfalángicas proximales) y ayuda a flexionar la muñeca.",
+  "conceptos": [
+   [
+    "flexion",
+    "flexiona"
+   ],
+   [
+    "falange media",
+    "interfalangica proximal",
+    "dedos"
+   ],
+   [
+    "muneca"
+   ]
+  ],
+  "enfermedades": [
+   {
+    "nombre": "Síndrome del túnel carpiano",
+    "claves": [
+     "tunel carpiano",
+     "sindrome del tunel carpiano"
+    ],
+    "nota": "Sus tendones pasan por el túnel junto al nervio mediano."
+   },
+   {
+    "nombre": "Lesión tendinosa por corte",
+    "claves": [
+     "corte",
+     "lesion tendinosa",
+     "rotura tendinosa"
+    ],
+    "nota": "Lesiones de la cara palmar del antebrazo o la mano."
+   }
+  ],
+  "dato": "Inervación: nervio mediano."
+ },
+ {
+  "id": "flexor_profundo_dedos",
+  "nombres": [
+   "Flexor profundo de los dedos"
+  ],
+  "funcion": "Flexiona las falanges distales de los dedos 2–5; es el único que flexiona la articulación interfalángica distal.",
+  "conceptos": [
+   [
+    "flexion",
+    "flexiona"
+   ],
+   [
+    "falange distal",
+    "interfalangica distal",
+    "dedos"
+   ],
+   [
+    "mano"
+   ]
+  ],
+  "enfermedades": [
+   {
+    "nombre": "Dedo en jersey",
+    "claves": [
+     "dedo en jersey",
+     "avulsion"
+    ],
+    "nota": "Avulsión de su tendón en la falange distal, típicamente del anular."
+   },
+   {
+    "nombre": "Lesión del nervio ulnar o interóseo anterior",
+    "claves": [
+     "lesion ulnar",
+     "lesion nerviosa"
+    ],
+    "nota": "Pérdida de flexión distal de los dedos según el nervio afectado."
+   }
+  ],
+  "dato": "Inervación doble: mediano (nervio interóseo anterior) para dedos 2–3 y ulnar para dedos 4–5."
+ },
+ {
+  "id": "extensor_radial_corto_carpo",
+  "nombres": [
+   "Extensor radial corto del carpo"
+  ],
+  "funcion": "Extiende la muñeca y la desvía hacia el lado radial; estabiliza la muñeca al empuñar.",
+  "conceptos": [
+   [
+    "extension",
+    "extiende"
+   ],
+   [
+    "muneca",
+    "carpo"
+   ],
+   [
+    "radial",
+    "abduccion"
+   ],
+   [
+    "estabiliza",
+    "agarre"
+   ]
+  ],
+  "enfermedades": [
+   {
+    "nombre": "Epicondilitis lateral (codo de tenista)",
+    "claves": [
+     "epicondilitis",
+     "codo de tenista",
+     "epicondilitis lateral"
+    ],
+    "nota": "Tendinopatía de su origen en el epicóndilo lateral."
+   },
+   {
+    "nombre": "Lesión del ramo profundo del radial",
+    "claves": [
+     "lesion radial",
+     "sindrome del supinador",
+     "lesion nerviosa"
+    ],
+    "nota": "Debilidad de extensión de muñeca y dedos."
+   }
+  ],
+  "dato": "Inervación: ramo profundo del nervio radial. Se origina en el epicóndilo lateral (tendón extensor común)."
+ },
+ {
+  "id": "abductor_corto_pulgar",
+  "nombres": [
+   "Abductor corto del pulgar"
+  ],
+  "funcion": "Separa el pulgar de la palma (abducción) y ayuda a la oposición.",
+  "conceptos": [
+   [
+    "abduc",
+    "separa"
+   ],
+   [
+    "pulgar"
+   ],
+   [
+    "oposicion",
+    "palma"
+   ]
+  ],
+  "enfermedades": [
+   {
+    "nombre": "Atrofia tenar por túnel carpiano",
+    "claves": [
+     "tunel carpiano",
+     "atrofia tenar",
+     "sindrome del tunel carpiano"
+    ],
+    "nota": "Compresión del nervio mediano en la muñeca."
+   },
+   {
+    "nombre": "Lesión del ramo recurrente del mediano",
+    "claves": [
+     "lesion mediano",
+     "corte",
+     "lesion nerviosa"
+    ],
+    "nota": "Es superficial en la eminencia tenar; un corte pequeño puede impedir la oposición del pulgar."
+   }
+  ],
+  "dato": "Inervación: ramo recurrente del nervio mediano; es el músculo tenar más útil para explorar ese nervio."
+ },
+ {
+  "id": "psoas_mayor",
+  "nombres": [
+   "Psoas mayor"
+  ],
+  "funcion": "Principal flexor de la cadera (junto al ilíaco); también flexiona lateralmente la columna lumbar.",
+  "conceptos": [
+   [
+    "flexion",
+    "flexiona"
+   ],
+   [
+    "cadera",
+    "muslo"
+   ],
+   [
+    "columna",
+    "lumbar",
+    "tronco"
+   ]
+  ],
+  "enfermedades": [
+   {
+    "nombre": "Absceso del psoas",
+    "claves": [
+     "absceso del psoas",
+     "absceso"
+    ],
+    "nota": "Infección, a veces por tuberculosis vertebral o Crohn."
+   },
+   {
+    "nombre": "Signo del psoas en apendicitis",
+    "claves": [
+     "signo del psoas",
+     "apendicitis"
+    ],
+    "nota": "Dolor al extender la cadera por un apéndice retrocecal inflamado."
+   }
+  ],
+  "dato": "Inervación: ramos anteriores de L1–L3. Con el ilíaco forma el iliopsoas, que se inserta en el trocánter menor."
+ },
+ {
+  "id": "gluteo_maximo",
+  "nombres": [
+   "Músculo glúteo máximo"
+  ],
+  "funcion": "Principal extensor de la cadera, clave para levantarse, subir escaleras y correr; también la rota lateralmente.",
+  "conceptos": [
+   [
+    "extension",
+    "extiende"
+   ],
+   [
+    "cadera",
+    "muslo"
+   ],
+   [
+    "levantarse",
+    "subir",
+    "escaleras",
+    "correr"
+   ],
+   [
+    "rota",
+    "rotacion lateral"
+   ]
+  ],
+  "enfermedades": [
+   {
+    "nombre": "Lesión del nervio glúteo inferior",
+    "claves": [
+     "lesion gluteo inferior",
+     "lesion nerviosa"
+    ],
+    "nota": "Dificultad para levantarse de una silla o subir escaleras."
+   },
+   {
+    "nombre": "Inyección intramuscular mal colocada",
+    "claves": [
+     "lesion ciatico",
+     "inyeccion"
+    ],
+    "nota": "Debe aplicarse en el cuadrante superolateral para evitar el nervio ciático."
+   }
+  ],
+  "dato": "Inervación: nervio glúteo inferior (L5–S2)."
+ },
+ {
+  "id": "gluteo_medio",
+  "nombres": [
+   "Músculo glúteo medio"
+  ],
+  "funcion": "Abduce y rota medialmente la cadera; estabiliza la pelvis al apoyarse en una pierna durante la marcha.",
+  "conceptos": [
+   [
+    "abduc",
+    "separa"
+   ],
+   [
+    "cadera",
+    "muslo"
+   ],
+   [
+    "estabiliza",
+    "pelvis",
+    "marcha",
+    "apoyo"
+   ]
+  ],
+  "enfermedades": [
+   {
+    "nombre": "Signo de Trendelenburg",
+    "claves": [
+     "trendelenburg",
+     "marcha de trendelenburg",
+     "lesion gluteo superior"
+    ],
+    "nota": "Si falla, la pelvis cae hacia el lado contrario al apoyar."
+   },
+   {
+    "nombre": "Tendinopatía glútea",
+    "claves": [
+     "tendinopatia",
+     "tendinitis",
+     "bursitis trocanterica"
+    ],
+    "nota": "Dolor lateral de cadera."
+   }
+  ],
+  "dato": "Inervación: nervio glúteo superior (L4–S1)."
+ },
+ {
+  "id": "piriforme",
+  "nombres": [
+   "Músculo piriforme"
+  ],
+  "funcion": "Rota lateralmente el muslo extendido y lo abduce cuando la cadera está flexionada.",
+  "conceptos": [
+   [
+    "rota",
+    "rotacion lateral",
+    "externa"
+   ],
+   [
+    "muslo",
+    "cadera"
+   ],
+   [
+    "abduc"
+   ]
+  ],
+  "enfermedades": [
+   {
+    "nombre": "Síndrome del piriforme",
+    "claves": [
+     "sindrome del piriforme",
+     "compresion ciatico",
+     "ciatica"
+    ],
+    "nota": "Compresión del nervio ciático por el músculo."
+   },
+   {
+    "nombre": "Variante con ciático que lo atraviesa",
+    "claves": [
+     "variante",
+     "compresion"
+    ],
+    "nota": "En algunas personas la división fibular del ciático pasa a través del músculo."
+   }
+  ],
+  "dato": "Inervación: nervio del piriforme (S1–S2). Es referencia de la región glútea: el nervio ciático suele salir por debajo de él."
+ },
+ {
+  "id": "recto_femoral",
+  "nombres": [
+   "Músculo recto femoral"
+  ],
+  "funcion": "Extiende la rodilla y flexiona la cadera; es la única cabeza del cuádriceps que cruza la cadera.",
+  "conceptos": [
+   [
+    "extension",
+    "extiende"
+   ],
+   [
+    "rodilla"
+   ],
+   [
+    "flexion",
+    "flexiona",
+    "cadera"
+   ],
+   [
+    "cuadriceps"
+   ]
+  ],
+  "enfermedades": [
+   {
+    "nombre": "Desgarro del recto femoral",
+    "claves": [
+     "desgarro",
+     "distension",
+     "rotura muscular"
+    ],
+    "nota": "Frecuente en deportes con patadas o sprints."
+   },
+   {
+    "nombre": "Rotura del tendón cuadricipital",
+    "claves": [
+     "rotura del tendon",
+     "rotura tendon cuadricipital"
+    ],
+    "nota": "Imposibilidad de extender la rodilla."
+   }
+  ],
+  "dato": "Inervación: nervio femoral (L2–L4)."
+ },
+ {
+  "id": "vasto_lateral",
+  "nombres": [
+   "Músculo vasto lateral"
+  ],
+  "funcion": "Extiende la rodilla; es la cabeza más grande del cuádriceps.",
+  "conceptos": [
+   [
+    "extension",
+    "extiende"
+   ],
+   [
+    "rodilla"
+   ],
+   [
+    "cuadriceps"
+   ]
+  ],
+  "enfermedades": [
+   {
+    "nombre": "Contusión muscular",
+    "claves": [
+     "contusion",
+     "hematoma",
+     "miositis osificante"
+    ],
+    "nota": "Golpe en la cara lateral del muslo."
+   },
+   {
+    "nombre": "Inestabilidad patelofemoral",
+    "claves": [
+     "dolor patelofemoral",
+     "luxacion de rotula"
+    ],
+    "nota": "Su tracción lateral contribuye a la luxación de la patela."
+   }
+  ],
+  "dato": "Inervación: nervio femoral (L2–L4). Sitio de inyección intramuscular en lactantes."
+ },
+ {
+  "id": "vasto_medial",
+  "nombres": [
+   "Músculo vasto medial"
+  ],
+  "funcion": "Extiende la rodilla y, con sus fibras oblicuas inferiores, estabiliza la patela medialmente.",
+  "conceptos": [
+   [
+    "extension",
+    "extiende"
+   ],
+   [
+    "rodilla"
+   ],
+   [
+    "patela",
+    "rotula",
+    "estabiliza"
+   ],
+   [
+    "cuadriceps"
+   ]
+  ],
+  "enfermedades": [
+   {
+    "nombre": "Atrofia tras lesión de rodilla",
+    "claves": [
+     "atrofia",
+     "debilidad"
+    ],
+    "nota": "Se atrofia rápido tras lesiones o cirugías de rodilla."
+   },
+   {
+    "nombre": "Luxación lateral de patela",
+    "claves": [
+     "luxacion de rotula",
+     "luxacion"
+    ],
+    "nota": "Su debilidad favorece la luxación."
+   }
+  ],
+  "dato": "Inervación: nervio femoral (L2–L4)."
+ },
+ {
+  "id": "sartorio",
+  "nombres": [
+   "Músculo sartorio"
+  ],
+  "funcion": "Flexiona, abduce y rota lateralmente la cadera, y flexiona la rodilla (posición de 'sastre').",
+  "conceptos": [
+   [
+    "flexion",
+    "flexiona"
+   ],
+   [
+    "cadera",
+    "rodilla"
+   ],
+   [
+    "abduc",
+    "rota",
+    "rotacion lateral"
+   ]
+  ],
+  "enfermedades": [
+   {
+    "nombre": "Avulsión de la espina ilíaca anterosuperior",
+    "claves": [
+     "avulsion",
+     "fractura por avulsion"
+    ],
+    "nota": "En adolescentes deportistas."
+   },
+   {
+    "nombre": "Bursitis anserina",
+    "claves": [
+     "bursitis anserina",
+     "pata de ganso"
+    ],
+    "nota": "Dolor medial de rodilla en la inserción de la pata de ganso."
+   }
+  ],
+  "dato": "Inervación: nervio femoral (L2–L3). Es el músculo más largo del cuerpo y el límite lateral del triángulo femoral."
+ },
+ {
+  "id": "aductor_mayor",
+  "nombres": [
+   "Aductor mayor"
+  ],
+  "funcion": "Aduce el muslo; su porción aductora lo flexiona y su porción isquiotibial lo extiende.",
+  "conceptos": [
+   [
+    "aduc",
+    "acerca"
+   ],
+   [
+    "muslo",
+    "cadera"
+   ],
+   [
+    "flexion",
+    "extension"
+   ]
+  ],
+  "enfermedades": [
+   {
+    "nombre": "Distensión de aductores",
+    "claves": [
+     "distension",
+     "desgarro",
+     "pubalgia"
+    ],
+    "nota": "Lesión de la ingle en deportistas."
+   },
+   {
+    "nombre": "Lesión del nervio obturador",
+    "claves": [
+     "lesion obturador",
+     "lesion nerviosa"
+    ],
+    "nota": "Debilidad de la aducción del muslo, p. ej. tras cirugía pélvica."
+   }
+  ],
+  "dato": "Inervación doble: obturador (porción aductora) y porción tibial del ciático (porción isquiotibial). Su hiato da paso a los vasos femorales hacia la fosa poplítea."
+ },
+ {
+  "id": "semitendinoso",
+  "nombres": [
+   "Músculo semitendinoso"
+  ],
+  "funcion": "Isquiotibial: extiende la cadera y flexiona la rodilla; rota medialmente la pierna con la rodilla flexionada.",
+  "conceptos": [
+   [
+    "extension",
+    "extiende",
+    "cadera"
+   ],
+   [
+    "flexion",
+    "flexiona",
+    "rodilla"
+   ],
+   [
+    "isquiotibial",
+    "rota medial"
+   ]
+  ],
+  "enfermedades": [
+   {
+    "nombre": "Desgarro de isquiotibiales",
+    "claves": [
+     "desgarro",
+     "distension",
+     "isquiotibiales"
+    ],
+    "nota": "Lesión muscular frecuente en el sprint."
+   },
+   {
+    "nombre": "Uso como injerto del LCA",
+    "claves": [
+     "injerto"
+    ],
+    "nota": "Junto al grácil, para reconstruir el ligamento cruzado anterior."
+   }
+  ],
+  "dato": "Inervación: porción tibial del nervio ciático (L5–S2). Forma parte de la pata de ganso."
+ },
+ {
+  "id": "semimembranoso",
+  "nombres": [
+   "Músculo semimembranoso"
+  ],
+  "funcion": "Isquiotibial: extiende la cadera y flexiona la rodilla; rota medialmente la pierna con la rodilla flexionada.",
+  "conceptos": [
+   [
+    "extension",
+    "extiende",
+    "cadera"
+   ],
+   [
+    "flexion",
+    "flexiona",
+    "rodilla"
+   ],
+   [
+    "isquiotibial",
+    "rota medial"
+   ]
+  ],
+  "enfermedades": [
+   {
+    "nombre": "Desgarro de isquiotibiales",
+    "claves": [
+     "desgarro",
+     "distension",
+     "isquiotibiales"
+    ],
+    "nota": "Lesión deportiva frecuente."
+   },
+   {
+    "nombre": "Quiste de Baker",
+    "claves": [
+     "quiste de baker",
+     "quiste popliteo"
+    ],
+    "nota": "Quiste en la bolsa entre el semimembranoso y el gastrocnemio medial."
+   }
+  ],
+  "dato": "Inervación: porción tibial del nervio ciático (L5–S2)."
+ },
+ {
+  "id": "soleo",
+  "nombres": [
+   "Músculo sóleo"
+  ],
+  "funcion": "Flexión plantar del pie; mantiene la postura de pie y bombea la sangre venosa de la pierna.",
+  "conceptos": [
+   [
+    "flexion plantar",
+    "punta",
+    "empuja"
+   ],
+   [
+    "pie",
+    "tobillo"
+   ],
+   [
+    "postura",
+    "bipedestacion"
+   ],
+   [
+    "bomba",
+    "venosa",
+    "retorno"
+   ]
+  ],
+  "enfermedades": [
+   {
+    "nombre": "Rotura del tendón calcáneo",
+    "claves": [
+     "rotura de aquiles",
+     "tendon de aquiles",
+     "rotura"
+    ],
+    "nota": "Forma el tendón calcáneo con el gastrocnemio; prueba de Thompson."
+   },
+   {
+    "nombre": "Trombosis venosa profunda",
+    "claves": [
+     "trombosis venosa profunda",
+     "tvp",
+     "trombosis"
+    ],
+    "nota": "Sus senos venosos son sitio frecuente de inicio de trombos."
+   }
+  ],
+  "dato": "Inervación: nervio tibial (S1–S2). Junto con el gastrocnemio forma el tríceps sural."
+ },
+ {
+  "id": "tibial_anterior",
+  "nombres": [
+   "Músculo tibial anterior"
+  ],
+  "funcion": "Flexiona dorsalmente (levanta) el pie y lo invierte; evita que la punta arrastre al caminar.",
+  "conceptos": [
+   [
+    "dorsiflexion",
+    "flexion dorsal",
+    "levanta",
+    "eleva"
+   ],
+   [
+    "pie",
+    "tobillo"
+   ],
+   [
+    "inversion",
+    "marcha"
+   ]
+  ],
+  "enfermedades": [
+   {
+    "nombre": "Pie caído",
+    "claves": [
+     "pie caido",
+     "steppage",
+     "lesion fibular"
+    ],
+    "nota": "Por lesión del nervio fibular común o profundo."
+   },
+   {
+    "nombre": "Síndrome compartimental anterior",
+    "claves": [
+     "sindrome compartimental"
+    ],
+    "nota": "Dolor intenso en la cara anterior de la pierna."
+   }
+  ],
+  "dato": "Inervación: nervio fibular profundo (L4–L5)."
+ },
+ {
+  "id": "tibial_posterior",
+  "nombres": [
+   "Músculo tibial posterior"
+  ],
+  "funcion": "Flexión plantar e inversión del pie; principal soporte dinámico del arco longitudinal medial.",
+  "conceptos": [
+   [
+    "flexion plantar"
+   ],
+   [
+    "inversion"
+   ],
+   [
+    "arco",
+    "soporte",
+    "sostiene"
+   ],
+   [
+    "pie"
+   ]
+  ],
+  "enfermedades": [
+   {
+    "nombre": "Disfunción del tibial posterior",
+    "claves": [
+     "pie plano",
+     "pie plano adquirido",
+     "disfuncion",
+     "tendinopatia"
+    ],
+    "nota": "Causa más frecuente de pie plano adquirido en adultos."
+   },
+   {
+    "nombre": "Síndrome del túnel del tarso",
+    "claves": [
+     "tunel del tarso",
+     "tunel tarsiano"
+    ],
+    "nota": "Compresión del nervio tibial detrás del maléolo medial, junto a su tendón."
+   }
+  ],
+  "dato": "Inervación: nervio tibial (L4–L5). Su tendón pasa detrás del maléolo medial."
+ },
+ {
+  "id": "fibular_largo",
+  "nombres": [
+   "Músculo fibular largo"
+  ],
+  "funcion": "Evierte el pie y ayuda a la flexión plantar; sostiene el arco transverso del pie.",
+  "conceptos": [
+   [
+    "eversion",
+    "evierte"
+   ],
+   [
+    "flexion plantar"
+   ],
+   [
+    "arco",
+    "sostiene"
+   ],
+   [
+    "pie"
+   ]
+  ],
+  "enfermedades": [
+   {
+    "nombre": "Esguince de tobillo por inversión",
+    "claves": [
+     "esguince",
+     "inversion"
+    ],
+    "nota": "Los fibulares protegen contra la inversión."
+   },
+   {
+    "nombre": "Lesión del nervio fibular superficial",
+    "claves": [
+     "lesion fibular",
+     "lesion nerviosa"
+    ],
+    "nota": "Pérdida de eversión."
+   }
+  ],
+  "dato": "Inervación: nervio fibular superficial (L5–S1). Su tendón cruza la planta hasta el primer metatarsiano y el cuneiforme medial."
+ }
+]

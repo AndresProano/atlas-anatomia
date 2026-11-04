@@ -43,8 +43,9 @@ export async function wikiFor({ es, en }) {
     const whole = (s, rx) => { const m = clean(s).match(rx); return m ? m[m.length - 1] : null; };
     const esWhole = es && whole(es, /^(porci[oó]n|cabeza|vientre|parte|rama|segmento|afluente)\b.*?\b(de la|del|de los|de las|de)\s+(.+)$/i);
     const enWhole = en && whole(en, /^.*?\b(part|head|belly|branch|segment|tributary|portion)\s+of\s+(the\s+)?(.+)$/i);
-    if (es) tries.push(['es', clean(es)]);
+    // las partes no suelen tener artículo propio: primero el todo
     if (esWhole) tries.push(['es', esWhole]);
+    if (es) tries.push(['es', clean(es)]);
     if (enWhole) tries.push(['en', enWhole]);
     if (en) tries.push(['en', clean(en)]);
     for (const [lang, q] of tries) {

@@ -147,8 +147,18 @@ export async function createBody(viewer, { onProgress, onSystemLoaded } = {}) {
     const m = meshes.get(id);
     return m ? new THREE.Box3().setFromObject(m) : new THREE.Box3();
   }
+  // mirar la pieza desde el lado del cuerpo en el que está (frente, espalda, costado)
   function focus(id, margin = 2.2) {
-    viewer.fitTo(meshBox(id), null, { margin });
+    const box = meshBox(id);
+    const c = box.getCenter(new THREE.Vector3());
+    const axis = bodyBox.getCenter(new THREE.Vector3());
+    const out = new THREE.Vector3(c.x - axis.x, 0, c.z - axis.z);
+    let dir = null;
+    if (out.length() > 0.04) {
+      out.normalize();
+      dir = new THREE.Vector3(out.x * 0.8, 0.25, out.z * 0.8 + (out.z >= -0.3 ? 0.35 : 0)).normalize();
+    }
+    viewer.fitTo(box, dir, { margin });
   }
   function reveal(id) {
     const p = byId.get(id);

@@ -8,7 +8,7 @@
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><circle cx='16' cy='7' r='5' fill='%23c0392b'/><rect x='11' y='13' width='10' height='17' rx='4' fill='%23c0392b'/></svg>">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="styles.css?v=dd263107">
   <script type="importmap">
   {
     "imports": {
@@ -120,11 +120,11 @@
     <!-- Derecha: ficha de la estructura -->
     <aside class="info" id="info">
       <div class="empty" id="info-empty">
-        <p><strong>Haz clic en una estructura</strong> para ver su ficha.</p>
+        <p><strong>Toca o haz clic en una estructura</strong> para ver su ficha.</p>
         <ul class="tips">
-          <li>Arrastrar: rotar · Rueda: zoom · Clic derecho: mover</li>
-          <li>Doble clic: centrar en la pieza</li>
-          <li><kbd>H</kbd> ocultar selección · <kbd>I</kbd> aislar · <kbd>Esc</kbd> limpiar</li>
+          <li><span class="l">Arrastrar: rotar · Rueda: zoom · Clic derecho: mover</span><span class="s">Un dedo: rotar · Pellizcar: zoom · Dos dedos: mover</span></li>
+          <li><span class="l">Doble clic: centrar en la pieza</span><span class="s">Doble toque: centrar en la pieza</span></li>
+          <li class="desk-only"><kbd>H</kbd> ocultar selección · <kbd>I</kbd> aislar · <kbd>Esc</kbd> limpiar</li>
         </ul>
       </div>
       <div id="info-card" hidden>
@@ -149,6 +149,7 @@
     </aside>
   </main>
 
-  <script type="module" src="js/main.js"></script>
+  <script>window.ATLAS_V = 'dd263107';</script>
+  <script type="module" src="js/main.js?v=dd263107"></script>
 </body>
 </html>

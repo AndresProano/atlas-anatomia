@@ -36,8 +36,8 @@ export const displayName = (p) => p.es || p.en;
 
 export async function createBody(viewer, { onProgress, onSystemLoaded } = {}) {
   const [catalog, models] = await Promise.all([
-    fetch('data/parts.json').then((r) => r.json()),
-    fetch('data/models.json').then((r) => r.json()),
+    fetch(`data/parts.json?v=${window.ATLAS_V || ''}`).then((r) => r.json()),
+    fetch(`data/models.json?v=${window.ATLAS_V || ''}`).then((r) => r.json()),
   ]);
   const byId = new Map(catalog.parts.map((p) => [p.id, p]));
   const root = new THREE.Group();
@@ -123,7 +123,7 @@ export async function createBody(viewer, { onProgress, onSystemLoaded } = {}) {
   async function loadSystem(system) {
     const info = models[system];
     if (!info) return;
-    const gltf = await loader.loadAsync(info.file, (e) => {
+    const gltf = await loader.loadAsync(`${info.file}?v=${window.ATLAS_V || ''}`, (e) => {
       done[system] = e.loaded;
       onProgress?.(Object.values(done).reduce((a, b) => a + b, 0) / total, system);
     });

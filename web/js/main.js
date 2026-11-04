@@ -1,9 +1,9 @@
-import { createViewer, VIEWS } from './scene.js';
-import { createBody, SYSTEM_COLORS, displayName } from './body.js';
-import { createOrgans } from './organs.js';
-import { createQuiz } from './quiz.js';
-import { renderSources } from './sources.js';
-import { wikiFor, renderWiki } from './wiki.js';
+import { createViewer, VIEWS } from './scene.js?v=dd263107';
+import { createBody, SYSTEM_COLORS, displayName } from './body.js?v=dd263107';
+import { createOrgans } from './organs.js?v=dd263107';
+import { createQuiz } from './quiz.js?v=dd263107';
+import { renderSources } from './sources.js?v=dd263107';
+import { wikiFor, renderWiki } from './wiki.js?v=dd263107';
 
 const $ = (s) => document.querySelector(s);
 const canvas = $('#canvas');
@@ -206,8 +206,8 @@ searchEl.addEventListener('blur', () => setTimeout(() => { resultsEl.hidden = tr
 
 // --- órganos HuBMAP ----------------------------------------------------------
 const [hubmap, terms] = await Promise.all([
-  fetch('data/hubmap.json').then((r) => r.json()),
-  fetch('data/terms.json').then((r) => r.json()),
+  fetch(`data/hubmap.json?v=${window.ATLAS_V || ''}`).then((r) => r.json()),
+  fetch(`data/terms.json?v=${window.ATLAS_V || ''}`).then((r) => r.json()),
 ]);
 organs = createOrgans(viewer, terms, {
   onProgress: (f) => progress(f, `Descargando órgano desde HuBMAP… ${Math.round(Math.min(f, 1) * 100)}%`),
@@ -320,7 +320,7 @@ function setMode(m) {
     if (organs.current) { organs.frame(VIEWS.front); showOrganSummary(currentOrgan, organs.current); }
     else openOrgan(hubmap.find((o) => o.id === '3d-vh-f-heart') || hubmap[0]); // nunca abrir vacío
   } else {
-    infoEmpty.querySelector('p').innerHTML = '<strong>Haz clic en una estructura</strong> para ver su ficha.';
+    infoEmpty.querySelector('p').innerHTML = '<strong>Toca o haz clic en una estructura</strong> para ver su ficha.';
   }
   if (m === 'quiz') quiz.next();
   if (m === 'sources') renderSources($('#sources-page'));

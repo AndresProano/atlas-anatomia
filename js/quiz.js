@@ -1,6 +1,6 @@
 // Quiz: se muestra solo la capa de la pregunta (con el esqueleto tenue de referencia),
 // se resalta una estructura conocida y hay que elegir su nombre entre 4 opciones.
-import { displayName } from './body.js?v=d68bc1b1';
+import { displayName } from './body.js?v=429cfb2c';
 
 export const QUIZ_GROUPS = {
   all: { label: 'Todo el cuerpo', systems: ['esqueletico', 'muscular', 'digestivo', 'respiratorio', 'urogenital', 'endocrino', 'cardiovascular', 'nervioso'] },

@@ -1,11 +1,11 @@
 // Interfaz tipo app: visor a pantalla completa, buscador flotante, capas en chips,
 // ficha como hoja inferior (móvil) o tarjeta lateral (escritorio) y barra de pestañas.
-import { createViewer, VIEWS } from './scene.js?v=d68bc1b1';
-import { createBody, SYSTEM_COLORS, displayName } from './body.js?v=d68bc1b1';
-import { createOrgans } from './organs.js?v=d68bc1b1';
-import { createQuiz } from './quiz.js?v=d68bc1b1';
-import { renderSources } from './sources.js?v=d68bc1b1';
-import { wikiFor } from './wiki.js?v=d68bc1b1';
+import { createViewer, VIEWS } from './scene.js?v=429cfb2c';
+import { createBody, SYSTEM_COLORS, displayName } from './body.js?v=429cfb2c';
+import { createOrgans } from './organs.js?v=429cfb2c';
+import { createQuiz } from './quiz.js?v=429cfb2c';
+import { renderSources } from './sources.js?v=429cfb2c';
+import { wikiFor } from './wiki.js?v=429cfb2c';
 
 const $ = (s) => document.querySelector(s);
 const V = window.ATLAS_V || '';

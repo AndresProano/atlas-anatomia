@@ -289,3 +289,23 @@ body.sheet-open .dock { opacity: 0; transform: translateY(10px); pointer-events:
 /* los avisos van arriba para no tapar la ficha ni el quiz */
 .toast { top: calc(70px + var(--safe-t)); bottom: auto; }
 @media (min-width: 900px) { .toast { top: 76px; bottom: auto; } }
+
+/* Comprender: función y enfermedades */
+.quiz-family { margin: 0 0 6px; }
+.quiz-family button { font-weight: 600; }
+.type-answer.col { flex-direction: column; }
+.type-answer textarea {
+  width: 100%; padding: 12px 14px; border-radius: 14px; border: 2px solid var(--border); background: var(--surface-2);
+  font: 16px/1.4 inherit; color: var(--text); outline: 0; resize: vertical; font-family: inherit;
+}
+.type-answer textarea:focus { border-color: var(--accent); }
+.type-answer textarea.ok { border-color: var(--ok); }
+.type-answer textarea.almost { border-color: #d97706; }
+.type-answer textarea.bad { border-color: var(--bad); }
+.type-answer.col .row { margin-top: 0; }
+.quiz .explain p { margin: 4px 0; font-size: 14px; }
+.dz { margin: 4px 0 6px; padding-left: 18px; font-size: 14px; }
+.dz li { margin-bottom: 4px; }
+.dato { font-size: 13px; color: var(--muted); border-left: 3px solid var(--accent); padding-left: 8px; }
+.clin { margin-bottom: 14px; }
+.clin p { margin: 0 0 8px; }

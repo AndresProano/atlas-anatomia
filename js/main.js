@@ -1,12 +1,13 @@
 // Interfaz tipo app: visor a pantalla completa, buscador flotante, capas en chips,
 // ficha como hoja inferior (móvil) o tarjeta lateral (escritorio) y barra de pestañas.
-import { createViewer, VIEWS } from './scene.js?v=4f7d79da';
-import { createBody, SYSTEM_COLORS, displayName } from './body.js?v=4f7d79da';
-import { createOrgans } from './organs.js?v=4f7d79da';
-import { createProfiles } from './profiles.js?v=4f7d79da';
-import { createQuiz } from './quiz.js?v=4f7d79da';
-import { renderSources } from './sources.js?v=4f7d79da';
-import { wikiFor } from './wiki.js?v=4f7d79da';
+import { createViewer, VIEWS } from './scene.js?v=a60fd833';
+import { createBody, SYSTEM_COLORS, displayName } from './body.js?v=a60fd833';
+import { createOrgans } from './organs.js?v=a60fd833';
+import { createProfiles } from './profiles.js?v=a60fd833';
+import { loadClinica } from './clinica.js?v=a60fd833';
+import { createQuiz } from './quiz.js?v=a60fd833';
+import { renderSources } from './sources.js?v=a60fd833';
+import { wikiFor } from './wiki.js?v=a60fd833';
 
 const $ = (s) => document.querySelector(s);
 const V = window.ATLAS_V || '';
@@ -41,6 +42,7 @@ const canvas = $('#canvas');
 const viewer = createViewer(canvas);
 let mode = 'body';
 let organs = null;
+let clinica = null; // base clínica, se carga más abajo
 
 // --- tema ---------------------------------------------------------------
 if (store.get('atlas-theme')) document.documentElement.dataset.theme = store.get('atlas-theme');
@@ -163,6 +165,19 @@ function fillDesc(es, en, target) {
       <a class="more" href="${esc(w.url)}" target="_blank" rel="noopener">Leer más en Wikipedia${w.lang === 'en' ? ' (inglés)' : ''} →</a>`;
   });
 }
+// bloque clínico de la ficha (si la estructura está en la base)
+function clinicaHtml(name) {
+  const ctx = clinica && clinica.forContext(name.replace(/\s*\((izq|der)\.\)/, ''));
+  if (!ctx) return '';
+  const e = ctx.entry;
+  return `<div class="clin">
+    ${ctx.parent ? `<p class="sub">Es parte de: <b>${esc(e.nombres[0])}</b></p>` : ''}
+    <div class="section-title">Función${ctx.parent ? ` · ${esc(e.nombres[0])}` : ''}</div><p>${esc(e.funcion)}</p>
+    ${e.dato ? `<p class="dato">${esc(e.dato)}</p>` : ''}
+    <div class="section-title">Enfermedades frecuentes</div>
+    <ul class="dz">${e.enfermedades.map((d) => `<li><b>${esc(d.nombre)}</b>: ${esc(d.nota)}</li>`).join('')}</ul>
+  </div>`;
+}
 function showPart(p) {
   if (!p) return closeSheet();
   const target = { kind: 'body', id: p.id };
@@ -171,6 +186,7 @@ function showPart(p) {
     <h2>${esc(displayName(p))}</h2>
     <p class="latin">${esc(p.la || p.en)}</p>
     ${actionsHtml()}
+    ${clinicaHtml(displayName(p))}
     ${descHtml()}`, target);
   fillDesc(p.es, p.en, target);
 }
@@ -356,7 +372,8 @@ function selectOrganPart(gk, focus = false) {
 // --- quiz ------------------------------------------------------------------------------------
 const quizBox = $('#quiz-box');
 const profiles = createProfiles();
-let quiz = createQuiz(body, quizBox, { profiles });
+clinica = await loadClinica(V);
+let quiz = createQuiz(body, quizBox, { profiles, clinica });
 
 // --- cuerpo masculino / femenino ----------------------------------------------------------------
 const bodies = { M: body };
@@ -387,7 +404,7 @@ async function switchBody(sx) {
   body = bodies[sx];
   body.root.visible = mode === 'body' || mode === 'quiz';
   xray = false;
-  quiz = createQuiz(body, quizBox, { profiles });
+  quiz = createQuiz(body, quizBox, { profiles, clinica });
   closeSheet();
   searchEl.value = ''; results = []; renderResults();
   renderLayers();

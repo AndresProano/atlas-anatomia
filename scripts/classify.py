@@ -124,7 +124,7 @@ for line in lines[1:]:
         tr.setdefault(cols[0].strip().lower(), {"la": cols[1].strip(), "es": cols[3].strip()})
 
 # traducciones complementarias (términos que Z-Anatomy no tiene), ver data-raw/traducciones_es.json
-extra_path = os.path.join(raw, "traducciones_es.json")
+extra_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "data", "traducciones_es.json")
 extra = json.load(open(extra_path, encoding="utf-8")) if os.path.exists(extra_path) else {}
 extra = {k.lower().strip(): v for k, v in extra.items()}
 
@@ -197,7 +197,7 @@ for fn in sorted(os.listdir(objdir)):
         system = next((s for s, rx in KEYWORDS if re.search(rx, low)), None)
     system = system or "otros"
     es, la, side = translate(en)
-    if es and side:
+    if es and side and not re.search(r"izquierd|derech", es, re.I):
         es = f"{es} ({SIDE_ES[side]})"
     nums = [float(x) for x in re.findall(r"-?\d+\.?\d*", meta.get("bounds", ""))]
     parts.append({

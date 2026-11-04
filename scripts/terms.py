@@ -12,7 +12,7 @@ for line in open(os.path.join(raw, "za", "Translations0.txt"), encoding="utf-8")
     c = line.split(";")
     if len(c) >= 4 and c[0].strip() and c[3].strip():
         t.setdefault(c[0].strip().lower(), [c[3].strip(), c[1].strip()])
-extra = os.path.join(raw, "traducciones_es.json")
+extra = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "data", "traducciones_es.json")
 if os.path.exists(extra):
     for k, v in json.load(open(extra, encoding="utf-8")).items():
         t.setdefault(k.lower().strip(), [v, ""])

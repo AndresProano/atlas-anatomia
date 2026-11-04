@@ -1,5 +1,7 @@
 # Atlas Anatómico 3D
 
+**Sitio publicado:** https://andresproano.github.io/atlas-anatomia/
+
 Atlas 3D del cuerpo humano para estudio personal (no comercial). Junta en un solo visor web varias bases de datos anatómicas abiertas:
 
 | Fuente | Qué aporta | Licencia |

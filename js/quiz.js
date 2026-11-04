@@ -1,5 +1,5 @@
 // Quiz: se resalta una estructura y hay que elegir su nombre entre 4 opciones del mismo sistema.
-import { displayName } from './body.js';
+import { displayName } from './body.js?v=dd263107';
 
 export function createQuiz(body, box, { onAnswer, onQuestion } = {}) {
   let score = 0, total = 0, system = 'all', current = null;

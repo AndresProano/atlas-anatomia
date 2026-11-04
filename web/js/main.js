@@ -1,11 +1,11 @@
 // Interfaz tipo app: visor a pantalla completa, buscador flotante, capas en chips,
 // ficha como hoja inferior (móvil) o tarjeta lateral (escritorio) y barra de pestañas.
-import { createViewer, VIEWS } from './scene.js?v=429cfb2c';
-import { createBody, SYSTEM_COLORS, displayName } from './body.js?v=429cfb2c';
-import { createOrgans } from './organs.js?v=429cfb2c';
-import { createQuiz } from './quiz.js?v=429cfb2c';
-import { renderSources } from './sources.js?v=429cfb2c';
-import { wikiFor } from './wiki.js?v=429cfb2c';
+import { createViewer, VIEWS } from './scene.js?v=838d52e1';
+import { createBody, SYSTEM_COLORS, displayName } from './body.js?v=838d52e1';
+import { createOrgans } from './organs.js?v=838d52e1';
+import { createQuiz } from './quiz.js?v=838d52e1';
+import { renderSources } from './sources.js?v=838d52e1';
+import { wikiFor } from './wiki.js?v=838d52e1';
 
 const $ = (s) => document.querySelector(s);
 const V = window.ATLAS_V || '';
@@ -22,7 +22,7 @@ const ICON = {
   xray: '<svg class="ico" viewBox="0 0 24 24"><rect x="4" y="3" width="16" height="18" rx="3"/><path d="M12 7v10M9 9h6M9 12h6M9 15h6"/></svg>',
 };
 const SYSTEM_SHORT = {
-  esqueletico: 'Hueso', articular: 'Articulación', muscular: 'Músculo', cardiovascular: 'Corazón y vasos',
+  reproductor: 'Aparato reproductor', esqueletico: 'Hueso', articular: 'Articulación', muscular: 'Músculo', cardiovascular: 'Corazón y vasos',
   nervioso: 'Sistema nervioso', respiratorio: 'Sistema respiratorio', digestivo: 'Sistema digestivo',
   urogenital: 'Sistema urogenital', endocrino: 'Sistema endocrino', ojo_oido: 'Órganos de los sentidos', piel: 'Piel', otros: 'Órgano',
 };
@@ -32,6 +32,7 @@ const LAYERS = [
   { key: 'organos', label: 'Órganos', color: SYSTEM_COLORS.digestivo, systems: ['digestivo', 'respiratorio', 'urogenital', 'endocrino', 'otros'] },
   { key: 'vasos', label: 'Vasos', color: SYSTEM_COLORS.cardiovascular, systems: ['cardiovascular'] },
   { key: 'nervios', label: 'Nervios', color: SYSTEM_COLORS.nervioso, systems: ['nervioso', 'ojo_oido'] },
+  { key: 'reproductor', label: 'Reproductor', color: SYSTEM_COLORS.reproductor, systems: ['reproductor'] },
   { key: 'piel', label: 'Piel', color: SYSTEM_COLORS.piel, systems: ['piel'] },
 ];
 
@@ -96,11 +97,12 @@ function setLayer(l, on) { l.systems.forEach((s) => body.setSystemVisible(s, on)
 function setXray(on) {
   xray = on;
   body.setSystemOpacity('muscular', on ? 0.18 : 1);
-  body.setSystemOpacity('piel', on ? 0.15 : 0.35);
+  body.setSystemOpacity('piel', on ? 0.08 : (body.female ? 0.22 : 0.35));
   renderLayers();
 }
 function renderLayers() {
-  layersEl.innerHTML = LAYERS.map((l) =>
+  const has = (l) => l.systems.some((s) => body.models[s]);
+  layersEl.innerHTML = LAYERS.filter(has).map((l) =>
     `<button class="chip ${layerOn(l) ? '' : 'off'}" data-layer="${l.key}" aria-pressed="${layerOn(l)}"><span class="dot" style="background:${l.color}"></span>${l.label}</button>`).join('')
     + `<button class="chip ${xray ? 'on' : ''}" data-xray aria-pressed="${xray}">${ICON.xray}Rayos X</button>`;
 }
@@ -352,7 +354,51 @@ function selectOrganPart(gk, focus = false) {
 
 // --- quiz ------------------------------------------------------------------------------------
 const quizBox = $('#quiz-box');
-const quiz = createQuiz(body, quizBox);
+let quiz = createQuiz(body, quizBox);
+
+// --- cuerpo masculino / femenino ----------------------------------------------------------------
+const bodies = { M: body };
+let bodySex = 'M';
+const sexBtns = document.querySelectorAll('#body-sex button');
+async function switchBody(sx) {
+  if (sx === bodySex) return;
+  sexBtns.forEach((b) => b.classList.toggle('active', b.dataset.sex === sx));
+  if (!bodies[sx]) {
+    progress(0, 'Cargando el cuerpo femenino…');
+    const holder = {};
+    holder.b = await createBody(viewer, {
+      dataset: { parts: 'female.json', models: 'female-models.json' },
+      onProgress: (f) => progress(f, `Cargando el cuerpo femenino… ${Math.round(f * 100)}%`),
+      onSystemLoaded: () => {
+        if (body === holder.b) renderLayers();
+        const left = holder.b?.order.filter((x) => holder.b.models[x] && !holder.b.state.loaded.has(x)).length;
+        if (holder.b && !left) loaderDone();
+      },
+    });
+    bodies[sx] = holder.b;
+    holder.b.allLoaded.then(() => { loaderDone(); updateClip(); });
+  }
+  if (mode === 'quiz') quiz.stop();
+  body.select(null);
+  body.root.visible = false;
+  bodySex = sx;
+  body = bodies[sx];
+  body.root.visible = mode === 'body' || mode === 'quiz';
+  xray = false;
+  quiz = createQuiz(body, quizBox);
+  closeSheet();
+  searchEl.value = ''; results = []; renderResults();
+  renderLayers();
+  updateShowAll();
+  updateClip();
+  viewer.fitTo(body.bodyBox, VIEWS.front);
+  if (mode === 'quiz') quiz.start();
+  if (sx === 'F' && !store.get('atlas-female-hint')) {
+    store.set('atlas-female-hint', '1');
+    toast('Cuerpo femenino (HuBMAP): órganos en su lugar, pelvis femenina y silueta de piel', 4500);
+  }
+}
+sexBtns.forEach((b) => b.addEventListener('click', () => switchBody(b.dataset.sex)));
 
 // --- modos ------------------------------------------------------------------------------------
 function setMode(m) {
@@ -363,6 +409,7 @@ function setMode(m) {
   body.root.visible = m === 'body' || m === 'quiz';
   organs.root.visible = m === 'organs';
   $('#search-pill').hidden = m !== 'body';
+  $('#body-sex').hidden = m !== 'body' && m !== 'quiz';
   $('#tools').hidden = m === 'quiz' || m === 'sources';
   $('#layers').hidden = m !== 'body';
   $('#organ-bar').hidden = m !== 'organs';
@@ -374,6 +421,7 @@ function setMode(m) {
   body.select(null);
   if (m === 'body') viewer.fitTo(body.bodyBox, VIEWS.front, { instant: true });
   if (m === 'organs') {
+    if (!organs.current) { sex = bodySex; document.querySelectorAll('#sex-filter button').forEach((x) => x.classList.toggle('active', x.dataset.sex === sex)); }
     renderOrganChips();
     if (organs.current) { organs.frame(VIEWS.front); showOrganSummary(); }
     else openOrgan(hubmap.find((o) => o.id === '3d-vh-f-heart') || hubmap[0]); // nunca abrir vacío
@@ -459,4 +507,4 @@ window.addEventListener('keydown', (e) => {
 });
 
 setMode('body');
-window.__atlas = { viewer, body, organs, quiz }; // depuración y pruebas
+window.__atlas = { viewer, get body() { return body; }, organs, get quiz() { return quiz; }, switchBody }; // depuración y pruebas

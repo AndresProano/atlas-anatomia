@@ -1,7 +1,7 @@
 // Sincronización en la nube (Cloudflare Worker "atlas-sync", ver worker/).
 // Cada perfil puede tener un código (p. ej. VALE-7K2P-QX9M) que funciona como contraseña:
 // con ese código se recupera el progreso en cualquier dispositivo.
-const DEFAULT_URL = 'https://atlas-sync.REEMPLAZAR.workers.dev';
+const DEFAULT_URL = 'https://atlas-sync.freelance-sites.workers.dev';
 const ALPHABET = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'; // sin 0/O ni 1/I para no confundir
 export const CODE_RE = /^[A-Z2-9]{4}-[A-Z2-9]{4}-[A-Z2-9]{4}$/;
 

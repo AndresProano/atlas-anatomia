@@ -16,6 +16,8 @@ const words = (s) => s.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase().sp
 function relevant(title, q) {
   const t = new Set(words(title));
   const qs = words(q);
+  // artículos de patologías no describen la estructura
+  if (/^(fractura|luxaci|s[ií]ndrome|enfermedad|c[aá]ncer|tumor|fracture|syndrome|disease|cancer)/i.test(title)) return false;
   return !qs.length || qs.some((w) => t.has(w));
 }
 
@@ -41,7 +43,7 @@ export async function wikiFor({ es, en }) {
     const tries = [];
     // "Porción clavicular del deltoides" -> buscar también el todo ("deltoides")
     const whole = (s, rx) => { const m = clean(s).match(rx); return m ? m[m.length - 1] : null; };
-    const esWhole = es && whole(es, /^(porci[oó]n|cabeza|vientre|parte|rama|segmento|afluente)\b.*?\b(de la|del|de los|de las|de)\s+(.+)$/i);
+    const esWhole = es && whole(es, /^(porci[oó]n|cabeza|vientre|parte|rama|segmento|afluente|cuerpo)\b.*?\b(de la|del|de los|de las|de)\s+(.+)$/i);
     const enWhole = en && whole(en, /^.*?\b(part|head|belly|branch|segment|tributary|portion)\s+of\s+(the\s+)?(.+)$/i);
     // las partes no suelen tener artículo propio: primero el todo
     if (esWhole) tries.push(['es', esWhole]);

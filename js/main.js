@@ -21,6 +21,17 @@ $('#theme-btn').addEventListener('click', () => {
   store.set('atlas-theme', document.documentElement.dataset.theme);
 });
 
+// --- aviso si el navegador dibuja sin tarjeta gráfica ---
+if (viewer.softwareGpu) {
+  const warn = document.createElement('div');
+  warn.className = 'gpu-warn';
+  warn.innerHTML = '<strong>Tu navegador está dibujando sin la tarjeta gráfica</strong> y todo irá lento. '
+    + 'En Chrome: Configuración → Sistema → activa <em>«Usar aceleración de hardware cuando esté disponible»</em> y reinicia. '
+    + '<button aria-label="Cerrar aviso">✕</button>';
+  warn.querySelector('button').addEventListener('click', () => warn.remove());
+  document.querySelector('#stage').append(warn);
+}
+
 // --- carga --------------------------------------------------------------
 const loaderEl = $('#loader'), loaderBar = $('#loader-bar'), loaderText = $('#loader-text');
 function progress(f, text) {
@@ -345,3 +356,4 @@ window.addEventListener('keydown', (e) => {
 });
 
 setMode('body');
+window.__atlas = { viewer, body, organs }; // depuración y medición de rendimiento

@@ -1,0 +1,74 @@
+{
+ "digestivo": {
+  "file": "models/digestivo.glb",
+  "parts": 106,
+  "trisOriginal": 283470,
+  "bytes": 779640
+ },
+ "esqueletico": {
+  "file": "models/esqueletico.glb",
+  "parts": 239,
+  "trisOriginal": 621814,
+  "bytes": 1959324
+ },
+ "ojo_oido": {
+  "file": "models/ojo_oido.glb",
+  "parts": 38,
+  "trisOriginal": 299404,
+  "bytes": 768740
+ },
+ "nervioso": {
+  "file": "models/nervioso.glb",
+  "parts": 147,
+  "trisOriginal": 535712,
+  "bytes": 1757212
+ },
+ "articular": {
+  "file": "models/articular.glb",
+  "parts": 78,
+  "trisOriginal": 167852,
+  "bytes": 604940
+ },
+ "muscular": {
+  "file": "models/muscular.glb",
+  "parts": 433,
+  "trisOriginal": 2395836,
+  "bytes": 5677596
+ },
+ "cardiovascular": {
+  "file": "models/cardiovascular.glb",
+  "parts": 1054,
+  "trisOriginal": 2038944,
+  "bytes": 5866988
+ },
+ "otros": {
+  "file": "models/otros.glb",
+  "parts": 5,
+  "trisOriginal": 4498,
+  "bytes": 20400
+ },
+ "endocrino": {
+  "file": "models/endocrino.glb",
+  "parts": 3,
+  "trisOriginal": 7454,
+  "bytes": 30896
+ },
+ "respiratorio": {
+  "file": "models/respiratorio.glb",
+  "parts": 104,
+  "trisOriginal": 78740,
+  "bytes": 355228
+ },
+ "piel": {
+  "file": "models/piel.glb",
+  "parts": 3,
+  "trisOriginal": 224348,
+  "bytes": 398720
+ },
+ "urogenital": {
+  "file": "models/urogenital.glb",
+  "parts": 18,
+  "trisOriginal": 17128,
+  "bytes": 77732
+ }
+}

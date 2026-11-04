@@ -1,0 +1,1136 @@
+[
+{
+"id": "3d-vh-f-palatine-tonsil-r",
+"en": "Right palatine tonsil",
+"es": "Amígdala palatina derecha",
+"sex": "F",
+"url": "https://cdn.humanatlas.io/digital-objects/ref-organ/palatine-tonsil-female-right/v1.2/assets/3d-vh-f-palatine-tonsil-r.glb",
+"bytes": 663256,
+"uberon": "fma54973",
+"dims_mm": [
+17.8,
+27.3,
+15.6
+]
+},
+{
+"id": "3d-vh-m-palatine-tonsil-r",
+"en": "Right palatine tonsil",
+"es": "Amígdala palatina derecha",
+"sex": "M",
+"url": "https://cdn.humanatlas.io/digital-objects/ref-organ/palatine-tonsil-male-right/v1.2/assets/3d-vh-m-palatine-tonsil-r.glb",
+"bytes": 222132,
+"uberon": "fma54973",
+"dims_mm": [
+16.8,
+24.0,
+14.4
+]
+},
+{
+"id": "3d-vh-f-palatine-tonsil-l",
+"en": "Left palatine tonsil",
+"es": "Amígdala palatina izquierda",
+"sex": "F",
+"url": "https://cdn.humanatlas.io/digital-objects/ref-organ/palatine-tonsil-female-left/v1.2/assets/3d-vh-f-palatine-tonsil-l.glb",
+"bytes": 930340,
+"uberon": "fma54974",
+"dims_mm": [
+19.6,
+26.3,
+17.9
+]
+},
+{
+"id": "3d-vh-m-palatine-tonsil-l",
+"en": "Left palatine tonsil",
+"es": "Amígdala palatina izquierda",
+"sex": "M",
+"url": "https://cdn.humanatlas.io/digital-objects/ref-organ/palatine-tonsil-male-left/v1.2/assets/3d-vh-m-palatine-tonsil-l.glb",
+"bytes": 449008,
+"uberon": "fma54974",
+"dims_mm": [
+16.5,
+24.2,
+16.4
+]
+},
+{
+"id": "3d-vh-f-epiploic-appendage-of-transverse-colon",
+"en": "Epiploic appendage of transverse colon",
+"es": "Apéndice epiploico del colon transverso",
+"sex": "F",
+"url": "https://cdn.humanatlas.io/digital-objects/ref-organ/epiploic-appendage-of-transverse-colon-female/v1.0/assets/3d-vh-f-epiploic-appendage-of-transverse-colon.glb",
+"bytes": 535024,
+"uberon": "fma15046",
+"dims_mm": [
+69.7,
+23.5,
+24.7
+]
+},
+{
+"id": "3d-vh-m-epiploic-appendage-of-transverse-colon",
+"en": "Epiploic appendage of transverse colon",
+"es": "Apéndice epiploico del colon transverso",
+"sex": "M",
+"url": "https://cdn.humanatlas.io/digital-objects/ref-organ/epiploic-appendage-of-transverse-colon-male/v1.0/assets/3d-vh-m-epiploic-appendage-of-transverse-colon.glb",
+"bytes": 1366476,
+"uberon": "fma15046",
+"dims_mm": [
+86.1,
+38.4,
+44.6
+]
+},
+{
+"id": "3d-vh-f-spleen",
+"en": "Spleen",
+"es": "Bazo",
+"sex": "F",
+"url": "https://cdn.humanatlas.io/digital-objects/ref-organ/spleen-female/v1.3/assets/3d-vh-f-spleen.glb",
+"bytes": 276824,
+"uberon": "UBERON_0002106",
+"dims_mm": [
+89.6,
+102.3,
+70.9
+]
+},
+{
+"id": "3d-vh-m-spleen",
+"en": "Spleen",
+"es": "Bazo",
+"sex": "M",
+"url": "https://cdn.humanatlas.io/digital-objects/ref-organ/spleen-male/v1.3/assets/3d-vh-m-spleen.glb",
+"bytes": 540348,
+"uberon": "UBERON_0002106",
+"dims_mm": [
+110.4,
+118.6,
+88.6
+]
+},
+{
+"id": "3d-vh-f-mouth",
+"en": "Mouth",
+"es": "Boca",
+"sex": "F",
+"url": "https://cdn.humanatlas.io/digital-objects/ref-organ/mouth-female/v1.0/assets/3d-vh-f-mouth.glb",
+"bytes": 103690760,
+"uberon": "UBERON_0000165",
+"dims_mm": [
+145.0,
+108.4,
+128.7
+]
+},
+{
+"id": "3d-vh-m-mouth",
+"en": "Mouth",
+"es": "Boca",
+"sex": "M",
+"url": "https://cdn.humanatlas.io/digital-objects/ref-organ/mouth-male/v1.0/assets/3d-vh-m-mouth.glb",
+"bytes": 53487620,
+"uberon": "UBERON_0000165",
+"dims_mm": [
+129.5,
+94.1,
+125.4
+]
+},
+{
+"id": "3d-vh-f-main-bronchus",
+"en": "Main bronchus",
+"es": "Bronquios principales",
+"sex": "F",
+"url": "https://cdn.humanatlas.io/digital-objects/ref-organ/main-bronchus-female/v1.1/assets/3d-vh-f-main-bronchus.glb",
+"bytes": 2858852,
+"uberon": "UBERON_0002182",
+"dims_mm": [
+92.8,
+54.6,
+31.1
+]
+},
+{
+"id": "3d-vh-m-main-bronchus",
+"en": "Main bronchus",
+"es": "Bronquios principales",
+"sex": "M",
+"url": "https://cdn.humanatlas.io/digital-objects/ref-organ/main-bronchus-male/v1.1/assets/3d-vh-m-main-bronchus.glb",
+"bytes": 422324,
+"uberon": "UBERON_0002182",
+"dims_mm": [
+74.7,
+44.2,
+27.5
+]
+},
+{
+"id": "3d-vh-f-heart",
+"en": "Heart",
+"es": "Corazón",
+"sex": "F",
+"url": "https://cdn.humanatlas.io/digital-objects/ref-organ/heart-female/v1.3/assets/3d-vh-f-heart.glb",
+"bytes": 1745560,
+"uberon": "UBERON_0000948",
+"dims_mm": [
+142.5,
+110.0,
+101.5
+]
+},
+{
+"id": "3d-vh-m-heart",
+"en": "Heart",
+"es": "Corazón",
+"sex": "M",
+"url": "https://cdn.humanatlas.io/digital-objects/ref-organ/heart-male/v1.3/assets/3d-vh-m-heart.glb",
+"bytes": 4071772,
+"uberon": "UBERON_0000948",
+"dims_mm": [
+124.4,
+105.4,
+105.2
+]
+},
+{
+"id": "3d-vh-f-intervertebral-disk",
+"en": "Intervertebral disk",
+"es": "Discos intervertebrales",
+"sex": "F",
+"url": "https://cdn.humanatlas.io/digital-objects/ref-organ/intervertebral-disk-female/v1.0/assets/3d-vh-f-intervertebral-disk.glb",
+"bytes": 48436136,
+"uberon": "UBERON_0001066",
+"dims_mm": [
+67.5,
+563.5,
+83.9
+]
+},
+{
+"id": "3d-vh-m-intervertebral-disk",
+"en": "Intervertebral disk",
+"es": "Discos intervertebrales",
+"sex": "M",
+"url": "https://cdn.humanatlas.io/digital-objects/ref-organ/intervertebral-disk-male/v1.0/assets/3d-vh-m-intervertebral-disk.glb",
+"bytes": 19567220,
+"uberon": "UBERON_0001066",
+"dims_mm": [
+65.0,
+541.5,
+90.5
+]
+},
+{
+"id": "3d-allen-f-brain",
+"en": "Brain",
+"es": "Encéfalo",
+"sex": "F",
+"url": "https://cdn.humanatlas.io/digital-objects/ref-organ/brain-female/v1.4/assets/3d-allen-f-brain.glb",
+"bytes": 11983380,
+"uberon": "UBERON_0000955",
+"dims_mm": [
+136.4,
+146.1,
+167.0
+]
+},
+{
+"id": "3d-allen-m-brain",
+"en": "Brain",
+"es": "Encéfalo",
+"sex": "M",
+"url": "https://cdn.humanatlas.io/digital-objects/ref-organ/brain-male/v1.4/assets/3d-allen-m-brain.glb",
+"bytes": 11982812,
+"uberon": "UBERON_0000955",
+"dims_mm": [
+136.4,
+146.1,
+167.0
+]
+},
+{
+"id": "3d-vh-f-sternum",
+"en": "Sternum",
+"es": "Esternón",
+"sex": "F",
+"url": "https://cdn.humanatlas.io/digital-objects/ref-organ/sternum-female/v1.0/assets/3d-vh-f-sternum.glb",
+"bytes": 223388,
+"uberon": "UBERON_0000975",
+"dims_mm": [
+36.7,
+105.7,
+25.2
+]
+},
+{
+"id": "3d-nih-f-lymph-node",
+"en": "Lymph node",
+"es": "Ganglio linfático",
+"sex": "F",
+"url": "https://cdn.humanatlas.io/digital-objects/ref-organ/lymph-node-female/v1.4/assets/3d-nih-f-lymph-node.glb",
+"bytes": 4542968,
+"uberon": "UBERON_0002509",
+"dims_mm": [
+19.6,
+11.3,
+12.5
+]
+},
+{
+"id": "3d-nih-m-lymph-node",
+"en": "Lymph node",
+"es": "Ganglio linfático",
+"sex": "M",
+"url": "https://cdn.humanatlas.io/digital-objects/ref-organ/lymph-node-male/v1.4/assets/3d-nih-m-lymph-node.glb",
+"bytes": 7414024,
+"uberon": "UBERON_0002509",
+"dims_mm": [
+18.3,
+10.7,
+13.0
+]
+},
+{
+"id": "3d-vh-f-mammary-gland-r",
+"en": "Right mammary gland",
+"es": "Glándula mamaria derecha",
+"sex": "F",
+"url": "https://cdn.humanatlas.io/digital-objects/ref-organ/mammary-gland-female-right/v1.1/assets/3d-vh-f-mammary-gland-r.glb",
+"bytes": 24388580,
+"uberon": "fma57987",
+"dims_mm": [
+128.3,
+180.0,
+113.2
+]
+},
+{
+"id": "3d-vh-f-mammary-gland-l",
+"en": "Left mammary gland",
+"es": "Glándula mamaria izquierda",
+"sex": "F",
+"url": "https://cdn.humanatlas.io/digital-objects/ref-organ/mammary-gland-female-left/v1.1/assets/3d-vh-f-mammary-gland-l.glb",
+"bytes": 13727256,
+"uberon": "fma57991",
+"dims_mm": [
+128.2,
+181.9,
+111.9
+]
+},
+{
+"id": "3d-vh-f-liver",
+"en": "Liver",
+"es": "Hígado",
+"sex": "F",
+"url": "https://cdn.humanatlas.io/digital-objects/ref-organ/liver-female/v1.2/assets/3d-vh-f-liver.glb",
+"bytes": 1738552,
+"uberon": "UBERON_0002107",
+"dims_mm": [
+247.1,
+170.0,
+166.3
+]
+},
+{
+"id": "3d-vh-m-liver",
+"en": "Liver",
+"es": "Hígado",
+"sex": "M",
+"url": "https://cdn.humanatlas.io/digital-objects/ref-organ/liver-male/v1.2/assets/3d-vh-m-liver.glb",
+"bytes": 1136412,
+"uberon": "UBERON_0002107",
+"dims_mm": [
+191.4,
+174.6,
+201.8
+]
+},
+{
+"id": "3d-vh-f-small-intestine",
+"en": "Small intestine",
+"es": "Intestino delgado",
+"sex": "F",
+"url": "https://cdn.humanatlas.io/digital-objects/ref-organ/small-intestine-female/v1.2/assets/3d-vh-f-small-intestine.glb",
+"bytes": 856536,
+"uberon": "UBERON_0002108",
+"dims_mm": [
+161.6,
+217.2,
+100.0
+]
+},
+{
+"id": "3d-vh-m-small-intestine",
+"en": "Small intestine",
+"es": "Intestino delgado",
+"sex": "M",
+"url": "https://cdn.humanatlas.io/digital-objects/ref-organ/small-intestine-male/v1.2/assets/3d-vh-m-small-intestine.glb",
+"bytes": 618728,
+"uberon": "UBERON_0002108",
+"dims_mm": [
+188.0,
+265.4,
+122.2
+]
+},
+{
+"id": "3d-sbu-f-large-intestine",
+"en": "Large intestine",
+"es": "Intestino grueso",
+"sex": "F",
+"url": "https://cdn.humanatlas.io/digital-objects/ref-organ/large-intestine-female/v1.3/assets/3d-sbu-f-large-intestine.glb",
+"bytes": 387376,
+"uberon": "UBERON_0000059",
+"dims_mm": [
+243.3,
+294.9,
+193.4
+]
+},
+{
+"id": "3d-sbu-m-large-intestine",
+"en": "Large intestine",
+"es": "Intestino grueso",
+"sex": "M",
+"url": "https://cdn.humanatlas.io/digital-objects/ref-organ/large-intestine-male/v1.3/assets/3d-sbu-m-large-intestine.glb",
+"bytes": 687076,
+"uberon": "UBERON_0000059",
+"dims_mm": [
+259.1,
+450.3,
+224.8
+]
+},
+{
+"id": "3d-vh-f-larynx",
+"en": "Larynx",
+"es": "Laringe",
+"sex": "F",
+"url": "https://cdn.humanatlas.io/digital-objects/ref-organ/larynx-female/v1.1/assets/3d-vh-f-larynx.glb",
+"bytes": 463320,
+"uberon": "UBERON_0001737",
+"dims_mm": [
+46.5,
+60.4,
+40.1
+]
+},
+{
+"id": "3d-vh-m-larynx",
+"en": "Larynx",
+"es": "Laringe",
+"sex": "M",
+"url": "https://cdn.humanatlas.io/digital-objects/ref-organ/larynx-male/v1.1/assets/3d-vh-m-larynx.glb",
+"bytes": 335576,
+"uberon": "UBERON_0001737",
+"dims_mm": [
+53.8,
+72.6,
+38.6
+]
+},
+{
+"id": "3d-vh-f-manubrium",
+"en": "Manubrium",
+"es": "Manubrio del esternón",
+"sex": "F",
+"url": "https://cdn.humanatlas.io/digital-objects/ref-organ/manubrium-female/v1.0/assets/3d-vh-f-manubrium.glb",
+"bytes": 132652,
+"uberon": "UBERON_2001553",
+"dims_mm": [
+72.1,
+52.3,
+40.3
+]
+},
+{
+"id": "3d-vh-f-spinal-cord",
+"en": "Spinal cord",
+"es": "Médula espinal",
+"sex": "F",
+"url": "https://cdn.humanatlas.io/digital-objects/ref-organ/spinal-cord-female/v1.1/assets/3d-vh-f-spinal-cord.glb",
+"bytes": 7657228,
+"uberon": "UBERON_0002240",
+"dims_mm": [
+17.9,
+408.8,
+81.9
+]
+},
+{
+"id": "3d-vh-m-spinal-cord",
+"en": "Spinal cord",
+"es": "Médula espinal",
+"sex": "M",
+"url": "https://cdn.humanatlas.io/digital-objects/ref-organ/spinal-cord-male/v1.1/assets/3d-vh-m-spinal-cord.glb",
+"bytes": 490652,
+"uberon": "UBERON_0002240",
+"dims_mm": [
+20.7,
+465.2,
+79.6
+]
+},
+{
+"id": "3d-vh-f-eye-r",
+"en": "Right eye",
+"es": "Ojo derecho",
+"sex": "F",
+"url": "https://cdn.humanatlas.io/digital-objects/ref-organ/eye-female-right/v1.3/assets/3d-vh-f-eye-r.glb",
+"bytes": 20697640,
+"uberon": "UBERON_0004549",
+"dims_mm": [
+24.5,
+24.4,
+25.7
+]
+},
+{
+"id": "3d-vh-m-eye-r",
+"en": "Right eye",
+"es": "Ojo derecho",
+"sex": "M",
+"url": "https://cdn.humanatlas.io/digital-objects/ref-organ/eye-male-right/v1.3/assets/3d-vh-m-eye-r.glb",
+"bytes": 20697584,
+"uberon": "UBERON_0004549",
+"dims_mm": [
+24.5,
+24.4,
+25.7
+]
+},
+{
+"id": "3d-vh-f-eye-l",
+"en": "Left eye",
+"es": "Ojo izquierdo",
+"sex": "F",
+"url": "https://cdn.humanatlas.io/digital-objects/ref-organ/eye-female-left/v1.3/assets/3d-vh-f-eye-l.glb",
+"bytes": 27462656,
+"uberon": "UBERON_0004548",
+"dims_mm": [
+24.5,
+24.4,
+25.7
+]
+},
+{
+"id": "3d-vh-m-eye-l",
+"en": "Left eye",
+"es": "Ojo izquierdo",
+"sex": "M",
+"url": "https://cdn.humanatlas.io/digital-objects/ref-organ/eye-male-left/v1.3/assets/3d-vh-m-eye-l.glb",
+"bytes": 27462616,
+"uberon": "UBERON_0004548",
+"dims_mm": [
+24.5,
+24.4,
+25.7
+]
+},
+{
+"id": "3d-vh-f-omentum",
+"en": "Omentum",
+"es": "Omento",
+"sex": "F",
+"url": "https://cdn.humanatlas.io/digital-objects/ref-organ/omentum-female/v1.0/assets/3d-vh-f-omentum.glb",
+"bytes": 5931032,
+"uberon": "UBERON_0003688",
+"dims_mm": [
+248.0,
+190.9,
+115.7
+]
+},
+{
+"id": "3d-vh-m-omentum",
+"en": "Omentum",
+"es": "Omento",
+"sex": "M",
+"url": "https://cdn.humanatlas.io/digital-objects/ref-organ/omentum-male/v1.0/assets/3d-vh-m-omentum.glb",
+"bytes": 2603108,
+"uberon": "UBERON_0003688",
+"dims_mm": [
+285.7,
+326.5,
+139.7
+]
+},
+{
+"id": "3d-vh-f-ovary-r",
+"en": "Right ovary",
+"es": "Ovario derecho",
+"sex": "F",
+"url": "https://cdn.humanatlas.io/digital-objects/ref-organ/ovary-female-right/v1.3/assets/3d-vh-f-ovary-r.glb",
+"bytes": 8756,
+"uberon": "UBERON_0002118",
+"dims_mm": [
+12.3,
+24.0,
+10.6
+]
+},
+{
+"id": "3d-vh-f-ovary-l",
+"en": "Left ovary",
+"es": "Ovario izquierdo",
+"sex": "F",
+"url": "https://cdn.humanatlas.io/digital-objects/ref-organ/ovary-female-left/v1.3/assets/3d-vh-f-ovary-l.glb",
+"bytes": 9000,
+"uberon": "UBERON_0002119",
+"dims_mm": [
+12.3,
+23.9,
+10.5
+]
+},
+{
+"id": "3d-vh-f-pelvis",
+"en": "Pelvis",
+"es": "Pelvis",
+"sex": "F",
+"url": "https://cdn.humanatlas.io/digital-objects/ref-organ/pelvis-female/v1.3/assets/3d-vh-f-pelvis.glb",
+"bytes": 1593612,
+"uberon": "UBERON_0001270",
+"dims_mm": [
+316.8,
+211.5,
+182.7
+]
+},
+{
+"id": "3d-vh-m-pelvis",
+"en": "Pelvis",
+"es": "Pelvis",
+"sex": "M",
+"url": "https://cdn.humanatlas.io/digital-objects/ref-organ/pelvis-male/v1.3/assets/3d-vh-m-pelvis.glb",
+"bytes": 1348340,
+"uberon": "UBERON_0001270",
+"dims_mm": [
+283.5,
+218.5,
+172.8
+]
+},
+{
+"id": "3d-vh-f-renal-pelvis-r",
+"en": "Right renal pelvis",
+"es": "Pelvis renal derecha",
+"sex": "F",
+"url": "https://cdn.humanatlas.io/digital-objects/ref-organ/renal-pelvis-female-right/v1.0/assets/3d-vh-f-renal-pelvis-r.glb",
+"bytes": 57612,
+"uberon": "UBERON_0018116",
+"dims_mm": [
+18.5,
+19.7,
+13.6
+]
+},
+{
+"id": "3d-vh-m-renal-pelvis-r",
+"en": "Right renal pelvis",
+"es": "Pelvis renal derecha",
+"sex": "M",
+"url": "https://cdn.humanatlas.io/digital-objects/ref-organ/renal-pelvis-male-right/v1.0/assets/3d-vh-m-renal-pelvis-r.glb",
+"bytes": 55052,
+"uberon": "UBERON_0018116",
+"dims_mm": [
+15.9,
+15.2,
+11.3
+]
+},
+{
+"id": "3d-vh-f-renal-pelvis-l",
+"en": "Left renal pelvis",
+"es": "Pelvis renal izquierda",
+"sex": "F",
+"url": "https://cdn.humanatlas.io/digital-objects/ref-organ/renal-pelvis-female-left/v1.0/assets/3d-vh-f-renal-pelvis-l.glb",
+"bytes": 61080,
+"uberon": "UBERON_0018115",
+"dims_mm": [
+12.5,
+24.3,
+16.0
+]
+},
+{
+"id": "3d-vh-m-renal-pelvis-l",
+"en": "Left renal pelvis",
+"es": "Pelvis renal izquierda",
+"sex": "M",
+"url": "https://cdn.humanatlas.io/digital-objects/ref-organ/renal-pelvis-male-left/v1.0/assets/3d-vh-m-renal-pelvis-l.glb",
+"bytes": 68824,
+"uberon": "UBERON_0018115",
+"dims_mm": [
+17.7,
+19.4,
+19.8
+]
+},
+{
+"id": "3d-vh-f-skin",
+"en": "Skin",
+"es": "Piel",
+"sex": "F",
+"url": "https://cdn.humanatlas.io/digital-objects/ref-organ/skin-female/v1.5/assets/3d-vh-f-skin.glb",
+"bytes": 16003176,
+"uberon": "UBERON_0002097",
+"dims_mm": [
+961.7,
+1657.8,
+327.1
+]
+},
+{
+"id": "3d-vh-m-skin",
+"en": "Skin",
+"es": "Piel",
+"sex": "M",
+"url": "https://cdn.humanatlas.io/digital-objects/ref-organ/skin-male/v1.4/assets/3d-vh-m-skin.glb",
+"bytes": 19901928,
+"uberon": "UBERON_0002097",
+"dims_mm": [
+1043.2,
+1824.3,
+325.6
+]
+},
+{
+"id": "3d-vh-f-placenta-full-term",
+"en": "Placenta full term",
+"es": "Placenta a término",
+"sex": "F",
+"url": "https://cdn.humanatlas.io/digital-objects/ref-organ/placenta-full-term-female/v1.1/assets/3d-vh-f-placenta-full-term.glb",
+"bytes": 4917432,
+"uberon": "UBERON_0001987",
+"dims_mm": [
+250.9,
+230.5,
+133.8
+]
+},
+{
+"id": "3d-vh-m-prostate",
+"en": "Prostate",
+"es": "Próstata",
+"sex": "M",
+"url": "https://cdn.humanatlas.io/digital-objects/ref-organ/prostate-male/v1.2/assets/3d-vh-m-prostate.glb",
+"bytes": 4086520,
+"uberon": "UBERON_0000079",
+"dims_mm": [
+83.0,
+70.6,
+42.8
+]
+},
+{
+"id": "3d-vh-f-lung",
+"en": "Lung",
+"es": "Pulmones",
+"sex": "F",
+"url": "https://cdn.humanatlas.io/digital-objects/ref-organ/lung-female/v1.4/assets/3d-vh-f-lung.glb",
+"bytes": 23255188,
+"uberon": "UBERON_0001004",
+"dims_mm": [
+251.1,
+223.0,
+152.6
+]
+},
+{
+"id": "3d-vh-m-lung",
+"en": "Lung",
+"es": "Pulmones",
+"sex": "M",
+"url": "https://cdn.humanatlas.io/digital-objects/ref-organ/lung-male/v1.4/assets/3d-vh-m-lung.glb",
+"bytes": 10942332,
+"uberon": "UBERON_0001004",
+"dims_mm": [
+259.4,
+229.1,
+189.7
+]
+},
+{
+"id": "3d-vh-f-pancreas",
+"en": "Pancreas",
+"es": "Páncreas",
+"sex": "F",
+"url": "https://cdn.humanatlas.io/digital-objects/ref-organ/pancreas-female/v1.3/assets/3d-vh-f-pancreas.glb",
+"bytes": 714832,
+"uberon": "UBERON_0001264",
+"dims_mm": [
+172.0,
+56.5,
+84.4
+]
+},
+{
+"id": "3d-vh-m-pancreas",
+"en": "Pancreas",
+"es": "Páncreas",
+"sex": "M",
+"url": "https://cdn.humanatlas.io/digital-objects/ref-organ/pancreas-male/v1.3/assets/3d-vh-m-pancreas.glb",
+"bytes": 2110316,
+"uberon": "UBERON_0001264",
+"dims_mm": [
+111.4,
+72.0,
+83.6
+]
+},
+{
+"id": "3d-vh-f-kidney-r",
+"en": "Right kidney",
+"es": "Riñón derecho",
+"sex": "F",
+"url": "https://cdn.humanatlas.io/digital-objects/ref-organ/kidney-female-right/v1.3/assets/3d-vh-f-kidney-r.glb",
+"bytes": 1383740,
+"uberon": "UBERON_0004539",
+"dims_mm": [
+73.4,
+97.9,
+69.5
+]
+},
+{
+"id": "3d-vh-m-kidney-r",
+"en": "Right kidney",
+"es": "Riñón derecho",
+"sex": "M",
+"url": "https://cdn.humanatlas.io/digital-objects/ref-organ/kidney-male-right/v1.3/assets/3d-vh-m-kidney-r.glb",
+"bytes": 1547360,
+"uberon": "UBERON_0004539",
+"dims_mm": [
+65.5,
+112.5,
+76.4
+]
+},
+{
+"id": "3d-vh-f-kidney-l",
+"en": "Left kidney",
+"es": "Riñón izquierdo",
+"sex": "F",
+"url": "https://cdn.humanatlas.io/digital-objects/ref-organ/kidney-female-left/v1.3/assets/3d-vh-f-kidney-l.glb",
+"bytes": 1356736,
+"uberon": "UBERON_0004538",
+"dims_mm": [
+73.1,
+124.9,
+77.6
+]
+},
+{
+"id": "3d-vh-m-kidney-l",
+"en": "Left kidney",
+"es": "Riñón izquierdo",
+"sex": "M",
+"url": "https://cdn.humanatlas.io/digital-objects/ref-organ/kidney-male-left/v1.3/assets/3d-vh-m-kidney-l.glb",
+"bytes": 1536980,
+"uberon": "UBERON_0004538",
+"dims_mm": [
+75.7,
+106.5,
+82.4
+]
+},
+{
+"id": "3d-vh-f-knee-r",
+"en": "Right knee",
+"es": "Rodilla derecha",
+"sex": "F",
+"url": "https://cdn.humanatlas.io/digital-objects/ref-organ/knee-female-right/v1.3/assets/3d-vh-f-knee-r.glb",
+"bytes": 348376,
+"uberon": "fma24977",
+"dims_mm": [
+101.6,
+771.8,
+110.5
+]
+},
+{
+"id": "3d-vh-m-knee-r",
+"en": "Right knee",
+"es": "Rodilla derecha",
+"sex": "M",
+"url": "https://cdn.humanatlas.io/digital-objects/ref-organ/knee-male-right/v1.2/assets/3d-vh-m-knee-r.glb",
+"bytes": 440080,
+"uberon": "fma24977",
+"dims_mm": [
+173.4,
+887.5,
+164.6
+]
+},
+{
+"id": "3d-vh-f-knee-l",
+"en": "Left knee",
+"es": "Rodilla izquierda",
+"sex": "F",
+"url": "https://cdn.humanatlas.io/digital-objects/ref-organ/knee-female-left/v1.3/assets/3d-vh-f-knee-l.glb",
+"bytes": 348328,
+"uberon": "fma24978",
+"dims_mm": [
+101.6,
+771.8,
+110.5
+]
+},
+{
+"id": "3d-vh-m-knee-l",
+"en": "Left knee",
+"es": "Rodilla izquierda",
+"sex": "M",
+"url": "https://cdn.humanatlas.io/digital-objects/ref-organ/knee-male-left/v1.2/assets/3d-vh-m-knee-l.glb",
+"bytes": 440020,
+"uberon": "fma24978",
+"dims_mm": [
+173.4,
+887.5,
+164.6
+]
+},
+{
+"id": "3d-vh-f-adipose",
+"en": "Adipose",
+"es": "Tejido adiposo",
+"sex": "F",
+"url": "https://cdn.humanatlas.io/digital-objects/ref-organ/adipose-female/v1.0/assets/3d-vh-f-adipose.glb",
+"bytes": 695648,
+"uberon": "UBERON_0014455",
+"dims_mm": [
+188.6,
+132.7,
+36.0
+]
+},
+{
+"id": "3d-vh-m-adipose",
+"en": "Adipose",
+"es": "Tejido adiposo",
+"sex": "M",
+"url": "https://cdn.humanatlas.io/digital-objects/ref-organ/adipose-male/v1.0/assets/3d-vh-m-adipose.glb",
+"bytes": 325428,
+"uberon": "UBERON_0014455",
+"dims_mm": [
+201.8,
+200.7,
+33.9
+]
+},
+{
+"id": "3d-vh-f-thymus",
+"en": "Thymus",
+"es": "Timo",
+"sex": "F",
+"url": "https://cdn.humanatlas.io/digital-objects/ref-organ/thymus-female/v1.3/assets/3d-vh-f-thymus.glb",
+"bytes": 71968,
+"uberon": "UBERON_0002370",
+"dims_mm": [
+86.0,
+123.6,
+53.8
+]
+},
+{
+"id": "3d-vh-m-thymus",
+"en": "Thymus",
+"es": "Timo",
+"sex": "M",
+"url": "https://cdn.humanatlas.io/digital-objects/ref-organ/thymus-male/v1.3/assets/3d-vh-m-thymus.glb",
+"bytes": 74912,
+"uberon": "UBERON_0002370",
+"dims_mm": [
+37.0,
+75.7,
+35.1
+]
+},
+{
+"id": "3d-vh-f-fallopian-tube-r",
+"en": "Right fallopian tube",
+"es": "Trompa uterina derecha",
+"sex": "F",
+"url": "https://cdn.humanatlas.io/digital-objects/ref-organ/fallopian-tube-female-right/v1.2/assets/3d-vh-f-fallopian-tube-r.glb",
+"bytes": 327504,
+"uberon": "UBERON_0001302",
+"dims_mm": [
+34.4,
+44.6,
+20.9
+]
+},
+{
+"id": "3d-vh-f-fallopian-tube-l",
+"en": "Left fallopian tube",
+"es": "Trompa uterina izquierda",
+"sex": "F",
+"url": "https://cdn.humanatlas.io/digital-objects/ref-organ/fallopian-tube-female-left/v1.2/assets/3d-vh-f-fallopian-tube-l.glb",
+"bytes": 336732,
+"uberon": "UBERON_0001303",
+"dims_mm": [
+38.6,
+44.5,
+18.5
+]
+},
+{
+"id": "3d-vh-f-trachea",
+"en": "Trachea",
+"es": "Tráquea",
+"sex": "F",
+"url": "https://cdn.humanatlas.io/digital-objects/ref-organ/trachea-female/v1.1/assets/3d-vh-f-trachea.glb",
+"bytes": 729604,
+"uberon": "UBERON_0003126",
+"dims_mm": [
+24.3,
+107.9,
+76.6
+]
+},
+{
+"id": "3d-vh-m-trachea",
+"en": "Trachea",
+"es": "Tráquea",
+"sex": "M",
+"url": "https://cdn.humanatlas.io/digital-objects/ref-organ/trachea-male/v1.1/assets/3d-vh-m-trachea.glb",
+"bytes": 1184848,
+"uberon": "UBERON_0003126",
+"dims_mm": [
+28.7,
+125.1,
+67.2
+]
+},
+{
+"id": "3d-vh-f-ureter-r",
+"en": "Right ureter",
+"es": "Uréter derecho",
+"sex": "F",
+"url": "https://cdn.humanatlas.io/digital-objects/ref-organ/ureter-female-right/v1.2/assets/3d-vh-f-ureter-r.glb",
+"bytes": 611468,
+"uberon": "UBERON_0001222",
+"dims_mm": [
+35.3,
+224.3,
+35.7
+]
+},
+{
+"id": "3d-vh-m-ureter-r",
+"en": "Right ureter",
+"es": "Uréter derecho",
+"sex": "M",
+"url": "https://cdn.humanatlas.io/digital-objects/ref-organ/ureter-male-right/v1.2/assets/3d-vh-m-ureter-r.glb",
+"bytes": 540788,
+"uberon": "UBERON_0001222",
+"dims_mm": [
+36.6,
+223.2,
+51.7
+]
+},
+{
+"id": "3d-vh-f-ureter-l",
+"en": "Left ureter",
+"es": "Uréter izquierdo",
+"sex": "F",
+"url": "https://cdn.humanatlas.io/digital-objects/ref-organ/ureter-female-left/v1.2/assets/3d-vh-f-ureter-l.glb",
+"bytes": 682688,
+"uberon": "UBERON_0001223",
+"dims_mm": [
+53.5,
+219.7,
+36.7
+]
+},
+{
+"id": "3d-vh-m-ureter-l",
+"en": "Left ureter",
+"es": "Uréter izquierdo",
+"sex": "M",
+"url": "https://cdn.humanatlas.io/digital-objects/ref-organ/ureter-male-left/v1.2/assets/3d-vh-m-ureter-l.glb",
+"bytes": 682892,
+"uberon": "UBERON_0001223",
+"dims_mm": [
+40.4,
+256.0,
+50.4
+]
+},
+{
+"id": "3d-vh-f-blood-vasculature",
+"en": "Blood vasculature",
+"es": "Vasculatura sanguínea",
+"sex": "F",
+"url": "https://cdn.humanatlas.io/digital-objects/ref-organ/blood-vasculature-female/v1.3/assets/3d-vh-f-blood-vasculature.glb",
+"bytes": 17875996,
+"uberon": "UBERON_0004537",
+"dims_mm": [
+192.8,
+799.2,
+184.9
+]
+},
+{
+"id": "3d-vh-m-blood-vasculature",
+"en": "Blood vasculature",
+"es": "Vasculatura sanguínea",
+"sex": "M",
+"url": "https://cdn.humanatlas.io/digital-objects/ref-organ/blood-vasculature-male/v1.3/assets/3d-vh-m-blood-vasculature.glb",
+"bytes": 18050040,
+"uberon": "UBERON_0004537",
+"dims_mm": [
+236.2,
+871.8,
+187.4
+]
+},
+{
+"id": "3d-vh-f-urinary-bladder",
+"en": "Urinary bladder",
+"es": "Vejiga urinaria",
+"sex": "F",
+"url": "https://cdn.humanatlas.io/digital-objects/ref-organ/urinary-bladder-female/v1.2/assets/3d-vh-f-urinary-bladder.glb",
+"bytes": 765224,
+"uberon": "UBERON_0001255",
+"dims_mm": [
+52.0,
+44.2,
+61.7
+]
+},
+{
+"id": "3d-vh-m-urinary-bladder",
+"en": "Urinary bladder",
+"es": "Vejiga urinaria",
+"sex": "M",
+"url": "https://cdn.humanatlas.io/digital-objects/ref-organ/urinary-bladder-male/v1.2/assets/3d-vh-m-urinary-bladder.glb",
+"bytes": 199044,
+"uberon": "UBERON_0001255",
+"dims_mm": [
+63.8,
+39.9,
+72.3
+]
+},
+{
+"id": "3d-vh-f-uterus",
+"en": "Uterus",
+"es": "Útero",
+"sex": "F",
+"url": "https://cdn.humanatlas.io/digital-objects/ref-organ/uterus-female/v1.2/assets/3d-vh-f-uterus.glb",
+"bytes": 980408,
+"uberon": "UBERON_0000995",
+"dims_mm": [
+52.5,
+47.0,
+58.7
+]
+}
+]

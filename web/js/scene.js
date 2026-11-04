@@ -17,7 +17,14 @@ export const VIEWS = {
 
 export function createViewer(canvas) {
   const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+  const gl = renderer.getContext();
+  const dbg = gl.getExtension('WEBGL_debug_renderer_info');
+  const gpuName = dbg ? gl.getParameter(dbg.UNMASKED_RENDERER_WEBGL) : '';
+  const softwareGpu = /basic render|swiftshader|llvmpipe|software/i.test(gpuName);
+  // resolución: completa en reposo, reducida mientras se rota
+  const fullDpr = Math.min(window.devicePixelRatio, softwareGpu ? 1 : 1.5);
+  const moveDpr = softwareGpu ? 0.5 : Math.min(1, fullDpr);
+  renderer.setPixelRatio(fullDpr);
   renderer.localClippingEnabled = true;
   renderer.outputColorSpace = THREE.SRGBColorSpace;
 
@@ -42,6 +49,9 @@ export function createViewer(canvas) {
   let dirty = true;
   const requestRender = () => { dirty = true; };
   controls.addEventListener('change', requestRender);
+  let restoreTimer = null;
+  controls.addEventListener('start', () => { clearTimeout(restoreTimer); if (renderer.getPixelRatio() !== moveDpr) { renderer.setPixelRatio(moveDpr); resize(); } });
+  controls.addEventListener('end', () => { restoreTimer = setTimeout(() => { renderer.setPixelRatio(fullDpr); resize(); }, 250); });
 
   function resize() {
     const el = canvas.parentElement;
@@ -160,17 +170,18 @@ export function createViewer(canvas) {
 
   // construir BVH en segundo plano para que el hover sea rápido
   function buildTreesIdle(meshes) {
+    // tandas de ~8 ms para no congelar la página
     const queue = [...meshes];
-    const idle = window.requestIdleCallback || ((cb) => setTimeout(() => cb({ timeRemaining: () => 8 }), 16));
-    const work = (deadline) => {
-      while (queue.length && deadline.timeRemaining() > 2) {
+    const work = () => {
+      const t0 = performance.now();
+      while (queue.length && performance.now() - t0 < 8) {
         const m = queue.shift();
         if (m.geometry && !m.geometry.boundsTree) m.geometry.computeBoundsTree();
       }
-      if (queue.length) idle(work);
+      if (queue.length) setTimeout(work, 30);
     };
-    idle(work);
+    setTimeout(work, 300);
   }
 
-  return { THREE, renderer, scene, camera, controls, requestRender, fitTo, pick, setClip, clipState, registerMaterial, buildTreesIdle };
+  return { gpuName, softwareGpu, THREE, renderer, scene, camera, controls, requestRender, fitTo, pick, setClip, clipState, registerMaterial, buildTreesIdle };
 }

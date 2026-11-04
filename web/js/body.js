@@ -61,8 +61,7 @@ export async function createBody(viewer, { onProgress, onSystemLoaded } = {}) {
     (materials[system] ??= []).push(m);
     return m;
   }
-  const highlight = new THREE.MeshStandardMaterial({ color: '#ffd166', emissive: '#ff9f1c', emissiveIntensity: 0.45, roughness: 0.5, side: THREE.DoubleSide });
-  viewer.registerMaterial(highlight);
+  const HIGHLIGHT = new THREE.Color('#ffb020');
 
   function applyOpacity(system) {
     const op = state.sysOpacity[system];
@@ -74,17 +73,50 @@ export async function createBody(viewer, { onProgress, onSystemLoaded } = {}) {
     }
   }
 
+  // Cada pieza es un Mesh "lógico" (fuera de la escena) que sirve para seleccionar con BVH;
+  // lo que se dibuja es un BatchedMesh por sistema: ~12 llamadas de dibujo en vez de ~2.200.
   function refresh() {
     for (const [id, mesh] of meshes) {
       const p = mesh.userData.part;
-      mesh.visible = state.sysVisible[p.system] && !state.hidden.has(id) && (!state.isolated || state.isolated.has(id));
-      // los transparentes se dibujan después
-      mesh.renderOrder = state.sysOpacity[p.system] < 1 ? 1 : 0;
+      const v = state.sysVisible[p.system] && !state.hidden.has(id) && (!state.isolated || state.isolated.has(id));
+      mesh.visible = v;
+      mesh.userData.batch.setVisibleAt(mesh.userData.inst, v);
     }
+    for (const b of batches) b.renderOrder = state.sysOpacity[b.userData.system] < 1 ? 1 : 0; // transparentes al final
     viewer.requestRender();
   }
 
+  // geometría cuantizada (Int16/Int8 normalizados) -> Float32, para que todas encajen en el lote
+  function toFloat(g) {
+    const out = new THREE.BufferGeometry();
+    for (const name of ['position', 'normal']) {
+      const a = g.attributes[name];
+      const arr = new Float32Array(a.count * 3);
+      for (let i = 0; i < a.count; i++) { arr[i * 3] = a.getX(i); arr[i * 3 + 1] = a.getY(i); arr[i * 3 + 2] = a.getZ(i); }
+      out.setAttribute(name, new THREE.BufferAttribute(arr, 3));
+    }
+    out.setIndex(new THREE.BufferAttribute(Uint32Array.from(g.index.array), 1));
+    return out;
+  }
+  const batches = [];
+  function buildBatch(system, material, list) {
+    let verts = 0, idx = 0;
+    const geos = list.map((m) => { const g = toFloat(m.geometry); verts += g.attributes.position.count; idx += g.index.count; return g; });
+    const batch = new THREE.BatchedMesh(list.length, verts, idx, material);
+    batch.userData.system = system;
+    list.forEach((m, i) => {
+      const inst = batch.addInstance(batch.addGeometry(geos[i]));
+      batch.setMatrixAt(inst, m.matrixWorld);
+      batch.setColorAt(inst, m.userData.color);
+      m.userData.batch = batch;
+      m.userData.inst = inst;
+    });
+    batches.push(batch);
+    root.add(batch);
+  }
+
   const loader = new GLTFLoader().setMeshoptDecoder(MeshoptDecoder);
+  const pendingTrees = [];
   const total = LOAD_ORDER.reduce((a, s) => a + (models[s]?.bytes || 0), 0);
   const done = {};
 
@@ -96,50 +128,59 @@ export async function createBody(viewer, { onProgress, onSystemLoaded } = {}) {
       onProgress?.(Object.values(done).reduce((a, b) => a + b, 0) / total, system);
     });
     done[system] = info.bytes;
-    const base = makeMaterial(system, SYSTEM_COLORS[system]);
-    const vein = system === 'cardiovascular' ? makeMaterial(system, VEIN_COLOR) : null;
-    const heart = system === 'cardiovascular' ? makeMaterial(system, HEART_COLOR) : null;
+    // un material por sistema (blanco: el color real va por instancia)
+    const material = makeMaterial(system, '#ffffff');
     const group = gltf.scene;
-    group.name = system;
+    group.updateMatrixWorld(true);
     const list = [];
     group.traverse((o) => {
       if (!o.isMesh) return;
       const id = o.name.replace(/_\d+$/, '');
       const p = byId.get(id);
       if (!p) return;
-      o.geometry.computeVertexNormals();
+      if (!o.geometry.attributes.normal) o.geometry.computeVertexNormals();
       o.userData.part = p;
-      let mat = base;
-      if (vein && /vein|venous|vena\b|sinus|tributary/i.test(p.en)) mat = vein;
-      else if (heart && /atri|ventric|valve|cusp|leaflet|papillary|myocard|heart|chordae|septum/i.test(p.en)) mat = heart;
-      o.material = mat;
-      o.userData.baseMaterial = mat;
+      let color = SYSTEM_COLORS[system];
+      if (system === 'cardiovascular') {
+        if (/vein|venous|vena\b|sinus|tributary/i.test(p.en)) color = VEIN_COLOR;
+        else if (/atri|ventric|valve|cusp|leaflet|papillary|myocard|heart|chordae|septum/i.test(p.en)) color = HEART_COLOR;
+      }
+      o.userData.color = new THREE.Color(color);
+      o.material = material; // solo para leer la opacidad al seleccionar
       meshes.set(id, o);
       list.push(o);
     });
-    root.add(group);
+    buildBatch(system, material, list);
     applyOpacity(system);
     state.loaded.add(system);
     refresh();
     onSystemLoaded?.(system, list.length);
-    viewer.buildTreesIdle(list);
+    pendingTrees.push(...list);
   }
 
   // esqueleto primero, el resto en paralelo de a dos
   await loadSystem(LOAD_ORDER[0]);
-  const bodyBox = new THREE.Box3().setFromObject(root);
+  const bodyBox = new THREE.Box3();
+  const fitBody = () => { bodyBox.makeEmpty(); for (const m of meshes.values()) bodyBox.expandByObject(m); };
+  fitBody();
   const queue = LOAD_ORDER.slice(1);
   const workers = [0, 1].map(async () => { while (queue.length) await loadSystem(queue.shift()); });
-  const allLoaded = Promise.all(workers).then(() => bodyBox.setFromObject(root));
+  const allLoaded = Promise.all(workers).then(() => {
+    fitBody();
+    viewer.buildTreesIdle(pendingTrees); // BVH para hover/clic, en tandas cortas
+  });
 
   // --- API -----------------------------------------------------------------
   function select(id) {
     if (state.selected) {
       const prev = meshes.get(state.selected);
-      if (prev) prev.material = prev.userData.baseMaterial;
+      if (prev) prev.userData.batch.setColorAt(prev.userData.inst, prev.userData.color);
     }
     state.selected = id && meshes.has(id) ? id : null;
-    if (state.selected) meshes.get(state.selected).material = highlight;
+    if (state.selected) {
+      const m = meshes.get(state.selected);
+      m.userData.batch.setColorAt(m.userData.inst, HIGHLIGHT);
+    }
     viewer.requestRender();
     return state.selected ? byId.get(state.selected) : null;
   }

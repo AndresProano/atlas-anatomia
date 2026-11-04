@@ -179,16 +179,67 @@ kbd { border: 1px solid var(--border); border-radius: 4px; padding: 0 4px; font-
 .badge { display: inline-block; font-size: 11px; padding: 1px 7px; border-radius: 99px; background: var(--accent-soft); color: var(--accent); margin-left: 6px; vertical-align: 2px; }
 
 /* Móvil */
+.organ-select { display: none; }
+.s { display: none; }
+
+/* Móvil: buscador y selector arriba, visor, ficha y luego el resto */
 @media (max-width: 900px) {
-  body { overflow: auto; }
-  .topbar { flex-wrap: wrap; padding: 10px 16px; }
+  html, body { height: auto; }
+  body { overflow-x: hidden; overflow-y: auto; }
+  .topbar { flex-wrap: wrap; padding: 8px 16px; gap: 8px; position: sticky; top: 0; z-index: 20; }
+  .brand p { display: none; }
   .tabs { order: 3; width: 100%; margin-left: 0; }
-  .icon-btn { margin-left: auto; }
-  .layout { display: flex; flex-direction: column; }
-  .stage { order: 1; height: 62vh; flex-shrink: 0; }
-  .info { order: 2; border-left: 0; border-top: 1px solid var(--border); padding: 16px; }
-  .sidebar { order: 3; border-right: 0; border-top: 1px solid var(--border); }
+  .tab { flex: 1; padding: 6px 4px; font-size: 13px; }
+  .icon-btn { margin-left: auto; width: 32px; height: 32px; }
+
+  .layout { display: flex; flex-direction: column; min-height: 0; }
+  .sidebar { display: contents; }            /* sus paneles se ordenan junto al visor */
+  .panel { background: var(--surface); border-bottom: 1px solid var(--border); padding: 10px 16px; }
+  .p-search { order: 0; position: sticky; top: var(--topbar-h, 92px); z-index: 15; }
+  .p-organs { order: 0; }
+  .stage { order: 1; height: 58vh; min-height: 320px; flex-shrink: 0; }
+  .info { order: 2; border-left: 0; padding: 14px 16px; overflow: visible; }
+  .p-presets { order: 3; }
+  .p-clip { order: 4; }
+  .p-systems { order: 5; }
+  .p-about { order: 6; }
+
+  .search input { font-size: 16px; padding: 10px 12px; } /* 16px evita el zoom automático de iOS */
+  .results { max-height: 50vh; }
+  .results li { padding: 9px 8px; }
+
+  /* órganos: selector compacto en vez de la lista larga */
+  .organ-select {
+    display: block; width: 100%; font-size: 16px; padding: 9px 10px; margin-bottom: 8px;
+    border-radius: 8px; border: 1px solid var(--border); background: var(--surface-2);
+  }
+  .organ-list { display: none; }
+  .p-organs h2 { display: none; }
+  .seg { margin-bottom: 0; }
+
+  .hud { left: 8px; right: 8px; top: 8px; flex-wrap: nowrap; }
+  .views { flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; }
+  .views button { font-size: 11px; padding: 5px 7px; white-space: nowrap; }
+  .hud > .views:first-child { flex: 1; min-width: 0; }
+  .systems li { padding: 6px 4px; }
+  .systems input[type=range] { height: 22px; }
+  .quiz-box {
+    order: 1; position: static; transform: none; width: auto; margin: 0;
+    border-radius: 0; border-width: 0 0 1px; box-shadow: none; padding: 12px 16px;
+  }
+  body[data-mode="quiz"] .info { display: none; }
   .quiz-box .opts { grid-template-columns: 1fr; }
+  .quiz-box .opts button { padding: 9px 10px; }
+  .sources-page { position: static; padding: 20px 16px; }
+  body[data-mode="sources"] .stage { height: auto; min-height: 0; }
+  body[data-mode="sources"] #canvas, body[data-mode="sources"] .hud,
+  body[data-mode="sources"] .loader, body[data-mode="sources"] .gpu-warn { display: none; }
+  body[data-mode="sources"] .info { display: none; }
+  .gpu-warn { font-size: 12px; left: 8px; right: 8px; bottom: 8px; }
+  .hover-label { display: none; }
+  .l { display: none; }
+  .s { display: inline; }
+  .tabs { overflow: visible; }
 }
 
 .gpu-warn {

@@ -29,8 +29,8 @@
       </div>
     </div>
     <nav class="tabs" role="tablist">
-      <button class="tab active" data-mode="body" role="tab">Cuerpo completo</button>
-      <button class="tab" data-mode="organs" role="tab">Órganos en detalle</button>
+      <button class="tab active" data-mode="body" role="tab"><span class="l">Cuerpo completo</span><span class="s">Cuerpo</span></button>
+      <button class="tab" data-mode="organs" role="tab"><span class="l">Órganos en detalle</span><span class="s">Órganos</span></button>
       <button class="tab" data-mode="quiz" role="tab">Quiz</button>
       <button class="tab" data-mode="sources" role="tab">Fuentes</button>
     </nav>
@@ -40,14 +40,14 @@
   <main class="layout">
     <!-- Panel izquierdo: cambia según el modo -->
     <aside class="sidebar" id="sidebar">
-      <section class="panel" data-for="body quiz">
+      <section class="panel p-search" data-for="body quiz">
         <div class="search">
           <input id="search" type="search" placeholder="Buscar estructura (español, inglés o latín)…" autocomplete="off">
           <ul id="search-results" class="results" hidden></ul>
         </div>
       </section>
 
-      <section class="panel" data-for="body quiz">
+      <section class="panel p-presets" data-for="body quiz">
         <h2>Capas rápidas</h2>
         <div class="presets" id="presets">
           <button data-preset="todo">Todo</button>
@@ -59,12 +59,12 @@
         </div>
       </section>
 
-      <section class="panel grow" data-for="body quiz">
+      <section class="panel grow p-systems" data-for="body quiz">
         <h2>Sistemas <span class="muted" id="load-status"></span></h2>
         <ul class="systems" id="systems"></ul>
       </section>
 
-      <section class="panel" data-for="body organs">
+      <section class="panel p-clip" data-for="body organs">
         <h2>Corte</h2>
         <div class="clip">
           <select id="clip-axis" aria-label="Plano de corte">
@@ -78,8 +78,9 @@
         </div>
       </section>
 
-      <section class="panel grow" data-for="organs" hidden>
+      <section class="panel grow p-organs" data-for="organs" hidden>
         <h2>Órganos de referencia <span class="muted">HuBMAP</span></h2>
+        <select id="organ-select" class="organ-select" aria-label="Elegir órgano"></select>
         <div class="seg" id="sex-filter">
           <button data-sex="all" class="active">Todos</button>
           <button data-sex="F">Femenino</button>
@@ -88,7 +89,7 @@
         <ul class="organ-list" id="organ-list"></ul>
       </section>
 
-      <section class="panel grow" data-for="sources" hidden>
+      <section class="panel grow p-about" data-for="sources" hidden>
         <h2>Sobre este atlas</h2>
         <p class="muted">Junta varias bases de datos anatómicas abiertas en un solo visor. Todo el contenido es de licencia libre; las atribuciones de cada fuente están en esta página.</p>
       </section>
@@ -99,14 +100,14 @@
       <canvas id="canvas"></canvas>
       <div class="hud">
         <div class="views">
-          <button data-view="front" title="Vista anterior">Anterior</button>
-          <button data-view="back" title="Vista posterior">Posterior</button>
-          <button data-view="left" title="Vista lateral izquierda">Lat. izq.</button>
-          <button data-view="right" title="Vista lateral derecha">Lat. der.</button>
-          <button data-view="top" title="Vista superior">Superior</button>
+          <button data-view="front" title="Vista anterior"><span class="l">Anterior</span><span class="s">Ant.</span></button>
+          <button data-view="back" title="Vista posterior"><span class="l">Posterior</span><span class="s">Post.</span></button>
+          <button data-view="left" title="Vista lateral izquierda"><span class="l">Lat. izq.</span><span class="s">Izq.</span></button>
+          <button data-view="right" title="Vista lateral derecha"><span class="l">Lat. der.</span><span class="s">Der.</span></button>
+          <button data-view="top" title="Vista superior"><span class="l">Superior</span><span class="s">Sup.</span></button>
         </div>
         <div class="views">
-          <button id="show-all" title="Mostrar todo lo oculto">Mostrar ocultos</button>
+          <button id="show-all" title="Mostrar todo lo oculto"><span class="l">Mostrar ocultos</span><span class="s">Ver todo</span></button>
           <button id="reset-view" title="Restablecer cámara">⟲</button>
         </div>
       </div>

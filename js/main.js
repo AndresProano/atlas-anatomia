@@ -21,15 +21,20 @@ $('#theme-btn').addEventListener('click', () => {
   store.set('atlas-theme', document.documentElement.dataset.theme);
 });
 
+// altura real de la barra superior (en móvil el buscador queda pegado debajo)
+const topbar = document.querySelector('.topbar');
+new ResizeObserver(() => document.documentElement.style.setProperty('--topbar-h', `${topbar.offsetHeight}px`)).observe(topbar);
+
 // --- aviso si el navegador dibuja sin tarjeta gráfica ---
 if (viewer.softwareGpu) {
   const warn = document.createElement('div');
   warn.className = 'gpu-warn';
-  warn.innerHTML = '<strong>Tu navegador está dibujando sin la tarjeta gráfica</strong> y todo irá lento. '
-    + 'En Chrome: Configuración → Sistema → activa <em>«Usar aceleración de hardware cuando esté disponible»</em> y reinicia. '
+  warn.innerHTML = '<strong>Sin aceleración gráfica:</strong> irá lento. '
+    + '<span class="l">En Chrome: Configuración → Sistema → activa <em>«Usar aceleración de hardware cuando esté disponible»</em> y reinicia.</span>'
+    + '<span class="s">Actívala en la configuración del navegador.</span>'
     + '<button aria-label="Cerrar aviso">✕</button>';
-  warn.querySelector('button').addEventListener('click', () => warn.remove());
-  document.querySelector('#stage').append(warn);
+  warn.querySelector('button').addEventListener('click', () => { warn.remove(); store.set('atlas-gpu-warn', 'off'); });
+  if (store.get('atlas-gpu-warn') !== 'off') document.querySelector('#stage').append(warn);
 }
 
 // --- carga --------------------------------------------------------------
@@ -210,31 +215,42 @@ organs = createOrgans(viewer, terms, {
 const organList = $('#organ-list');
 let sexFilter = 'all', currentOrgan = null;
 const mb = (b) => (b ? `${(b / 1e6).toFixed(b < 1e7 ? 1 : 0)} MB` : '');
+const organSelect = $('#organ-select');
 function renderOrgans() {
-  organList.innerHTML = hubmap.filter((o) => sexFilter === 'all' || o.sex === sexFilter).map((o) => `
+  const list = hubmap.filter((o) => sexFilter === 'all' || o.sex === sexFilter);
+  organList.innerHTML = list.map((o) => `
     <li data-id="${o.id}" class="${currentOrgan?.id === o.id ? 'active' : ''}">
       <span>${o.es} <span class="tag">${o.sex === 'F' ? '♀' : '♂'}</span></span><small>${mb(o.bytes)}</small>
     </li>`).join('');
+  // en móvil se usa este selector compacto en vez de la lista
+  organSelect.innerHTML = list.map((o) =>
+    `<option value="${o.id}" ${currentOrgan?.id === o.id ? 'selected' : ''}>${o.es} ${o.sex === 'F' ? '♀' : '♂'} · ${mb(o.bytes)}</option>`).join('');
 }
+async function openOrgan(organ) {
+  if (!organ) return;
+  currentOrgan = organ;
+  renderOrgans();
+  infoEmpty.hidden = false; infoCard.hidden = true;
+  infoEmpty.querySelector('p').innerHTML = `<strong>Descargando ${organ.es}…</strong> (${mb(organ.bytes)} desde HuBMAP)`;
+  try {
+    const entry = await organs.show(organ);
+    loaderDone();
+    if (entry && currentOrgan === organ) { showOrganSummary(organ, entry); updateClip(); }
+  } catch (err) {
+    progress(0, `No se pudo descargar ${organ.es}: ${err.message}`);
+    infoEmpty.querySelector('p').innerHTML = `<strong>No se pudo descargar ${organ.es}.</strong> Revisa la conexión e inténtalo de nuevo.`;
+  }
+}
+organSelect.addEventListener('change', () => openOrgan(hubmap.find((o) => o.id === organSelect.value)));
 renderOrgans();
 document.querySelectorAll('[data-sex]').forEach((b) => b.addEventListener('click', () => {
   sexFilter = b.dataset.sex;
   document.querySelectorAll('[data-sex]').forEach((x) => x.classList.toggle('active', x === b));
   renderOrgans();
 }));
-organList.addEventListener('click', async (e) => {
+organList.addEventListener('click', (e) => {
   const li = e.target.closest('li');
-  if (!li) return;
-  const organ = hubmap.find((o) => o.id === li.dataset.id);
-  currentOrgan = organ;
-  renderOrgans();
-  try {
-    const entry = await organs.show(organ);
-    loaderDone();
-    if (entry) { showOrganSummary(organ, entry); updateClip(); }
-  } catch (err) {
-    progress(0, `No se pudo descargar ${organ.es}: ${err.message}`);
-  }
+  if (li) openOrgan(hubmap.find((o) => o.id === li.dataset.id));
 });
 function showOrganSummary(organ, entry, activeGk = null) {
   infoTarget = { kind: 'organ-root' };
@@ -274,11 +290,20 @@ function selectOrganGroup(gk, focus = false) {
 
 // --- quiz ------------------------------------------------------------------
 const quizBox = $('#quiz-box');
+// en móvil la caja del quiz va debajo del visor para no tapar la estructura resaltada
+const mobileMq = matchMedia('(max-width: 900px)');
+function placeQuizBox() {
+  const stage = $('#stage');
+  if (mobileMq.matches) stage.after(quizBox); else stage.append(quizBox);
+}
+mobileMq.addEventListener('change', placeQuizBox);
+placeQuizBox();
 const quiz = createQuiz(body, quizBox, { onAnswer: (p) => showBodyPart(p), onQuestion: (p) => { seeThrough(p); syncSystems(); } });
 
 // --- modos -------------------------------------------------------------------
 function setMode(m) {
   mode = m;
+  document.body.dataset.mode = m; // el CSS móvil usa esto (p. ej. Fuentes sin visor 3D)
   document.querySelectorAll('.tab').forEach((t) => t.classList.toggle('active', t.dataset.mode === m));
   document.querySelectorAll('.sidebar .panel').forEach((p) => { p.hidden = !p.dataset.for.split(' ').includes(m); });
   body.root.visible = m === 'body' || m === 'quiz';
@@ -293,7 +318,7 @@ function setMode(m) {
   if (m === 'body' || m === 'quiz') viewer.fitTo(body.bodyBox, VIEWS.front, { instant: true });
   if (m === 'organs') {
     if (organs.current) { organs.frame(VIEWS.front); showOrganSummary(currentOrgan, organs.current); }
-    else { infoEmpty.hidden = false; infoEmpty.querySelector('p').innerHTML = '<strong>Elige un órgano</strong> de la lista. Se descarga desde HuBMAP (el peso aparece al lado).'; }
+    else openOrgan(hubmap.find((o) => o.id === '3d-vh-f-heart') || hubmap[0]); // nunca abrir vacío
   } else {
     infoEmpty.querySelector('p').innerHTML = '<strong>Haz clic en una estructura</strong> para ver su ficha.';
   }

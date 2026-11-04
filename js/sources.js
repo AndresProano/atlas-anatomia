@@ -10,7 +10,7 @@ const INTEGRATED = [
   {
     name: 'HuBMAP Human Reference Atlas', badge: 'Órganos en detalle',
     lic: 'CC BY 4.0 · HuBMAP / Indiana University CNS',
-    text: '81 órganos de referencia (masculinos y femeninos) con subestructuras: riñón con pirámides y papilas, corazón, ojo, útero, mama, placenta… Se cargan directo desde su CDN.',
+    text: 'El cuerpo femenino (Visible Human Female, «united-female») con 943 piezas en su lugar —útero, ovarios, trompas, mamas, pelvis femenina, órganos y vasos— y 81 órganos de referencia con subestructuras en el modo Órganos.',
     url: 'https://humanatlas.io/3d-reference-library',
   },
   {

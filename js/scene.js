@@ -159,6 +159,7 @@ export function createViewer(canvas) {
       if (clipState.active && clipPlane.distanceToPoint(h.point) < 0) continue;
       const op = h.object.material.opacity ?? 1;
       if (op < 0.15) continue; // atravesar capas casi invisibles
+      if (op < 0.6 && h.object.userData.part?.system === 'piel') continue; // la silueta de piel no tapa los clics
       return h;
     }
     return null;

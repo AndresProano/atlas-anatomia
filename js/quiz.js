@@ -1,12 +1,12 @@
 // Quiz: se muestra solo la capa de la pregunta (con el esqueleto tenue de referencia),
 // se resalta una estructura conocida y hay que elegir su nombre entre 4 opciones.
-import { displayName } from './body.js?v=429cfb2c';
+import { displayName } from './body.js?v=838d52e1';
 
 export const QUIZ_GROUPS = {
-  all: { label: 'Todo el cuerpo', systems: ['esqueletico', 'muscular', 'digestivo', 'respiratorio', 'urogenital', 'endocrino', 'cardiovascular', 'nervioso'] },
+  all: { label: 'Todo el cuerpo', systems: ['esqueletico', 'muscular', 'digestivo', 'respiratorio', 'urogenital', 'reproductor', 'endocrino', 'cardiovascular', 'nervioso'] },
   huesos: { label: 'Huesos', systems: ['esqueletico'] },
   musculos: { label: 'Músculos', systems: ['muscular'] },
-  organos: { label: 'Órganos', systems: ['digestivo', 'respiratorio', 'urogenital', 'endocrino'] },
+  organos: { label: 'Órganos', systems: ['digestivo', 'respiratorio', 'urogenital', 'reproductor', 'endocrino'] },
   vasos: { label: 'Corazón y vasos', systems: ['cardiovascular'] },
   nervios: { label: 'Sistema nervioso', systems: ['nervioso'] },
 };
@@ -17,7 +17,7 @@ const SCENE = {
   cardiovascular: { show: ['esqueletico', 'cardiovascular'], ghost: ['esqueletico'] },
   nervioso: { show: ['esqueletico', 'nervioso'], ghost: ['esqueletico'] },
 };
-const ORGANS = { show: ['esqueletico', 'digestivo', 'respiratorio', 'urogenital', 'endocrino', 'cardiovascular'], ghost: ['esqueletico'] };
+const ORGANS = { show: ['esqueletico', 'digestivo', 'respiratorio', 'urogenital', 'reproductor', 'endocrino', 'cardiovascular'], ghost: ['esqueletico'] };
 
 export function createQuiz(body, box, { onAnswer } = {}) {
   let score = 0, total = 0, group = 'all', current = null, saved = null;
@@ -26,7 +26,7 @@ export function createQuiz(body, box, { onAnswer } = {}) {
   // estructuras "de examen": con nombre latino (vienen de Z-Anatomy) y de tamaño visible
   function pool() {
     const sys = QUIZ_GROUPS[group].systems;
-    return body.catalog.parts.filter((p) => p.es && p.la && body.meshes.has(p.id) && body.state.loaded.has(p.system)
+    return body.catalog.parts.filter((p) => p.es && (p.la || body.female) && body.meshes.has(p.id) && body.state.loaded.has(p.system)
       && sys.includes(p.system) && (p.vol ?? 0) >= 1.5);
   }
   const rand = (a) => a[Math.floor(Math.random() * a.length)];
@@ -34,8 +34,9 @@ export function createQuiz(body, box, { onAnswer } = {}) {
   function stage(p) {
     const sc = SCENE[p.system] || ORGANS;
     for (const s of body.order) {
-      body.setSystemVisible(s, sc.show.includes(s));
-      body.setSystemOpacity(s, sc.ghost?.includes(s) ? 0.22 : 1);
+      const silhouette = body.female && s === 'piel'; // silueta femenina como referencia
+      body.setSystemVisible(s, sc.show.includes(s) || silhouette);
+      body.setSystemOpacity(s, silhouette ? 0.12 : (sc.ghost?.includes(s) ? 0.22 : 1));
     }
     body.showAll();
   }
@@ -88,7 +89,7 @@ export function createQuiz(body, box, { onAnswer } = {}) {
     box.querySelector('.score').textContent = `${score} / ${total}`;
     const ex = document.createElement('div');
     ex.className = 'explain';
-    ex.innerHTML = `<strong>${ok ? '¡Correcto!' : 'Era: ' + right}</strong><em>${current.la}</em>`;
+    ex.innerHTML = `<strong>${ok ? '¡Correcto!' : 'Era: ' + right}</strong>${current.la ? `<em>${current.la}</em>` : ''}`;
     opts.after(ex);
     const skip = box.querySelector('#quiz-skip');
     skip.textContent = 'Siguiente';

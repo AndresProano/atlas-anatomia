@@ -123,6 +123,9 @@ body.sheet-open .dock { opacity: 0; transform: translateY(10px); pointer-events:
 .chip.off .dot { opacity: .3; }
 .chip.on { background: var(--accent); color: var(--accent-ink); }
 .organ-bar { display: flex; align-items: center; }
+.sex-top { flex-shrink: 0; display: flex; gap: 2px; height: 48px; padding: 5px; border-radius: 24px; background: var(--surface); box-shadow: var(--shadow); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); }
+.sex-top button { width: 38px; height: 38px; border-radius: 50%; font-size: 18px; color: var(--muted); }
+.sex-top button.active { background: var(--accent); color: var(--accent-ink); }
 .sex { display: flex; flex-shrink: 0; margin-left: 12px; background: var(--surface); border-radius: 20px; box-shadow: var(--shadow); padding: 3px; }
 .sex button { width: 34px; height: 34px; border-radius: 50%; font-size: 16px; color: var(--muted); }
 .sex button.active { background: var(--accent); color: var(--accent-ink); }
@@ -220,9 +223,9 @@ body.sheet-open .dock { opacity: 0; transform: translateY(10px); pointer-events:
 
 /* Escritorio: la ficha pasa a tarjeta lateral y la barra de pestañas flota */
 @media (min-width: 900px) {
-  .top { left: 16px; right: auto; width: 420px; top: 16px; }
-  .tools { right: auto; left: 448px; top: 18px; flex-direction: row; }
-  .pop { right: auto; left: 448px; top: 70px; }
+  .top { left: 16px; right: auto; width: 480px; top: 16px; }
+  .tools { right: auto; left: 508px; top: 18px; flex-direction: row; }
+  .pop { right: auto; left: 508px; top: 70px; }
   .tabbar {
     left: 50%; right: auto; bottom: 16px; transform: translateX(-50%); width: 400px; height: 60px; padding: 0 6px;
     border-radius: 20px; border: 1px solid var(--border); box-shadow: var(--shadow);

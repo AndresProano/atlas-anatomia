@@ -16,11 +16,12 @@ export const SYSTEM_COLORS = {
   ojo_oido: '#c9d3d8',
   piel: '#e2b79d',
   otros: '#9f8dc0',
+  reproductor: '#d9849f',
 };
 const VEIN_COLOR = '#3f63ad';
 const HEART_COLOR = '#a83a3a';
 const LOAD_ORDER = ['esqueletico', 'muscular', 'digestivo', 'respiratorio', 'cardiovascular', 'nervioso',
-  'urogenital', 'endocrino', 'articular', 'ojo_oido', 'otros', 'piel'];
+  'urogenital', 'reproductor', 'endocrino', 'articular', 'ojo_oido', 'otros', 'piel'];
 
 export const PRESETS = {
   todo: { show: LOAD_ORDER.filter((s) => s !== 'piel') },
@@ -34,25 +35,29 @@ export const PRESETS = {
 export const norm = (s) => (s || '').normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
 export const displayName = (p) => p.es || p.en;
 
-export async function createBody(viewer, { onProgress, onSystemLoaded } = {}) {
+// dataset: cuerpo masculino (BodyParts3D) o femenino (HuBMAP united-female)
+export async function createBody(viewer, { onProgress, onSystemLoaded, dataset = { parts: 'parts.json', models: 'models.json' } } = {}) {
   const [catalog, models] = await Promise.all([
-    fetch(`data/parts.json?v=${window.ATLAS_V || ''}`).then((r) => r.json()),
-    fetch(`data/models.json?v=${window.ATLAS_V || ''}`).then((r) => r.json()),
+    fetch(`data/${dataset.parts}?v=${window.ATLAS_V || ''}`).then((r) => r.json()),
+    fetch(`data/${dataset.models}?v=${window.ATLAS_V || ''}`).then((r) => r.json()),
   ]);
+  const female = !!catalog.female;
   const byId = new Map(catalog.parts.map((p) => [p.id, p]));
   const root = new THREE.Group();
   root.name = 'body';
   viewer.scene.add(root);
 
   const state = {
-    sysVisible: Object.fromEntries(LOAD_ORDER.map((s) => [s, s !== 'piel'])),
-    sysOpacity: Object.fromEntries(LOAD_ORDER.map((s) => [s, s === 'piel' ? 0.35 : 1])),
+    // en el cuerpo femenino la piel se ve como silueta transparente (no hay músculos que la reemplacen)
+    sysVisible: Object.fromEntries(LOAD_ORDER.map((s) => [s, female || s !== 'piel'])),
+    sysOpacity: Object.fromEntries(LOAD_ORDER.map((s) => [s, s === 'piel' ? (female ? 0.22 : 0.35) : 1])),
     hidden: new Set(),
     isolated: null, // Set de ids o null
     selected: null,
     loaded: new Set(),
   };
   const meshes = new Map(); // id -> Mesh
+  let outline = null; // contorno de la selección
   const materials = {}; // sistema -> [materiales]
 
   function makeMaterial(system, color) {
@@ -82,6 +87,7 @@ export async function createBody(viewer, { onProgress, onSystemLoaded } = {}) {
       mesh.visible = v;
       mesh.userData.batch.setVisibleAt(mesh.userData.inst, v);
     }
+    if (outline) outline.visible = !!meshes.get(state.selected)?.visible;
     for (const b of batches) b.renderOrder = state.sysOpacity[b.userData.system] < 1 ? 1 : 0; // transparentes al final
     viewer.requestRender();
   }
@@ -170,6 +176,34 @@ export async function createBody(viewer, { onProgress, onSystemLoaded } = {}) {
     viewer.buildTreesIdle(pendingTrees); // BVH para hover/clic, en tandas cortas
   });
 
+  // contorno de la pieza seleccionada: "casco invertido" inflado en espacio de mundo,
+  // con grosor proporcional a la distancia de la cámara (se ve igual de fino con cualquier zoom)
+  const outlineMat = new THREE.ShaderMaterial({
+    uniforms: { thickness: { value: 0.003 }, color: { value: new THREE.Color('#0d9488') } },
+    vertexShader: `uniform float thickness;
+      void main() {
+        vec4 wp = modelMatrix * vec4(position, 1.0);
+        vec3 wn = normalize(mat3(modelMatrix) * normal);
+        float d = length(cameraPosition - wp.xyz);
+        wp.xyz += wn * thickness * d;
+        gl_Position = projectionMatrix * viewMatrix * wp;
+      }`,
+    fragmentShader: 'uniform vec3 color; void main() { gl_FragColor = vec4(color, 1.0); }',
+    side: THREE.BackSide,
+    // empujar el contorno hacia atrás para que no se cruce con la superficie de la pieza
+    polygonOffset: true, polygonOffsetFactor: 6, polygonOffsetUnits: 6,
+  });
+  function setOutline(m) {
+    if (outline) { root.remove(outline); outline = null; }
+    if (!m) return;
+    outline = new THREE.Mesh(m.geometry, outlineMat);
+    outline.matrixAutoUpdate = false;
+    outline.matrix.copy(m.matrixWorld);
+    outline.raycast = () => {};
+    outline.renderOrder = 2;
+    root.add(outline);
+  }
+
   // --- API -----------------------------------------------------------------
   function select(id) {
     if (state.selected) {
@@ -181,6 +215,8 @@ export async function createBody(viewer, { onProgress, onSystemLoaded } = {}) {
       const m = meshes.get(state.selected);
       m.userData.batch.setColorAt(m.userData.inst, HIGHLIGHT);
     }
+    setOutline(state.selected ? meshes.get(state.selected) : null);
+    setOverlay(state.selected); // la selección se ve aunque otra estructura la tape
     viewer.requestRender();
     return state.selected ? byId.get(state.selected) : null;
   }
@@ -299,7 +335,7 @@ export async function createBody(viewer, { onProgress, onSystemLoaded } = {}) {
   }
 
   return {
-    root, catalog, byId, meshes, state, systems: catalog.systems, order: LOAD_ORDER, models,
+    root, catalog, byId, meshes, state, systems: catalog.systems, order: LOAD_ORDER, models, female,
     bodyBox, allLoaded, select, focus, reveal, hide, isolate, showAll, setSystemVisible, setSystemOpacity,
     applyPreset, search, visibleMeshes, meshBox, pulse, snapshot, restore, setOverlay,
   };

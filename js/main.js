@@ -1,11 +1,11 @@
 // Interfaz tipo app: visor a pantalla completa, buscador flotante, capas en chips,
 // ficha como hoja inferior (móvil) o tarjeta lateral (escritorio) y barra de pestañas.
-import { createViewer, VIEWS } from './scene.js?v=838d52e1';
-import { createBody, SYSTEM_COLORS, displayName } from './body.js?v=838d52e1';
-import { createOrgans } from './organs.js?v=838d52e1';
-import { createQuiz } from './quiz.js?v=838d52e1';
-import { renderSources } from './sources.js?v=838d52e1';
-import { wikiFor } from './wiki.js?v=838d52e1';
+import { createViewer, VIEWS } from './scene.js?v=3fd73cb6';
+import { createBody, SYSTEM_COLORS, displayName } from './body.js?v=3fd73cb6';
+import { createOrgans } from './organs.js?v=3fd73cb6';
+import { createQuiz } from './quiz.js?v=3fd73cb6';
+import { renderSources } from './sources.js?v=3fd73cb6';
+import { wikiFor } from './wiki.js?v=3fd73cb6';
 
 const $ = (s) => document.querySelector(s);
 const V = window.ATLAS_V || '';
@@ -465,7 +465,15 @@ canvas.addEventListener('pointerdown', (e) => {
 });
 canvas.addEventListener('pointerup', (e) => {
   if (!down || Math.hypot(e.clientX - down.x, e.clientY - down.y) > 8 || e.button !== 0) return;
-  if (mode === 'quiz' || mode === 'sources') return;
+  if (mode === 'sources') return;
+  if (mode === 'quiz') {
+    // modo Señalar: solo cuentan las capas sólidas (el esqueleto tenue de referencia no "roba" el toque)
+    if (quiz.mode !== 'point') return;
+    const solid = [...body.meshes.values()].filter((m) => body.state.sysOpacity[m.userData.part.system] >= 0.5);
+    const h = viewer.pick(e.clientX, e.clientY, solid);
+    quiz.tap(h ? h.object.userData.part.id : null);
+    return;
+  }
   const hit = viewer.pick(e.clientX, e.clientY, activeMeshes());
   const now = performance.now(), dbl = now - lastTap < 320;
   lastTap = now;

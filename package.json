@@ -3,12 +3,14 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "data": "python -I scripts/classify.py data-raw web/data/parts.json",
-    "models": "node scripts/build-models.mjs",
-    "serve": "npx http-server web -p 5173 -c-1"
+    "download": "sh scripts/download.sh",
+    "data": "python -I scripts/classify.py data-raw web/data/parts.json && python -I scripts/terms.py data-raw web/data/terms.json && python -I scripts/hubmap.py data-raw/hubmap/reference-organs.json data-raw/hubmap/sizes.json web/data/hubmap.json",
+    "models": "node scripts/build-models.mjs 0.5",
+    "serve": "python -I scripts/serve.py 5173"
   },
   "devDependencies": {
     "@gltf-transform/core": "4.5.1",
+    "@gltf-transform/extensions": "4.5.1",
     "@gltf-transform/functions": "4.5.1",
     "meshoptimizer": "0.22.0"
   }

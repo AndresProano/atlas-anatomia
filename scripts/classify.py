@@ -123,6 +123,11 @@ for line in lines[1:]:
     if len(cols) >= 4 and cols[0].strip():
         tr.setdefault(cols[0].strip().lower(), {"la": cols[1].strip(), "es": cols[3].strip()})
 
+# traducciones complementarias (términos que Z-Anatomy no tiene), ver data-raw/traducciones_es.json
+extra_path = os.path.join(raw, "traducciones_es.json")
+extra = json.load(open(extra_path, encoding="utf-8")) if os.path.exists(extra_path) else {}
+extra = {k.lower().strip(): v for k, v in extra.items()}
+
 SIDE = re.compile(r"^(left|right) ")
 SIDE_ES = {"left": "izq.", "right": "der."}
 
@@ -144,6 +149,8 @@ def translate(en):
              re.sub(r"\bof (the )?", "of ", key)]
     hit = next((tr[c] for c in cands if c in tr), None)
     if not hit:
+        if key in extra:
+            return extra[key], None, side
         return None, None, side
     return hit["es"], hit["la"], side
 

@@ -243,9 +243,64 @@ export async function createBody(viewer, { onProgress, onSystemLoaded } = {}) {
 
   function visibleMeshes() { return [...meshes.values()].filter((m) => m.visible); }
 
+  // pulso de color sobre la pieza seleccionada (para que se encuentre a simple vista)
+  let pulseTimer = null;
+  function pulse(id, ms = 1600) {
+    clearInterval(pulseTimer);
+    const m = meshes.get(id);
+    if (!m) return;
+    const a = HIGHLIGHT, b = new THREE.Color('#fff3c4'), tmp = new THREE.Color();
+    const t0 = performance.now();
+    pulseTimer = setInterval(() => {
+      const t = performance.now() - t0;
+      if (t > ms || state.selected !== id) {
+        clearInterval(pulseTimer);
+        if (state.selected === id) m.userData.batch.setColorAt(m.userData.inst, HIGHLIGHT);
+        viewer.requestRender();
+        return;
+      }
+      m.userData.batch.setColorAt(m.userData.inst, tmp.copy(a).lerp(b, (Math.sin(t / 120) + 1) / 2));
+      viewer.requestRender();
+    }, 40);
+  }
+
+  // resaltado "rayos X": copia de la pieza dibujada encima de todo (se ve aunque esté al fondo)
+  const overlayMat = new THREE.MeshBasicMaterial({ color: '#ffb020', transparent: true, opacity: 0.55, depthTest: false, depthWrite: false });
+  viewer.registerMaterial(overlayMat);
+  let overlay = null;
+  function setOverlay(id) {
+    if (overlay) { root.remove(overlay); overlay = null; }
+    const m = id && meshes.get(id);
+    if (m) {
+      overlay = new THREE.Mesh(m.geometry, overlayMat);
+      overlay.matrixAutoUpdate = false;
+      overlay.matrix.copy(m.matrixWorld);
+      overlay.renderOrder = 999;
+      overlay.raycast = () => {}; // no interfiere con la selección
+      root.add(overlay);
+    }
+    viewer.requestRender();
+  }
+
+  // guardar / restaurar capas (el quiz cambia la vista y luego la devuelve como estaba)
+  function snapshot() {
+    return {
+      sysVisible: { ...state.sysVisible }, sysOpacity: { ...state.sysOpacity },
+      hidden: new Set(state.hidden), isolated: state.isolated ? new Set(state.isolated) : null,
+    };
+  }
+  function restore(s) {
+    Object.assign(state.sysVisible, s.sysVisible);
+    Object.assign(state.sysOpacity, s.sysOpacity);
+    state.hidden = new Set(s.hidden);
+    state.isolated = s.isolated ? new Set(s.isolated) : null;
+    for (const sys of LOAD_ORDER) applyOpacity(sys);
+    refresh();
+  }
+
   return {
     root, catalog, byId, meshes, state, systems: catalog.systems, order: LOAD_ORDER, models,
     bodyBox, allLoaded, select, focus, reveal, hide, isolate, showAll, setSystemVisible, setSystemOpacity,
-    applyPreset, search, visibleMeshes, meshBox,
+    applyPreset, search, visibleMeshes, meshBox, pulse, snapshot, restore, setOverlay,
   };
 }

@@ -1,13 +1,14 @@
 // Interfaz tipo app: visor a pantalla completa, buscador flotante, capas en chips,
 // ficha como hoja inferior (móvil) o tarjeta lateral (escritorio) y barra de pestañas.
-import { createViewer, VIEWS } from './scene.js?v=a60fd833';
-import { createBody, SYSTEM_COLORS, displayName } from './body.js?v=a60fd833';
-import { createOrgans } from './organs.js?v=a60fd833';
-import { createProfiles } from './profiles.js?v=a60fd833';
-import { loadClinica } from './clinica.js?v=a60fd833';
-import { createQuiz } from './quiz.js?v=a60fd833';
-import { renderSources } from './sources.js?v=a60fd833';
-import { wikiFor } from './wiki.js?v=a60fd833';
+import { createViewer, VIEWS } from './scene.js?v=9449bd04';
+import { createBody, SYSTEM_COLORS, displayName } from './body.js?v=9449bd04';
+import { createOrgans } from './organs.js?v=9449bd04';
+import { createProfiles } from './profiles.js?v=9449bd04';
+import { loadClinica } from './clinica.js?v=9449bd04';
+import { createSync } from './sync.js?v=9449bd04';
+import { createQuiz } from './quiz.js?v=9449bd04';
+import { renderSources } from './sources.js?v=9449bd04';
+import { wikiFor } from './wiki.js?v=9449bd04';
 
 const $ = (s) => document.querySelector(s);
 const V = window.ATLAS_V || '';
@@ -373,7 +374,8 @@ function selectOrganPart(gk, focus = false) {
 const quizBox = $('#quiz-box');
 const profiles = createProfiles();
 clinica = await loadClinica(V);
-let quiz = createQuiz(body, quizBox, { profiles, clinica });
+const sync = createSync(profiles);
+let quiz = createQuiz(body, quizBox, { profiles, clinica, sync });
 
 // --- cuerpo masculino / femenino ----------------------------------------------------------------
 const bodies = { M: body };
@@ -404,7 +406,7 @@ async function switchBody(sx) {
   body = bodies[sx];
   body.root.visible = mode === 'body' || mode === 'quiz';
   xray = false;
-  quiz = createQuiz(body, quizBox, { profiles, clinica });
+  quiz = createQuiz(body, quizBox, { profiles, clinica, sync });
   closeSheet();
   searchEl.value = ''; results = []; renderResults();
   renderLayers();

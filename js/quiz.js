@@ -4,8 +4,8 @@
 //  - Señalar: te dan el nombre y tocas la estructura en el modelo.
 //  - Función / Enfermedades (Comprender): respondes con tus palabras y se califica por ideas clave.
 // Repetición espaciada (cajas de Leitner): lo que fallas vuelve antes, lo que dominas sale menos.
-import { displayName } from './body.js?v=a60fd833';
-import { gradeConcepts, gradeDisease } from './clinica.js?v=a60fd833';
+import { displayName } from './body.js?v=9449bd04';
+import { gradeConcepts, gradeDisease } from './clinica.js?v=9449bd04';
 
 export const QUIZ_GROUPS = {
   all: { label: 'Todo el cuerpo', systems: ['esqueletico', 'muscular', 'digestivo', 'respiratorio', 'urogenital', 'reproductor', 'endocrino', 'cardiovascular', 'nervioso'] },
@@ -77,7 +77,7 @@ const esc = (s) => String(s ?? '').replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<
 const WEIGHT = [6, 3, 1.5, 0.6, 0.25]; // caja 0 (nuevo/fallado) … caja 4 (dominado)
 const MASTERED = 2; // a partir de esta caja cuenta como dominado
 
-export function createQuiz(body, box, { onAnswer, profiles, clinica } = {}) {
+export function createQuiz(body, box, { onAnswer, profiles, clinica, sync } = {}) {
   let score = 0, total = 0, group = 'all', mode = 'choice', review = false;
   let current = null, saved = null, answered = false, hintLevel = 0;
   let progress = profiles.loadProgress();
@@ -281,6 +281,7 @@ export function createQuiz(body, box, { onAnswer, profiles, clinica } = {}) {
     r.t = Date.now();
     progress[keyOf(current)] = r;
     saveProgress(progress);
+    sync?.schedule();
     total++; score += points;
     answered = true;
     onAnswer?.(current, points >= 1);
@@ -289,7 +290,7 @@ export function createQuiz(body, box, { onAnswer, profiles, clinica } = {}) {
     const el = box.querySelector('#quiz-feedback');
     el.innerHTML = `<div class="explain ${kind}"><strong>${title}</strong>
       <span>${baseName(current)}</span>${current.la ? `<em>${current.la}</em>` : ''}</div>
-      ${profiles.backupDue() ? '<button class="backup-nudge" id="nudge">Guarda una copia de tu progreso para no perderlo →</button>' : ''}`;
+      ${profiles.backupDue() ? `<button class="backup-nudge" id="nudge">${sync?.configured ? 'Activa la sincronización para no perder tu progreso →' : 'Guarda una copia de tu progreso para no perderlo →'}</button>` : ''}`;
     el.querySelector('#nudge')?.addEventListener('click', showStats);
     const skip = box.querySelector('#quiz-skip');
     skip.textContent = 'Siguiente'; skip.className = 'btn';
@@ -390,6 +391,7 @@ export function createQuiz(body, box, { onAnswer, profiles, clinica } = {}) {
     r.a++; r.c++; r.box = Math.min(r.box + 1, 4); r.t = Date.now();
     progress[lastRec.key] = r;
     saveProgress(progress);
+    sync?.schedule();
     score += 1 - lastRec.points;
     lastRec.points = 1;
     const ex = box.querySelector('#quiz-feedback .explain');
@@ -442,6 +444,18 @@ export function createQuiz(body, box, { onAnswer, profiles, clinica } = {}) {
       <p class="sub">Una estructura queda "dominada" cuando la aciertas 2 veces seguidas.</p>
       <ul class="stats">${rows}</ul>
       <p class="sub">${att} respuestas en total · ${att ? Math.round((cor / att) * 100) : 0}% de aciertos</p>
+      ${sync?.configured ? `<div class="backup cloud">
+        <div class="section-title">Sincronización en la nube</div>
+        ${me?.sync ? `<p class="sub">Activa: tu progreso se guarda solo. Para usarlo en otro dispositivo, entra con este código:</p>
+          <div class="code-row"><code id="sync-code">${me.sync}</code><button class="btn ghost" id="sync-copy">Copiar</button></div>
+          <p class="sub" id="sync-status">${me.lastSync ? `Último guardado: ${new Date(me.lastSync).toLocaleString('es')}` : 'Aún no se ha guardado.'}</p>
+          <div class="row wrap"><button class="btn ghost" id="sync-now">Sincronizar ahora</button><button class="link" id="sync-off">Desactivar en este dispositivo</button></div>`
+        : `<p class="sub">Guarda el progreso de ${esc(me?.name || 'esta persona')} en internet para no perderlo y usarlo en cualquier celular o computadora.</p>
+          <div class="row wrap"><button class="btn" id="sync-on">Activar sincronización</button></div>
+          <p class="sub">¿Ya la activaste en otro dispositivo? Escribe tu código:</p>
+          <form class="type-answer" id="sync-join" autocomplete="off"><input id="sync-input" placeholder="XXXX-XXXX-XXXX" autocapitalize="characters" spellcheck="false"><button class="btn ghost" type="submit">Entrar</button></form>
+          <p class="sub" id="sync-status"></p>`}
+      </div>` : ''}
       <div class="backup">
         <div class="section-title">Copia de seguridad</div>
         <p class="sub">El progreso se guarda en este navegador. Haz una copia para pasarlo a otro dispositivo o por si se borran los datos.${me?.lastBackup ? ` Última copia: ${new Date(me.lastBackup).toLocaleDateString('es')}.` : ''}</p>
@@ -457,6 +471,26 @@ export function createQuiz(body, box, { onAnswer, profiles, clinica } = {}) {
     box.querySelectorAll('[data-pid]').forEach((b) => b.addEventListener('click', () => { profiles.use(b.dataset.pid); progress = profiles.loadProgress(); showStats(); }));
     box.querySelector('[data-new]').addEventListener('click', () => showWelcome(true));
     box.querySelector('#bk-file').addEventListener('click', () => { profiles.downloadBackup(); showStats(); });
+    const syncMsg = (t) => { const el = box.querySelector('#sync-status'); if (el) el.textContent = t; };
+    box.querySelector('#sync-on')?.addEventListener('click', async (e) => {
+      e.target.disabled = true; syncMsg('Activando…');
+      try { await sync.enable(); showStats(); } catch (err) { syncMsg('No se pudo activar: ' + err.message); e.target.disabled = false; }
+    });
+    box.querySelector('#sync-join')?.addEventListener('submit', async (e) => {
+      e.preventDefault(); syncMsg('Buscando tu progreso…');
+      try { const r = await sync.join(box.querySelector('#sync-input').value); progress = profiles.loadProgress(); syncMsg(`Listo: ${r.items} estructuras de ${r.name}.`); setTimeout(showStats, 1200); }
+      catch (err) { syncMsg(err.message); }
+    });
+    box.querySelector('#sync-copy')?.addEventListener('click', async () => {
+      try { await navigator.clipboard.writeText(profiles.current.sync); syncMsg('Código copiado. Guárdalo en un lugar seguro: es tu llave.'); } catch { syncMsg('Copia el código a mano.'); }
+    });
+    box.querySelector('#sync-now')?.addEventListener('click', async () => {
+      syncMsg('Sincronizando…'); await sync.pull(); await sync.push(); progress = profiles.loadProgress(); showStats();
+    });
+    box.querySelector('#sync-off')?.addEventListener('click', (e) => {
+      if (!e.target.dataset.confirm) { e.target.dataset.confirm = '1'; e.target.textContent = '¿Seguro? Anota tu código antes. Toca otra vez'; return; }
+      sync.disable(); showStats();
+    });
     box.querySelector('#bk-code').addEventListener('click', async () => {
       const code = await profiles.backupCode();
       const area = box.querySelector('#bk-area');
@@ -511,6 +545,7 @@ export function createQuiz(body, box, { onAnswer, profiles, clinica } = {}) {
     start() {
       saved = body.snapshot();
       progress = profiles.loadProgress();
+      if (sync?.code) sync.pull().then((changed) => { if (changed) progress = profiles.loadProgress(); });
       if (profiles.needsName()) { stage(poolFor(group)[0] || body.catalog.parts[0]); showWelcome(); } else next();
     },
     stop() { if (saved) body.restore(saved); saved = null; current = null; body.select(null); body.setOverlay(null); },

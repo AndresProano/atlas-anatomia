@@ -1,0 +1,9 @@
+name = "atlas-sync"
+main = "src/index.js"
+compatibility_date = "2025-10-01"
+
+# Base de datos clave-valor donde se guarda el progreso.
+# El id se obtiene con:  npx wrangler kv namespace create ATLAS
+[[kv_namespaces]]
+binding = "ATLAS"
+id = "REEMPLAZAR_CON_EL_ID_DEL_NAMESPACE"

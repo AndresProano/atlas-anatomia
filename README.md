@@ -22,23 +22,21 @@ Visible Human Project, Open Anatomy, NIH 3D, BioDigital, Pulse, BioGears y OpenS
 - **Órganos en detalle** (HuBMAP): riñón con pirámides y papilas, corazón, ojo, útero, ovarios, mama, placenta, etc.
 - **Quiz**: se resalta una estructura y eliges su nombre entre 4 opciones; filtrable por sistema.
 
-## Cuerpo femenino completo
+## Cuerpo femenino («mujer de atlas»)
 
-La mujer combina tres fuentes, de más real a más aproximada:
+La mujer es un modelo de estudio, no el cuerpo de una persona concreta (`npm run female`):
 
-1. **HuBMAP** (Visible Human Female): órganos, mamas, aparato reproductor, cerebro, columna, vasos y piel.
-2. **Universidad de Denver** ([Andreassen et al. 2023](https://doi.org/10.1038/s41597-022-01905-2), CC BY 4.0):
-   cadera y piernas **reales de la misma mujer** — pelvis completa, fémur, tibia, peroné, rótula, pie, 38 músculos por
-   lado, cartílagos y ligamentos de rodilla. `du_import.py` las alinea hueso a hueso con HuBMAP (que colocó las
-   piernas más separadas) y gira los pies (el cadáver los tiene en punta).
-3. **BodyParts3D adaptado** (aproximado): cráneo, costillas, cintura escapular, brazos, manos y músculos de tronco,
-   cuello, cabeza y brazos. `female_fit.py` los ajusta con puntos de referencia (huesos comunes, pelvis real, secciones
-   de piel descontando la grasa), articula los brazos hacia su postura, deforma con thin-plate spline y empuja hacia
-   dentro lo que se sale de la piel.
+1. **Base:** el cuerpo completo de BodyParts3D (huesos, músculos, órganos, vasos, nervios, piel).
+2. **Proporciones femeninas medias** (ANSUR II): estatura ×0,928, hombros más estrechos, tórax algo más estrecho,
+   cintura más estrecha, caderas y glúteos más llenos.
+3. **Pelvis femenina real** (Visible Human Female, Univ. de Denver, CC BY 4.0), escalada a una anchura biilíaca media,
+   colocada por los acetábulos (sobre las cabezas femorales), sacro y sínfisis, con la misma inclinación del plano
+   pélvico anterior que el hombre. Los músculos que se insertan en la pelvis la siguen (ICP no rígido simétrico).
+4. Todo se deforma con thin-plate spline (`textbook_female.py`). Se quitan los genitales masculinos y se añaden útero,
+   ovarios, trompas, vagina y mamas de HuBMAP; la piel cubre las mamas y se alisa la zona genital.
 
-Para regenerar: descargar "Final 3D STL Models" de https://digitalcommons.du.edu/visiblehuman/1/ (el sitio no admite
-descargas automáticas), descomprimir en `data-raw/du-vhf/stl/` y ejecutar `npm run female`.
-Controles de calidad: `female_check.py` (qué se sale de la piel) y `female_stretch.py` (qué se estiró demasiado).
+Para regenerar hace falta la geometría de Denver: descargar "Final 3D STL Models" de
+https://digitalcommons.du.edu/visiblehuman/1/ (no admite descargas automáticas) y descomprimir en `data-raw/du-vhf/stl/`.
 
 ## Estructura
 
@@ -54,7 +52,7 @@ scripts/
   classify.py        clasifica piezas por sistema (FMA is_a + part_of) y traduce
   build-models.mjs   OBJ → GLB por sistema (gltf-transform + meshoptimizer)
   build-female.mjs   HuBMAP united-female → f-<sistema>.glb
-  du_import.py, female_fit.py, build-female-complete.mjs   completan el cuerpo femenino (ver arriba)
+  du_import.py, textbook_female.py, build-female-textbook.mjs   mujer de atlas (ver arriba)
   hubmap.py, terms.py, serve.py
 ```
 

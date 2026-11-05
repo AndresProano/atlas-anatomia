@@ -314,3 +314,17 @@ body.sheet-open .dock { opacity: 0; transform: translateY(10px); pointer-events:
 .backup.cloud { border-top: 0; margin-top: 0; padding-top: 4px; }
 .code-row { display: flex; gap: 8px; align-items: center; margin: 6px 0; }
 .code-row code { flex: 1; padding: 10px 12px; border-radius: 12px; background: var(--accent-soft); color: var(--accent); font: 700 17px/1 ui-monospace, Consolas, monospace; letter-spacing: .06em; text-align: center; }
+
+/* Cuenta */
+.acc-tabs { margin: 6px 0 10px; }
+.acc-tabs button { font-size: 12px; padding: 7px 2px; }
+.acc-form { display: grid; gap: 8px; }
+.acc-form input {
+  padding: 12px 14px; border-radius: 14px; border: 2px solid var(--border); background: var(--surface-2);
+  font-size: 16px; color: var(--text); outline: 0; font-family: inherit;
+}
+.acc-form input:focus { border-color: var(--accent); }
+.sub.warn { color: #d97706; }
+.old-code { margin-top: 10px; font-size: 13px; color: var(--muted); }
+.old-code summary { cursor: pointer; }
+.old-code form { margin-top: 8px; }

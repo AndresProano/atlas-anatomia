@@ -1,8 +1,9 @@
 // Sincronización en la nube (Cloudflare Worker "atlas-sync", ver worker/).
-// Cada perfil puede tener un código (p. ej. VALE-7K2P-QX9M) que funciona como contraseña:
-// con ese código se recupera el progreso en cualquier dispositivo.
+// Forma principal: cuenta con correo y contraseña. Cada perfil local puede estar ligado a una cuenta;
+// el progreso se sube solo y se recupera al iniciar sesión en otro dispositivo.
+// Se mantiene el "código de sincronización" de la versión anterior para quien ya lo activó.
 const DEFAULT_URL = 'https://atlas-sync.freelance-sites.workers.dev';
-const ALPHABET = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'; // sin 0/O ni 1/I para no confundir
+const ALPHABET = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
 export const CODE_RE = /^[A-Z2-9]{4}-[A-Z2-9]{4}-[A-Z2-9]{4}$/;
 
 function syncUrl() {
@@ -16,8 +17,7 @@ export function newCode() {
   const s = [...r].map((b) => ALPHABET[b % ALPHABET.length]).join('');
   return `${s.slice(0, 4)}-${s.slice(4, 8)}-${s.slice(8, 12)}`;
 }
-export const normCode = (s) => (s || '').toUpperCase().replace(/[^A-Z0-9]/g, '')
-  .replace(/(.{4})(.{4})(.{4}).*/, '$1-$2-$3');
+export const normCode = (s) => (s || '').toUpperCase().replace(/[^A-Z0-9]/g, '').replace(/(.{4})(.{4})(.{4}).*/, '$1-$2-$3');
 
 function mergeInto(local, remote) {
   let changed = false;
@@ -33,90 +33,134 @@ export function createSync(profiles, { onStatus } = {}) {
   const configured = !base.includes('REEMPLAZAR');
   let timer = null, busy = false, again = false;
   const status = (s) => onStatus?.(s);
-  const code = () => profiles.current?.sync || null;
+  const account = () => profiles.current?.account || null;
+  const legacy = () => (!account() && profiles.current?.sync) || null;
+  const active = () => !!(account() || legacy());
 
-  async function request(method, c, body, keepalive = false) {
-    const r = await fetch(`${base}/v1/p/${c}`, {
-      method, keepalive,
-      headers: body ? { 'Content-Type': 'application/json' } : undefined,
-      body: body ? JSON.stringify(body) : undefined,
-    });
-    if (r.status === 404) return null;
-    if (!r.ok) throw new Error(`el servidor respondió ${r.status}`);
-    return r.json();
+  async function call(method, path, body, token, keepalive = false) {
+    const headers = {};
+    if (body) headers['Content-Type'] = 'application/json';
+    if (token) headers.Authorization = `Bearer ${token}`;
+    const r = await fetch(`${base}${path}`, { method, keepalive, headers, body: body ? JSON.stringify(body) : undefined });
+    const data = await r.json().catch(() => ({}));
+    if (r.status === 404 && path.includes('progress')) return null;
+    if (r.status === 404 && path.startsWith('/v1/p/')) return null;
+    if (!r.ok) { const e = new Error(data.error || `el servidor respondió ${r.status}`); e.status = r.status; throw e; }
+    return data;
+  }
+  // GET/PUT del progreso según la forma activa
+  function progressCall(method, body, keepalive) {
+    const acc = account();
+    if (acc) return call(method, '/v1/me/progress', body, acc.token, keepalive);
+    return call(method, `/v1/p/${legacy()}`, body, null, keepalive);
+  }
+  function handleError(e) {
+    if (e.status === 401 && account()) {
+      profiles.setAccount({ ...account(), expired: true });
+      status({ state: 'expired', message: 'Tu sesión venció: vuelve a iniciar sesión' });
+    } else {
+      status({ state: 'error', message: navigator.onLine === false ? 'sin conexión, se guardará después' : e.message });
+    }
   }
 
-  // subir lo local y quedarse con la versión combinada del servidor
   async function push(keepalive = false) {
-    const c = code();
-    if (!c || !configured) return;
+    if (!configured || !active() || account()?.expired) return;
     if (busy) { again = true; return; }
     busy = true;
     try {
       status({ state: 'saving' });
       const local = profiles.loadProgress();
-      const merged = await request('PUT', c, { name: profiles.current.name, progress: local }, keepalive);
+      const merged = await progressCall('PUT', { name: profiles.current.name, progress: local }, keepalive);
       if (merged && mergeInto(local, merged.progress)) profiles.saveProgress(local);
       profiles.setSyncTime(Date.now());
       status({ state: 'ok', at: Date.now() });
-    } catch (e) {
-      status({ state: 'error', message: navigator.onLine === false ? 'sin conexión, se guardará después' : e.message });
-    } finally {
+    } catch (e) { handleError(e); } finally {
       busy = false;
       if (again) { again = false; schedule(2000); }
     }
   }
-  // traer lo del servidor (otro dispositivo pudo avanzar)
   async function pull() {
-    const c = code();
-    if (!c || !configured) return false;
+    if (!configured || !active() || account()?.expired) return false;
     try {
-      const remote = await request('GET', c);
+      const remote = await progressCall('GET');
       if (!remote) return false;
       const local = profiles.loadProgress();
       const changed = mergeInto(local, remote.progress);
       if (changed) profiles.saveProgress(local);
       status({ state: 'ok', at: Date.now() });
       return changed;
-    } catch (e) {
-      status({ state: 'error', message: e.message });
-      return false;
-    }
+    } catch (e) { handleError(e); return false; }
   }
   function schedule(ms = 20000) {
-    if (!code() || !configured) return;
+    if (!configured || !active()) return;
     clearTimeout(timer);
-    timer = setTimeout(() => push(), ms); // agrupa respuestas para no gastar escrituras
+    timer = setTimeout(() => { timer = null; push(); }, ms); // agrupa respuestas para no gastar escrituras
     status({ state: 'pending' });
   }
-  // al cerrar o cambiar de app, subir lo pendiente
   document.addEventListener('visibilitychange', () => {
     if (document.visibilityState === 'hidden' && timer) { clearTimeout(timer); timer = null; push(true); }
   });
-  window.addEventListener('online', () => { if (code()) push(); });
+  window.addEventListener('online', () => { if (active()) push(); });
+
+  // ligar la cuenta a un perfil local: el de ese correo si existe; si no, el actual (si está libre) o uno nuevo
+  function bind(res) {
+    const acc = { email: res.email, token: res.token };
+    const existing = profiles.list.find((p) => p.account?.email === res.email);
+    if (existing) profiles.use(existing.id);
+    else {
+      const cur = profiles.current;
+      const free = cur && !cur.account && (cur.name.toLowerCase() === res.name.toLowerCase() || !Object.keys(profiles.loadProgress()).length || cur.named === false);
+      if (!free) profiles.add(res.name);
+      else profiles.rename(res.name);
+    }
+    profiles.setAccount(acc);
+    if (profiles.current.sync) profiles.setSync(null); // la cuenta reemplaza al código
+  }
 
   return {
     configured,
-    get code() { return code(); },
+    get account() { return account(); },
+    get code() { return legacy(); },
+    get active() { return active(); },
     pull, push, schedule,
-    // activar en el perfil actual: crea un código y sube todo
-    async enable() {
-      const c = newCode();
-      profiles.setSync(c);
+    async register(email, password, name) {
+      const res = await call('POST', '/v1/auth/register', { email, password, name });
+      bind(res);
       await push();
-      return c;
+      return res; // incluye res.recovery: mostrarlo una vez
     },
-    // entrar con un código existente (otro dispositivo)
+    async login(email, password) {
+      const res = await call('POST', '/v1/auth/login', { email, password });
+      bind(res);
+      await pull();
+      await push();
+      return res;
+    },
+    async reset(email, recovery, password) {
+      const res = await call('POST', '/v1/auth/reset', { email, recovery, password });
+      bind(res);
+      await pull();
+      await push();
+      return res;
+    },
+    async logout() {
+      const acc = account();
+      if (timer) { clearTimeout(timer); timer = null; await push(); }
+      if (acc) { try { await call('POST', '/v1/auth/logout', {}, acc.token); } catch { /* ya vencida */ } }
+      profiles.setAccount(null);
+      status({ state: 'off' });
+    },
+    // código de sincronización (versión anterior)
     async join(input) {
       const c = normCode(input);
       if (!CODE_RE.test(c)) throw new Error('El código tiene el formato XXXX-XXXX-XXXX');
-      const remote = await request('GET', c);
+      const remote = await call('GET', `/v1/p/${c}`);
       if (!remote) throw new Error('No hay progreso guardado con ese código');
       const res = await profiles.restore({ app: 'atlas-anatomia', name: remote.name, progress: remote.progress });
       profiles.setSync(c);
       await push();
       return res;
     },
-    disable() { profiles.setSync(null); status({ state: 'off' }); },
+    disableCode() { profiles.setSync(null); status({ state: 'off' }); },
   };
 }

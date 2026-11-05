@@ -71,6 +71,7 @@ button { cursor: pointer; border: 0; background: none; padding: 0; }
   background: var(--surface); color: var(--text); box-shadow: var(--shadow); touch-action: none; user-select: none;
   backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); transition: transform .12s;
 }
+.nav-btn.mode.on { background: var(--accent); color: var(--accent-ink); }
 .nav-btn:active { transform: scale(.92); background: var(--accent); color: var(--accent-ink); }
 .dpad .nav-btn { width: 32px; height: 32px; border-radius: 10px; }
 .dpad .nav-btn .ico { width: 18px; height: 18px; }

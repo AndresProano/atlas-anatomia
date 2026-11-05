@@ -1,6 +1,7 @@
 // Motor 3D compartido: renderer, cámara, luces, corte y selección (raycast acelerado con BVH).
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
 import { computeBoundsTree, disposeBoundsTree, acceleratedRaycast } from 'three-mesh-bvh';
 
 THREE.BufferGeometry.prototype.computeBoundsTree = computeBoundsTree;
@@ -27,13 +28,22 @@ export function createViewer(canvas) {
   renderer.setPixelRatio(fullDpr);
   renderer.localClippingEnabled = true;
   renderer.outputColorSpace = THREE.SRGBColorSpace;
+  // aspecto realista: tono cinematográfico + reflejos suaves de estudio (iluminación basada en imagen)
+  renderer.toneMapping = THREE.ACESFilmicToneMapping;
+  renderer.toneMappingExposure = 1.05;
 
   const scene = new THREE.Scene();
   const camera = new THREE.PerspectiveCamera(35, 1, 0.01, 50);
   camera.position.set(0, 1, 4);
   scene.add(camera);
 
-  scene.add(new THREE.HemisphereLight(0xffffff, 0x6b6359, 1.3));
+  if (!softwareGpu) {
+    const pmrem = new THREE.PMREMGenerator(renderer);
+    scene.environment = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
+    scene.environmentIntensity = 0.45;
+    pmrem.dispose();
+  }
+  scene.add(new THREE.HemisphereLight(0xffffff, 0x6b6359, softwareGpu ? 1.3 : 0.75));
   const key = new THREE.DirectionalLight(0xffffff, 1.7);
   key.position.set(0.6, 0.8, 1);
   camera.add(key); // la luz principal sigue a la cámara
@@ -45,6 +55,7 @@ export function createViewer(canvas) {
   controls.enableDamping = true;
   controls.dampingFactor = 0.12;
   controls.screenSpacePanning = true;
+  controls.zoomToCursor = true; // la rueda del ratón acerca hacia donde apunta el cursor
   // Modo de navegación: 'pan' (mano, arrastra el cuerpo) o 'rotate' (gira alrededor del cuerpo).
   // El clic derecho / Shift+arrastre siempre hace lo contrario del modo activo.
   const ROT_CURSOR = `url("data:image/svg+xml,${encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="2.5" stroke-linecap="round"><path d="M21 12a9 9 0 1 1-3-6.7" stroke="white" stroke-width="5"/><path d="M21 4v5h-5" stroke="white" stroke-width="5"/><path d="M21 12a9 9 0 1 1-3-6.7"/><path d="M21 4v5h-5"/></svg>')}") 12 12, move`;

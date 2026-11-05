@@ -432,6 +432,7 @@ function setMode(m) {
   $('#search-pill').hidden = m !== 'body';
   $('#body-sex').hidden = m !== 'body' && m !== 'quiz';
   $('#tools').hidden = m === 'quiz' || m === 'sources';
+  $('#navpad').hidden = m === 'sources';
   $('#layers').hidden = m !== 'body';
   $('#organ-bar').hidden = m !== 'organs';
   $('.dock').hidden = m === 'quiz' || m === 'sources';
@@ -549,7 +550,7 @@ window.addEventListener('keydown', (e) => {
 });
 
 // Panel de navegación: un toque = un paso; mantener pulsado = movimiento continuo.
-document.querySelectorAll('#navpad .nav-btn').forEach((b) => {
+document.querySelectorAll('#navpad [data-pan], #navpad [data-zoom]').forEach((b) => {
   let timer = null;
   const step = () => {
     if (b.dataset.zoom) viewer.zoomBy(Number(b.dataset.zoom));

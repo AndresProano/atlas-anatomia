@@ -5,7 +5,7 @@ import { MeshoptDecoder } from 'three/addons/libs/meshopt_decoder.module.js';
 
 export const SYSTEM_COLORS = {
   esqueletico: '#e6dcc6',
-  muscular: '#b4544b',
+  muscular: '#93302a',
   articular: '#8fbfc4',
   cardiovascular: '#c43b33', // arterias; las venas usan VEIN_COLOR
   nervioso: '#e2bf45',
@@ -22,6 +22,111 @@ const VEIN_COLOR = '#3f63ad';
 const HEART_COLOR = '#a83a3a';
 const LOAD_ORDER = ['esqueletico', 'muscular', 'digestivo', 'respiratorio', 'cardiovascular', 'nervioso',
   'urogenital', 'reproductor', 'endocrino', 'articular', 'ojo_oido', 'otros', 'piel'];
+
+
+// --- músculo realista ------------------------------------------------------------------------
+// Textura procedural de fibras (relieve + albedo), tileable. Las fibras corren a lo largo de "u".
+function fiberTextures() {
+  const N = 256, h = new Float32Array(N * N);
+  let seed = 7; const rnd = () => ((seed = (seed * 16807) % 2147483647) / 2147483647);
+  const ph = Array.from({ length: 6 }, () => rnd() * Math.PI * 2);
+  for (let y = 0; y < N; y++) {
+    for (let x = 0; x < N; x++) {
+      const fx = (x / N) * Math.PI * 2, fy = (y / N) * Math.PI * 2;
+      // haces de fibras (varían a lo ancho, "y") con leve ondulación a lo largo ("x")
+      const w = fy + 0.04 * Math.sin(fx * 2 + ph[0]) + 0.02 * Math.sin(fx * 3 + ph[1]);
+      let v = 0.55 * Math.sin(w * 18 + ph[2]) + 0.3 * Math.sin(w * 41 + ph[3]) + 0.15 * Math.sin(w * 7 + ph[4]);
+      v = Math.sign(v) * Math.pow(Math.abs(v), 0.7);
+      h[y * N + x] = v + 0.08 * Math.sin(fx * 9 + fy * 3 + ph[5]);
+    }
+  }
+  const nrm = document.createElement('canvas'), alb = document.createElement('canvas');
+  nrm.width = nrm.height = alb.width = alb.height = N;
+  const ni = nrm.getContext('2d').createImageData(N, N), ai = alb.getContext('2d').createImageData(N, N);
+  const H = (x, y) => h[((y + N) % N) * N + ((x + N) % N)];
+  for (let y = 0; y < N; y++) {
+    for (let x = 0; x < N; x++) {
+      const dx = (H(x + 1, y) - H(x - 1, y)) * 1.2, dy = (H(x, y + 1) - H(x, y - 1)) * 1.2;
+      const l = Math.hypot(dx, dy, 1), i = (y * N + x) * 4;
+      ni.data[i] = (-dx / l * 0.5 + 0.5) * 255; ni.data[i + 1] = (-dy / l * 0.5 + 0.5) * 255; ni.data[i + 2] = (1 / l * 0.5 + 0.5) * 255; ni.data[i + 3] = 255;
+      const a = 228 + 27 * (H(x, y) * 0.5 + 0.5);
+      ai.data[i] = a; ai.data[i + 1] = a * 0.97; ai.data[i + 2] = a * 0.97; ai.data[i + 3] = 255;
+    }
+  }
+  nrm.getContext('2d').putImageData(ni, 0, 0); alb.getContext('2d').putImageData(ai, 0, 0);
+  const mk = (c, srgb) => {
+    const t = new THREE.CanvasTexture(c);
+    t.wrapS = t.wrapT = THREE.RepeatWrapping; t.anisotropy = 8;
+    if (srgb) t.colorSpace = THREE.SRGBColorSpace;
+    return t;
+  };
+  return { normal: mk(nrm, false), albedo: mk(alb, true) };
+}
+let _fibers = null;
+function muscleMaterial(color) {
+  _fibers ??= fiberTextures();
+  const m = new THREE.MeshPhysicalMaterial({
+    color, roughness: 0.48, metalness: 0, side: THREE.DoubleSide,
+    map: _fibers.albedo, normalMap: _fibers.normal, normalScale: new THREE.Vector2(0.3, 0.3),
+    clearcoat: 0.35, clearcoatRoughness: 0.32, // película húmeda de la fascia
+    sheen: 0.4, sheenRoughness: 0.5, sheenColor: new THREE.Color('#ff9a8a'),
+  });
+  // tendones/aponeurosis: los extremos de cada músculo se aclaran hacia blanco nacarado
+  m.onBeforeCompile = (sh) => {
+    sh.vertexShader = sh.vertexShader
+      .replace('#include <common>', '#include <common>\nattribute float tendon;\nvarying float vTendon;')
+      .replace('#include <begin_vertex>', '#include <begin_vertex>\nvTendon = tendon;');
+    sh.fragmentShader = sh.fragmentShader
+      .replace('#include <common>', '#include <common>\nvarying float vTendon;')
+      .replace('#include <map_fragment>', '#include <map_fragment>\ndiffuseColor.rgb = mix(diffuseColor.rgb, vec3(0.88, 0.84, 0.76), vTendon);')
+      .replace('#include <roughnessmap_fragment>', '#include <roughnessmap_fragment>\nroughnessFactor = mix(roughnessFactor, 0.32, vTendon);');
+  };
+  m.customProgramCacheKey = () => 'muscle-v2';
+  return m;
+}
+// UV a lo largo del eje principal (dirección de las fibras) + atributo "tendon" para los extremos.
+const _pv = new THREE.Vector3();
+function addMuscleAttributes(geo, matrixWorld) {
+  const pos = geo.attributes.position, n = pos.count;
+  const P = new Float32Array(n * 3);
+  const c = new THREE.Vector3();
+  for (let i = 0; i < n; i++) { _pv.fromBufferAttribute(pos, i).applyMatrix4(matrixWorld); P.set([_pv.x, _pv.y, _pv.z], i * 3); c.add(_pv); }
+  c.divideScalar(Math.max(n, 1));
+  // covarianza -> eje principal por iteración de potencias
+  const C = [0, 0, 0, 0, 0, 0]; // xx xy xz yy yz zz
+  for (let i = 0; i < n; i++) {
+    const x = P[i * 3] - c.x, y = P[i * 3 + 1] - c.y, z = P[i * 3 + 2] - c.z;
+    C[0] += x * x; C[1] += x * y; C[2] += x * z; C[3] += y * y; C[4] += y * z; C[5] += z * z;
+  }
+  const mul = (v) => new THREE.Vector3(C[0] * v.x + C[1] * v.y + C[2] * v.z, C[1] * v.x + C[3] * v.y + C[4] * v.z, C[2] * v.x + C[4] * v.y + C[5] * v.z);
+  let a1 = new THREE.Vector3(0.3, 1, 0.2).normalize();
+  for (let k = 0; k < 24; k++) a1 = mul(a1).normalize();
+  const helper = Math.abs(a1.y) < 0.9 ? new THREE.Vector3(0, 1, 0) : new THREE.Vector3(1, 0, 0);
+  const a2 = new THREE.Vector3().crossVectors(a1, helper).normalize();
+  const a3 = new THREE.Vector3().crossVectors(a1, a2).normalize();
+  let tMin = Infinity, tMax = -Infinity, wMax = 0;
+  const T = new Float32Array(n), V = new Float32Array(n);
+  for (let i = 0; i < n; i++) {
+    _pv.set(P[i * 3] - c.x, P[i * 3 + 1] - c.y, P[i * 3 + 2] - c.z);
+    const t = _pv.dot(a1), q2 = _pv.dot(a2), q3 = _pv.dot(a3);
+    T[i] = t; V[i] = q2 + q3;
+    tMin = Math.min(tMin, t); tMax = Math.max(tMax, t); wMax = Math.max(wMax, Math.hypot(q2, q3));
+  }
+  const len = Math.max(tMax - tMin, 1e-6), elong = len / Math.max(wMax * 2, 1e-6);
+  const uv = new Float32Array(n * 2), tendon = new Float32Array(n);
+  const FIBER_LEN = 0.08, FIBER_TILE = 0.02; // metros por repetición de textura (a lo largo / a lo ancho)
+  for (let i = 0; i < n; i++) {
+    uv[i * 2] = T[i] / FIBER_LEN;
+    uv[i * 2 + 1] = V[i] / FIBER_TILE;
+    if (elong > 2.2) {
+      const e = Math.min(T[i] - tMin, tMax - T[i]) / len; // 0 en los extremos
+      const x = THREE.MathUtils.clamp(1 - e / 0.09, 0, 1);
+      tendon[i] = x * x * (3 - 2 * x) * 0.85;
+    }
+  }
+  geo.setAttribute('uv', new THREE.BufferAttribute(uv, 2));
+  geo.setAttribute('tendon', new THREE.BufferAttribute(tendon, 1));
+}
 
 export const PRESETS = {
   todo: { show: LOAD_ORDER.filter((s) => s !== 'piel') },
@@ -61,7 +166,8 @@ export async function createBody(viewer, { onProgress, onSystemLoaded, dataset =
   const materials = {}; // sistema -> [materiales]
 
   function makeMaterial(system, color) {
-    const m = new THREE.MeshStandardMaterial({ color, roughness: 0.62, metalness: 0.0, side: THREE.DoubleSide });
+    const m = system === 'muscular' ? muscleMaterial(color)
+      : new THREE.MeshStandardMaterial({ color, roughness: 0.62, metalness: 0.0, side: THREE.DoubleSide });
     viewer.registerMaterial(m);
     (materials[system] ??= []).push(m);
     return m;
@@ -107,7 +213,11 @@ export async function createBody(viewer, { onProgress, onSystemLoaded, dataset =
   const batches = [];
   function buildBatch(system, material, list) {
     let verts = 0, idx = 0;
-    const geos = list.map((m) => { const g = toFloat(m.geometry); verts += g.attributes.position.count; idx += g.index.count; return g; });
+    const geos = list.map((m) => {
+      const g = toFloat(m.geometry);
+      if (system === 'muscular') addMuscleAttributes(g, m.matrixWorld);
+      verts += g.attributes.position.count; idx += g.index.count; return g;
+    });
     const batch = new THREE.BatchedMesh(list.length, verts, idx, material);
     batch.userData.system = system;
     list.forEach((m, i) => {
@@ -152,6 +262,11 @@ export async function createBody(viewer, { onProgress, onSystemLoaded, dataset =
         else if (/atri|ventric|valve|cusp|leaflet|papillary|myocard|heart|chordae|septum/i.test(p.en)) color = HEART_COLOR;
       }
       o.userData.color = new THREE.Color(color);
+      if (system === 'muscular') { // cada músculo con un tono ligeramente distinto: se distinguen mejor
+        let hsh = 0; for (const ch of id) hsh = (hsh * 31 + ch.charCodeAt(0)) | 0;
+        const r1 = ((hsh >>> 0) % 1000) / 1000, r2 = ((hsh >>> 10) % 1000) / 1000;
+        o.userData.color.offsetHSL((r1 - 0.5) * 0.025, (r2 - 0.5) * 0.12, (r1 - 0.5) * 0.06);
+      }
       o.material = material; // solo para leer la opacidad al seleccionar
       meshes.set(id, o);
       list.push(o);

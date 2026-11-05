@@ -1,14 +1,14 @@
 // Interfaz tipo app: visor a pantalla completa, buscador flotante, capas en chips,
 // ficha como hoja inferior (móvil) o tarjeta lateral (escritorio) y barra de pestañas.
-import { createViewer, VIEWS } from './scene.js?v=e69f2597';
-import { createBody, SYSTEM_COLORS, displayName } from './body.js?v=e69f2597';
-import { createOrgans } from './organs.js?v=e69f2597';
-import { createProfiles } from './profiles.js?v=e69f2597';
-import { loadClinica } from './clinica.js?v=e69f2597';
-import { createSync } from './sync.js?v=e69f2597';
-import { createQuiz } from './quiz.js?v=e69f2597';
-import { renderSources } from './sources.js?v=e69f2597';
-import { wikiFor } from './wiki.js?v=e69f2597';
+import { createViewer, VIEWS } from './scene.js?v=90fc0e85';
+import { createBody, SYSTEM_COLORS, displayName } from './body.js?v=90fc0e85';
+import { createOrgans } from './organs.js?v=90fc0e85';
+import { createProfiles } from './profiles.js?v=90fc0e85';
+import { loadClinica } from './clinica.js?v=90fc0e85';
+import { createSync } from './sync.js?v=90fc0e85';
+import { createQuiz } from './quiz.js?v=90fc0e85';
+import { renderSources } from './sources.js?v=90fc0e85';
+import { wikiFor } from './wiki.js?v=90fc0e85';
 
 const $ = (s) => document.querySelector(s);
 const V = window.ATLAS_V || '';

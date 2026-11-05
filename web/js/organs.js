@@ -2,7 +2,7 @@
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { MeshoptDecoder } from 'three/addons/libs/meshopt_decoder.module.js';
-import { VIEWS } from './scene.js?v=e69f2597';
+import { VIEWS } from './scene.js?v=90fc0e85';
 
 const SIDE = { l: 'izquierdo', r: 'derecho', left: 'izquierdo', right: 'derecho' };
 

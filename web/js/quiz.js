@@ -4,8 +4,8 @@
 //  - Señalar: te dan el nombre y tocas la estructura en el modelo.
 //  - Función / Enfermedades (Comprender): respondes con tus palabras y se califica por ideas clave.
 // Repetición espaciada (cajas de Leitner): lo que fallas vuelve antes, lo que dominas sale menos.
-import { displayName } from './body.js?v=e69f2597';
-import { gradeConcepts, gradeDisease } from './clinica.js?v=e69f2597';
+import { displayName } from './body.js?v=90fc0e85';
+import { gradeConcepts, gradeDisease } from './clinica.js?v=90fc0e85';
 
 export const QUIZ_GROUPS = {
   all: { label: 'Todo el cuerpo', systems: ['esqueletico', 'muscular', 'digestivo', 'respiratorio', 'urogenital', 'reproductor', 'endocrino', 'cardiovascular', 'nervioso'] },
@@ -290,7 +290,7 @@ export function createQuiz(body, box, { onAnswer, profiles, clinica, sync } = {}
     const el = box.querySelector('#quiz-feedback');
     el.innerHTML = `<div class="explain ${kind}"><strong>${title}</strong>
       <span>${baseName(current)}</span>${current.la ? `<em>${current.la}</em>` : ''}</div>
-      ${profiles.backupDue() ? `<button class="backup-nudge" id="nudge">${sync?.configured ? 'Activa la sincronización para no perder tu progreso →' : 'Guarda una copia de tu progreso para no perderlo →'}</button>` : ''}`;
+      ${profiles.backupDue() ? `<button class="backup-nudge" id="nudge">${sync?.configured ? 'Crea una cuenta para no perder tu progreso →' : 'Guarda una copia de tu progreso para no perderlo →'}</button>` : ''}`;
     el.querySelector('#nudge')?.addEventListener('click', showStats);
     const skip = box.querySelector('#quiz-skip');
     skip.textContent = 'Siguiente'; skip.className = 'btn';
@@ -444,18 +444,7 @@ export function createQuiz(body, box, { onAnswer, profiles, clinica, sync } = {}
       <p class="sub">Una estructura queda "dominada" cuando la aciertas 2 veces seguidas.</p>
       <ul class="stats">${rows}</ul>
       <p class="sub">${att} respuestas en total · ${att ? Math.round((cor / att) * 100) : 0}% de aciertos</p>
-      ${sync?.configured ? `<div class="backup cloud">
-        <div class="section-title">Sincronización en la nube</div>
-        ${me?.sync ? `<p class="sub">Activa: tu progreso se guarda solo. Para usarlo en otro dispositivo, entra con este código:</p>
-          <div class="code-row"><code id="sync-code">${me.sync}</code><button class="btn ghost" id="sync-copy">Copiar</button></div>
-          <p class="sub" id="sync-status">${me.lastSync ? `Último guardado: ${new Date(me.lastSync).toLocaleString('es')}` : 'Aún no se ha guardado.'}</p>
-          <div class="row wrap"><button class="btn ghost" id="sync-now">Sincronizar ahora</button><button class="link" id="sync-off">Desactivar en este dispositivo</button></div>`
-        : `<p class="sub">Guarda el progreso de ${esc(me?.name || 'esta persona')} en internet para no perderlo y usarlo en cualquier celular o computadora.</p>
-          <div class="row wrap"><button class="btn" id="sync-on">Activar sincronización</button></div>
-          <p class="sub">¿Ya la activaste en otro dispositivo? Escribe tu código:</p>
-          <form class="type-answer" id="sync-join" autocomplete="off"><input id="sync-input" placeholder="XXXX-XXXX-XXXX" autocapitalize="characters" spellcheck="false"><button class="btn ghost" type="submit">Entrar</button></form>
-          <p class="sub" id="sync-status"></p>`}
-      </div>` : ''}
+      ${sync?.configured ? `<div class="backup cloud" id="account">${accountHtml(me)}</div>` : ''}
       <div class="backup">
         <div class="section-title">Copia de seguridad</div>
         <p class="sub">El progreso se guarda en este navegador. Haz una copia para pasarlo a otro dispositivo o por si se borran los datos.${me?.lastBackup ? ` Última copia: ${new Date(me.lastBackup).toLocaleDateString('es')}.` : ''}</p>
@@ -471,26 +460,7 @@ export function createQuiz(body, box, { onAnswer, profiles, clinica, sync } = {}
     box.querySelectorAll('[data-pid]').forEach((b) => b.addEventListener('click', () => { profiles.use(b.dataset.pid); progress = profiles.loadProgress(); showStats(); }));
     box.querySelector('[data-new]').addEventListener('click', () => showWelcome(true));
     box.querySelector('#bk-file').addEventListener('click', () => { profiles.downloadBackup(); showStats(); });
-    const syncMsg = (t) => { const el = box.querySelector('#sync-status'); if (el) el.textContent = t; };
-    box.querySelector('#sync-on')?.addEventListener('click', async (e) => {
-      e.target.disabled = true; syncMsg('Activando…');
-      try { await sync.enable(); showStats(); } catch (err) { syncMsg('No se pudo activar: ' + err.message); e.target.disabled = false; }
-    });
-    box.querySelector('#sync-join')?.addEventListener('submit', async (e) => {
-      e.preventDefault(); syncMsg('Buscando tu progreso…');
-      try { const r = await sync.join(box.querySelector('#sync-input').value); progress = profiles.loadProgress(); syncMsg(`Listo: ${r.items} estructuras de ${r.name}.`); setTimeout(showStats, 1200); }
-      catch (err) { syncMsg(err.message); }
-    });
-    box.querySelector('#sync-copy')?.addEventListener('click', async () => {
-      try { await navigator.clipboard.writeText(profiles.current.sync); syncMsg('Código copiado. Guárdalo en un lugar seguro: es tu llave.'); } catch { syncMsg('Copia el código a mano.'); }
-    });
-    box.querySelector('#sync-now')?.addEventListener('click', async () => {
-      syncMsg('Sincronizando…'); await sync.pull(); await sync.push(); progress = profiles.loadProgress(); showStats();
-    });
-    box.querySelector('#sync-off')?.addEventListener('click', (e) => {
-      if (!e.target.dataset.confirm) { e.target.dataset.confirm = '1'; e.target.textContent = '¿Seguro? Anota tu código antes. Toca otra vez'; return; }
-      sync.disable(); showStats();
-    });
+    wireAccount();
     box.querySelector('#bk-code').addEventListener('click', async () => {
       const code = await profiles.backupCode();
       const area = box.querySelector('#bk-area');
@@ -520,6 +490,81 @@ export function createQuiz(body, box, { onAnswer, profiles, clinica, sync } = {}
     });
   }
 
+
+  // --- cuenta (Cloudflare) ---------------------------------------------------------------
+  let accTab = 'login', recoveryShown = null, recoveryTitle = 'Cuenta creada';
+  function accountHtml(me) {
+    if (recoveryShown) {
+      return `<div class="section-title">${recoveryTitle}</div>
+        <p class="sub">Guarda este <b>código de recuperación</b>: es la única forma de cambiar tu contraseña si la olvidas. Solo se muestra esta vez.</p>
+        <div class="code-row"><code>${recoveryShown}</code><button class="btn ghost" id="rec-copy">Copiar</button></div>
+        <div class="row wrap"><button class="btn" id="rec-done">Ya lo guardé</button></div><p class="sub" id="acc-msg"></p>`;
+    }
+    const acc = me?.account;
+    if (acc && !acc.expired) {
+      return `<div class="section-title">Cuenta</div>
+        <p class="sub">Sesión iniciada como <b>${esc(acc.email)}</b>. Tu progreso se guarda solo en la nube.</p>
+        <p class="sub" id="acc-msg">${me.lastSync ? `Último guardado: ${new Date(me.lastSync).toLocaleString('es')}` : 'Aún no se ha guardado.'}</p>
+        <div class="row wrap"><button class="btn ghost" id="acc-sync">Sincronizar ahora</button><button class="link" id="acc-logout">Cerrar sesión</button></div>`;
+    }
+    const legacy = me?.sync && !acc;
+    const tabs = { login: 'Iniciar sesión', register: 'Crear cuenta', reset: 'Olvidé mi contraseña' };
+    const f = {
+      login: `<input id="acc-email" type="email" placeholder="Correo" autocomplete="username" value="${esc(acc?.email || '')}">
+        <input id="acc-pass" type="password" placeholder="Contraseña" autocomplete="current-password">
+        <button class="btn" type="submit">Entrar</button>`,
+      register: `<input id="acc-name" type="text" placeholder="Nombre" value="${esc(me?.named === false ? '' : (me?.name || ''))}" maxlength="40">
+        <input id="acc-email" type="email" placeholder="Correo" autocomplete="username">
+        <input id="acc-pass" type="password" placeholder="Contraseña (mínimo 8)" autocomplete="new-password">
+        <button class="btn" type="submit">Crear cuenta</button>`,
+      reset: `<input id="acc-email" type="email" placeholder="Correo" autocomplete="username">
+        <input id="acc-rec" type="text" placeholder="Código de recuperación (XXXX-XXXX-XXXX)" autocapitalize="characters" spellcheck="false">
+        <input id="acc-pass" type="password" placeholder="Contraseña nueva (mínimo 8)" autocomplete="new-password">
+        <button class="btn" type="submit">Cambiar contraseña</button>`,
+    };
+    return `<div class="section-title">Cuenta</div>
+      ${acc?.expired ? '<p class="sub warn">Tu sesión venció. Vuelve a iniciar sesión para seguir guardando en la nube.</p>'
+        : `<p class="sub">${legacy ? `Usas el código <b>${esc(me.sync)}</b>. Crea una cuenta para entrar con correo y contraseña.` : `Inicia sesión para guardar el progreso de ${esc(me?.name || 'esta persona')} en la nube y usarlo en cualquier dispositivo.`}</p>`}
+      <div class="seg acc-tabs">${Object.entries(tabs).map(([k, l]) => `<button data-acctab="${k}" class="${k === accTab ? 'active' : ''}">${l}</button>`).join('')}</div>
+      <form class="acc-form" id="acc-form" autocomplete="on">${f[accTab]}</form>
+      <p class="sub" id="acc-msg"></p>
+      ${legacy ? '' : `<details class="old-code"><summary>Tengo un código de sincronización</summary>
+        <form class="type-answer" id="sync-join" autocomplete="off"><input id="sync-input" placeholder="XXXX-XXXX-XXXX" autocapitalize="characters" spellcheck="false"><button class="btn ghost" type="submit">Entrar</button></form></details>`}`;
+  }
+  function wireAccount() {
+    const el = box.querySelector('#account');
+    if (!el) return;
+    const msg = (t) => { const m = box.querySelector('#acc-msg'); if (m) m.textContent = t; };
+    const val = (id) => box.querySelector(id)?.value || '';
+    el.querySelectorAll('[data-acctab]').forEach((b) => b.addEventListener('click', () => { accTab = b.dataset.acctab; showStats(); }));
+    box.querySelector('#acc-form')?.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const btn = e.target.querySelector('button[type=submit]');
+      btn.disabled = true; msg(accTab === 'register' ? 'Creando la cuenta…' : 'Entrando…');
+      try {
+        if (accTab === 'login') await sync.login(val('#acc-email'), val('#acc-pass'));
+        if (accTab === 'register') { const r = await sync.register(val('#acc-email'), val('#acc-pass'), val('#acc-name')); recoveryShown = r.recovery; recoveryTitle = 'Cuenta creada'; }
+        if (accTab === 'reset') { const r = await sync.reset(val('#acc-email'), val('#acc-rec'), val('#acc-pass')); recoveryShown = r.recovery; recoveryTitle = 'Contraseña cambiada: este es tu nuevo código de recuperación'; }
+        progress = profiles.loadProgress();
+        showStats();
+      } catch (err) { msg(err.message); btn.disabled = false; }
+    });
+    box.querySelector('#rec-copy')?.addEventListener('click', async () => {
+      try { await navigator.clipboard.writeText(recoveryShown); msg('Copiado. Guárdalo en tus notas o en un chat contigo misma.'); } catch { msg('Cópialo a mano.'); }
+    });
+    box.querySelector('#rec-done')?.addEventListener('click', () => { recoveryShown = null; showStats(); });
+    box.querySelector('#acc-sync')?.addEventListener('click', async () => { msg('Sincronizando…'); await sync.pull(); await sync.push(); progress = profiles.loadProgress(); showStats(); });
+    box.querySelector('#acc-logout')?.addEventListener('click', async (e) => {
+      if (!e.target.dataset.confirm) { e.target.dataset.confirm = '1'; e.target.textContent = 'Tu progreso queda guardado en la nube. ¿Cerrar sesión? Toca otra vez'; return; }
+      await sync.logout(); showStats();
+    });
+    box.querySelector('#sync-join')?.addEventListener('submit', async (e) => {
+      e.preventDefault(); msg('Buscando tu progreso…');
+      try { const r = await sync.join(val('#sync-input')); progress = profiles.loadProgress(); msg(`Listo: ${r.items} estructuras de ${r.name}.`); setTimeout(showStats, 1200); }
+      catch (err) { msg(err.message); }
+    });
+  }
+
   function showWelcome(adding = false) {
     box.innerHTML = `<h3>${adding ? 'Nueva persona' : '¿Quién va a estudiar?'}</h3>
       <p class="sub">Cada persona guarda su propio progreso en este dispositivo.</p>
@@ -527,7 +572,8 @@ export function createQuiz(body, box, { onAnswer, profiles, clinica, sync } = {}
         <input id="who-name" type="text" placeholder="Tu nombre" maxlength="24" enterkeyhint="done">
         <button class="btn" type="submit">Empezar</button>
       </form>
-      ${adding ? '<button class="link" id="who-cancel">Cancelar</button>' : ''}`;
+      ${adding ? '<button class="link" id="who-cancel">Cancelar</button>' : ''}
+      ${sync?.configured ? '<p class="sub">¿Ya tienes cuenta? <button class="link" id="who-login">Inicia sesión</button></p>' : ''}`;
     box.querySelector('#who-form').addEventListener('submit', (e) => {
       e.preventDefault();
       const name = box.querySelector('#who-name').value.trim();
@@ -537,6 +583,7 @@ export function createQuiz(body, box, { onAnswer, profiles, clinica, sync } = {}
       next();
     });
     box.querySelector('#who-cancel')?.addEventListener('click', showStats);
+    box.querySelector('#who-login')?.addEventListener('click', () => { accTab = 'login'; showStats(); setTimeout(() => box.querySelector('#account')?.scrollIntoView({ block: 'start' }), 50); });
     if (!matchMedia('(max-width: 899px)').matches) box.querySelector('#who-name').focus();
   }
 
@@ -545,7 +592,7 @@ export function createQuiz(body, box, { onAnswer, profiles, clinica, sync } = {}
     start() {
       saved = body.snapshot();
       progress = profiles.loadProgress();
-      if (sync?.code) sync.pull().then((changed) => { if (changed) progress = profiles.loadProgress(); });
+      if (sync?.active) sync.pull().then((changed) => { if (changed) progress = profiles.loadProgress(); });
       if (profiles.needsName()) { stage(poolFor(group)[0] || body.catalog.parts[0]); showWelcome(); } else next();
     },
     stop() { if (saved) body.restore(saved); saved = null; current = null; body.select(null); body.setOverlay(null); },

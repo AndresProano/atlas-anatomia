@@ -78,10 +78,11 @@ export function createProfiles() {
     markBackup() { const c = api.current; if (c) { c.lastBackup = Date.now(); save(data); } },
     // sincronización en la nube (web/js/sync.js)
     setSync(code) { const c = api.current; if (c) { if (code) c.sync = code; else delete c.sync; save(data); } },
+    setAccount(acc) { const c = api.current; if (c) { if (acc) c.account = acc; else delete c.account; save(data); } },
     setSyncTime(t) { const c = api.current; if (c) { c.lastSync = t; c.lastBackup = t; save(data); } },
     backupDue() {
       const c = api.current;
-      if (c?.sync) return false; // con sincronización en la nube no hace falta recordar
+      if (c?.sync || c?.account) return false; // con sincronización en la nube no hace falta recordar
       const n = Object.keys(api.loadProgress()).length;
       return n >= 10 && (!c?.lastBackup || Date.now() - c.lastBackup > 7 * 864e5);
     },

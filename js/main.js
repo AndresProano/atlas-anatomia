@@ -526,6 +526,18 @@ canvas.addEventListener('pointermove', (e) => {
 });
 canvas.addEventListener('pointerleave', () => { hoverLabel.hidden = true; });
 
+// Panel de navegación: un toque = un paso; mantener pulsado = movimiento continuo.
+document.querySelectorAll('#navpad .nav-btn').forEach((b) => {
+  let timer = null;
+  const step = () => {
+    if (b.dataset.zoom) viewer.zoomBy(Number(b.dataset.zoom));
+    else { const [x, y] = b.dataset.pan.split(',').map(Number); viewer.panBy(x * 0.5, y * 0.5); }
+  };
+  const stop = () => { clearInterval(timer); timer = null; };
+  b.addEventListener('pointerdown', (e) => { e.preventDefault(); step(); stop(); timer = setInterval(step, 60); });
+  ['pointerup', 'pointerleave', 'pointercancel'].forEach((ev) => b.addEventListener(ev, stop));
+});
+
 window.addEventListener('keydown', (e) => {
   if (e.target.matches('input, select, textarea')) return;
   const k = e.key.toLowerCase();

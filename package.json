@@ -7,7 +7,8 @@
     "data": "python -I scripts/classify.py data-raw web/data/parts.json && python -I scripts/terms.py data-raw web/data/terms.json && python -I scripts/hubmap.py data-raw/hubmap/reference-organs.json data-raw/hubmap/sizes.json web/data/hubmap.json",
     "models": "node scripts/build-models.mjs 0.25 0.01",
     "serve": "python -I scripts/serve.py 5173",
-    "publish": "sh scripts/publish.sh"
+    "publish": "sh scripts/publish.sh",
+    "female": "node scripts/female-dump.mjs data-raw/female-fit/dump models/piel.glb models/f-piel.glb models/esqueletico.glb models/f-esqueletico.glb models/muscular.glb models/articular.glb models/f-nervioso.glb models/f-respiratorio.glb models/f-reproductor.glb && python3 scripts/female_fit.py data-raw/female-fit/dump data-raw/female-fit && python3 scripts/female_check.py data-raw/female-fit/dump data-raw/female-fit && node scripts/build-female-complete.mjs data-raw/female-fit"
   },
   "devDependencies": {
     "@gltf-transform/core": "4.5.1",

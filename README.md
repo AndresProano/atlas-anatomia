@@ -22,6 +22,23 @@ Visible Human Project, Open Anatomy, NIH 3D, BioDigital, Pulse, BioGears y OpenS
 - **Órganos en detalle** (HuBMAP): riñón con pirámides y papilas, corazón, ojo, útero, ovarios, mama, placenta, etc.
 - **Quiz**: se resalta una estructura y eliges su nombre entre 4 opciones; filtrable por sistema.
 
+## Cuerpo femenino completo
+
+HuBMAP (Visible Human Female) trae los órganos, la columna, la pelvis y las piernas de una mujer real, pero no
+el cráneo, las costillas, la cintura escapular, los brazos, las manos, los pies ni casi ningún músculo. Esas piezas
+se toman de BodyParts3D y se **ajustan a su cuerpo** (`npm run female`):
+
+1. Puntos de referencia emparejados entre ambos cuerpos: vértebras, sacro, esternón, coxales, fémur/tibia/peroné,
+   y secciones de la piel a alturas equivalentes (tronco, cuello, cabeza, muslos, piernas, brazos, pies),
+   descontando la grasa subcutánea.
+2. Los brazos del hombre (colgando) se articulan en hombro, codo y muñeca hacia la postura de ella (abiertos).
+3. Deformación suave (thin-plate spline) de todas las piezas y limpieza final: lo que queda fuera de la piel se
+   empuja hacia dentro.
+4. `female_check.py` informa qué se sale de la piel y `female_stretch.py` qué piezas se estiraron demasiado.
+
+Resultado: +202 huesos, +416 músculos y +29 cartílagos/ligamentos (1590 piezas). Las proporciones de esas piezas
+son aproximadas: vienen de un cuerpo masculino adaptado, no de una disección femenina.
+
 ## Estructura
 
 ```
@@ -35,6 +52,8 @@ scripts/
   download.sh        baja los datos crudos a data-raw/ (no versionado)
   classify.py        clasifica piezas por sistema (FMA is_a + part_of) y traduce
   build-models.mjs   OBJ → GLB por sistema (gltf-transform + meshoptimizer)
+  build-female.mjs   HuBMAP united-female → f-<sistema>.glb
+  female_fit.py, build-female-complete.mjs   completa el cuerpo femenino (ver arriba)
   hubmap.py, terms.py, serve.py
 ```
 

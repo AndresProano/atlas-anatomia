@@ -45,6 +45,34 @@ export function createViewer(canvas) {
   controls.enableDamping = true;
   controls.dampingFactor = 0.12;
   controls.screenSpacePanning = true;
+  // Navegación tipo mapa: clic izquierdo arrastra (mano); derecho o Shift/Ctrl/Cmd + arrastre gira.
+  controls.mouseButtons = { LEFT: THREE.MOUSE.PAN, MIDDLE: THREE.MOUSE.DOLLY, RIGHT: THREE.MOUSE.ROTATE };
+  canvas.style.cursor = 'grab';
+  canvas.addEventListener('pointerdown', (e) => { if (e.pointerType === 'mouse') canvas.style.cursor = e.button === 0 && !(e.shiftKey || e.ctrlKey || e.metaKey) ? 'grabbing' : 'move'; });
+  window.addEventListener('pointerup', () => { canvas.style.cursor = 'grab'; });
+  canvas.addEventListener('contextmenu', (e) => e.preventDefault());
+
+  // Desplazamiento con flechas: mueve cámara y objetivo juntos, proporcional a la distancia.
+  const _right = new THREE.Vector3(), _up = new THREE.Vector3(), _delta = new THREE.Vector3();
+  function panBy(dx, dy) {
+    const dist = camera.position.distanceTo(controls.target);
+    const step = dist * Math.tan(THREE.MathUtils.degToRad(camera.fov / 2)) * 0.15;
+    _right.setFromMatrixColumn(camera.matrix, 0);
+    _up.setFromMatrixColumn(camera.matrix, 1);
+    _delta.copy(_right).multiplyScalar(dx * step).addScaledVector(_up, dy * step);
+    camera.position.add(_delta);
+    controls.target.add(_delta);
+    controls.update();
+    requestRender();
+  }
+  window.addEventListener('keydown', (e) => {
+    if (e.target.matches?.('input, select, textarea')) return;
+    const d = { ArrowLeft: [-1, 0], ArrowRight: [1, 0], ArrowUp: [0, 1], ArrowDown: [0, -1] }[e.key];
+    if (!d) return;
+    e.preventDefault();
+    const m = e.shiftKey ? 3 : 1;
+    panBy(d[0] * m, d[1] * m);
+  });
 
   let dirty = true;
   const requestRender = () => { dirty = true; };

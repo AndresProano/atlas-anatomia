@@ -1,0 +1,252 @@
+{
+  "_comment": "Nombres de las piezas de la Universidad de Denver (Visible Human Female). 'match' busca el nombre inglés en el catálogo masculino (con {side} = left/right) para reutilizar español, latín y Wikipedia; si no hay, se usan en/es/la de aquí.",
+  "Bone": {
+    "Calcaneous": {
+      "match": "{Side} calcaneus"
+    },
+    "Coccyx": {
+      "en": "Coccyx",
+      "es": "Cóccix",
+      "la": "Os coccygis",
+      "single": true
+    },
+    "Cuboid": {
+      "match": "{Side} cuboid bone"
+    },
+    "Femur": {
+      "match": "{Side} femur"
+    },
+    "Fibula": {
+      "match": "{Side} fibula"
+    },
+    "IntermediateCuneiform": {
+      "match": "{Side} intermediate cuneiform bone"
+    },
+    "LateralCuneiform": {
+      "match": "{Side} lateral cuneiform bone"
+    },
+    "MedialCuneiform": {
+      "match": "{Side} medial cuneiform bone"
+    },
+    "Navicular": {
+      "match": "Navicular bone of {side} foot"
+    },
+    "Patella": {
+      "match": "{Side} patella"
+    },
+    "Pelvis": {
+      "match": "{Side} hip bone"
+    },
+    "Phalanges": {
+      "en": "Metatarsals and phalanges of {side} foot",
+      "es": "Metatarsianos y falanges del pie",
+      "la": "Ossa metatarsi et phalanges pedis"
+    },
+    "Sacrum": {
+      "match": "Sacrum",
+      "single": true
+    },
+    "Talus": {
+      "match": "{Side} talus"
+    },
+    "Tibia": {
+      "match": "{Side} tibia"
+    }
+  },
+  "Cartilage": {
+    "FemurDistal": {
+      "en": "Articular cartilage of distal {side} femur",
+      "es": "Cartílago articular del extremo distal del fémur",
+      "la": "Cartilago articularis femoris"
+    },
+    "FemurHead": {
+      "en": "Articular cartilage of {side} femoral head",
+      "es": "Cartílago de la cabeza del fémur",
+      "la": "Cartilago articularis capitis femoris"
+    },
+    "PelvisAcetabulum": {
+      "en": "Acetabular cartilage ({side})",
+      "es": "Cartílago del acetábulo",
+      "la": "Facies lunata acetabuli"
+    },
+    "Patella": {
+      "en": "Articular cartilage of {side} patella",
+      "es": "Cartílago articular de la rótula",
+      "la": "Cartilago articularis patellae"
+    },
+    "Talus": {
+      "en": "Articular cartilage of {side} talus",
+      "es": "Cartílago articular del astrágalo",
+      "la": "Cartilago articularis tali"
+    },
+    "TibiaDistal": {
+      "en": "Articular cartilage of distal {side} tibia",
+      "es": "Cartílago articular distal de la tibia",
+      "la": "Cartilago articularis tibiae"
+    },
+    "TibiaLateral": {
+      "en": "Lateral tibial plateau cartilage ({side})",
+      "es": "Cartílago del platillo tibial lateral",
+      "la": "Cartilago condyli lateralis tibiae"
+    },
+    "TibiaMedial": {
+      "en": "Medial tibial plateau cartilage ({side})",
+      "es": "Cartílago del platillo tibial medial",
+      "la": "Cartilago condyli medialis tibiae"
+    }
+  },
+  "Ligament": {
+    "ACL": {
+      "en": "Anterior cruciate ligament of {side} knee",
+      "es": "Ligamento cruzado anterior",
+      "la": "Ligamentum cruciatum anterius"
+    },
+    "PCL": {
+      "en": "Posterior cruciate ligament of {side} knee",
+      "es": "Ligamento cruzado posterior",
+      "la": "Ligamentum cruciatum posterius"
+    },
+    "MCL": {
+      "en": "Tibial collateral ligament ({side})",
+      "es": "Ligamento colateral tibial (medial)",
+      "la": "Ligamentum collaterale tibiale"
+    },
+    "LCL": {
+      "en": "Fibular collateral ligament ({side})",
+      "es": "Ligamento colateral peroneo (lateral)",
+      "la": "Ligamentum collaterale fibulare"
+    }
+  },
+  "Muscle": {
+    "AdductorBrevis": {
+      "match": "{Side} adductor brevis"
+    },
+    "AdductorLongus": {
+      "match": "{Side} adductor longus"
+    },
+    "AdductorMagnus": {
+      "match": "{Side} adductor magnus"
+    },
+    "ExtensorDigitorumLongus": {
+      "match": "{Side} extensor digitorum longus"
+    },
+    "ExtensorHallucisLongus": {
+      "match": "{Side} extensor hallucis longus"
+    },
+    "FlexorDigitorumLongus": {
+      "match": "{Side} flexor digitorum longus"
+    },
+    "FlexorHallucisLongus": {
+      "match": "{Side} flexor hallucis longus"
+    },
+    "GastrocnemiusLateral": {
+      "match": "Lateral head of {side} gastrocnemius"
+    },
+    "GastrocnemiusMedial": {
+      "match": "Medial head of {side} gastrocnemius"
+    },
+    "GluteusMaximus": {
+      "match": "{Side} gluteus maximus"
+    },
+    "GluteusMedius": {
+      "match": "{Side} gluteus medius"
+    },
+    "GluteusMinimus": {
+      "match": "{Side} gluteus minimus"
+    },
+    "Gracilis": {
+      "match": "{Side} gracilis"
+    },
+    "Illiacus": {
+      "match": "{Side} iliacus"
+    },
+    "InferiorGemellus": {
+      "en": "{Side} gemellus inferior",
+      "es": "Músculo gemelo inferior",
+      "la": "Musculus gemellus inferior"
+    },
+    "ObturatorExternus": {
+      "match": "{Side} obturator externus"
+    },
+    "ObturatorInternus": {
+      "match": "{Side} obturator internus"
+    },
+    "Pectineus": {
+      "match": "{Side} pectineus"
+    },
+    "PeroneusLongus": {
+      "match": "{Side} fibularis longus"
+    },
+    "Piriformis": {
+      "match": "{Side} piriformis"
+    },
+    "Plantaris": {
+      "match": "{Side} plantaris"
+    },
+    "Popliteus": {
+      "match": "{Side} popliteus"
+    },
+    "PsoasMajor": {
+      "match": "{Side} psoas major"
+    },
+    "RectusFemoris": {
+      "match": "{Side} rectus femoris"
+    },
+    "Sartorius": {
+      "match": "{Side} sartorius"
+    },
+    "Semimembranosus": {
+      "match": "{Side} semimembranosus"
+    },
+    "Soleus": {
+      "match": "{Side} soleus"
+    },
+    "SuperiorGemellus": {
+      "en": "{Side} gemellus superior",
+      "es": "Músculo gemelo superior",
+      "la": "Musculus gemellus superior"
+    },
+    "TensorFasciaeLatae": {
+      "match": "{Side} tensor fasciae latae"
+    },
+    "TibialisAnterior": {
+      "match": "{Side} tibialis anterior"
+    },
+    "TibialisPosterior": {
+      "match": "{Side} tibialis posterior"
+    },
+    "VastusIntermedius": {
+      "match": "{Side} vastus intermedius"
+    },
+    "VastusLateralis": {
+      "match": "{Side} vastus lateralis"
+    },
+    "VastusMedialis": {
+      "match": "{Side} vastus medialis"
+    },
+    "BicepsFemorisLongHead": {
+      "match": "Long head of {side} biceps femoris"
+    },
+    "BicepsFemorisShortHead": {
+      "match": "Short head of {side} biceps femoris"
+    },
+    "QuadratisFemoris": {
+      "match": "{Side} quadratus femoris"
+    },
+    "Semitendonosus": {
+      "match": "{Side} semitendinosus"
+    },
+    "BicepsFemorisLong": {
+      "match": "Long head of {side} biceps femoris"
+    },
+    "BicepsFemorisShort": {
+      "match": "Short head of {side} biceps femoris"
+    },
+    "QuadratusFemoris": {
+      "match": "{Side} quadratus femoris"
+    },
+    "Semitendinosus": {
+      "match": "{Side} semitendinosus"
+    }
+  }
+}

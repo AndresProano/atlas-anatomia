@@ -8,7 +8,7 @@
     "models": "node scripts/build-models.mjs 0.25 0.01",
     "serve": "python -I scripts/serve.py 5173",
     "publish": "sh scripts/publish.sh",
-    "female": "node scripts/female-dump.mjs data-raw/female-fit/dump models/piel.glb models/f-piel.glb models/esqueletico.glb models/f-esqueletico.glb models/muscular.glb models/articular.glb models/f-nervioso.glb models/f-respiratorio.glb models/f-reproductor.glb && python3 scripts/female_fit.py data-raw/female-fit/dump data-raw/female-fit && python3 scripts/female_check.py data-raw/female-fit/dump data-raw/female-fit && node scripts/build-female-complete.mjs data-raw/female-fit"
+    "female": "sh scripts/female-originals.sh && node scripts/female-dump.mjs data-raw/female-fit/dump models/piel.glb models/f-piel.glb models/esqueletico.glb $PWD/data-raw/female-hubmap/f-esqueletico.glb models/muscular.glb models/articular.glb models/f-nervioso.glb models/f-respiratorio.glb models/f-reproductor.glb && python3 scripts/du_import.py data-raw/du-vhf/stl data-raw/female-fit/dump data-raw/du-vhf/aligned && python3 scripts/female_fit.py data-raw/female-fit/dump data-raw/female-fit && python3 scripts/female_check.py data-raw/female-fit/dump data-raw/female-fit && node scripts/build-female-complete.mjs data-raw/female-fit data-raw/du-vhf/aligned"
   },
   "devDependencies": {
     "@gltf-transform/core": "4.5.1",

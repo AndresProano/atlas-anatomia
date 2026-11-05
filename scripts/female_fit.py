@@ -97,6 +97,15 @@ for nm_m, nm_f in [("Sacrum", "Sacrum"), ("Coccyx", "Coccyx"), ("Body of sternum
     lo_a, hi_a = ends(a); lo_b, hi_b = ends(b)
     add(lo_a, lo_b, "tronco"); add(hi_a, hi_b, "tronco")
 
+# pelvis real (opcional): salida de scripts/du_import.py en data-raw/du-vhf/aligned
+DU_DIR = os.environ.get("DU_ALIGNED", os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "data-raw", "du-vhf", "aligned"))
+DU_PELVIS = None
+if os.path.exists(os.path.join(DU_DIR, "du.json")):
+    import json as _json
+    _idx = _json.load(open(os.path.join(DU_DIR, "du.json")))
+    _V = np.fromfile(os.path.join(DU_DIR, "du.bin"), dtype=np.float32).reshape(-1, 3).astype(float)
+    DU_PELVIS = np.concatenate([_V[e["off"]:e["off"] + e["n"]][::3] for e in _idx if e["kind"] == "Bone" and e["name"] == "Pelvis"])
+    print("usando la pelvis real de Denver:", len(DU_PELVIS), "puntos")
 for side, sgn in (("Left", 1), ("Right", -1)):
     sd = "(left)" if side == "Left" else "(right)"
     # BodyParts3D: "Left" del cuerpo = x>0? se decide por el signo real de los datos
@@ -105,9 +114,14 @@ for side, sgn in (("Left", 1), ("Right", -1)):
     # el lado se decide por la posición real (x), no por el nombre
     hip_f = fbone(lambda p: p["en"].startswith("Ilium"))
     hip_f = hip_f[np.sign(hip_f[:, 0]) == s]
-    # extremos robustos: lateral, arriba, abajo, delante y detrás. El extremo medial NO: el coxal de HuBMAP
-    # no llega a la sínfisis del pubis y emparejarlo estiraría la línea media.
-    for k, q in ((0, 0.98 if s > 0 else 0.02), (1, 0.02), (1, 0.98), (2, 0.02), (2, 0.98)):
+    # si está la pelvis real de Denver (completa, con pubis) se usa en lugar del ilion de HuBMAP
+    if DU_PELVIS is not None:
+        hip_f = DU_PELVIS[np.sign(DU_PELVIS[:, 0]) == s]
+        extremes = ((0, 0.98 if s > 0 else 0.02), (0, 0.02 if s > 0 else 0.98), (1, 0.02), (1, 0.98), (2, 0.02), (2, 0.98))
+    else:
+        # sin ella, el extremo medial NO: el coxal de HuBMAP no llega a la sínfisis del pubis
+        extremes = ((0, 0.98 if s > 0 else 0.02), (1, 0.02), (1, 0.98), (2, 0.02), (2, 0.98))
+    for k, q in extremes:
         pa = hip_m[np.argmin(np.abs(hip_m[:, k] - np.quantile(hip_m[:, k], q)))]
         pb = hip_f[np.argmin(np.abs(hip_f[:, k] - np.quantile(hip_f[:, k], q)))]
         add(pa, pb, "pelvis")

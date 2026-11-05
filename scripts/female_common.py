@@ -10,6 +10,11 @@ ROOT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..")
 def catalogs():
     male = json.load(open(os.path.join(ROOT, "web/data/parts.json"), encoding="utf-8"))["parts"]
     female = json.load(open(os.path.join(ROOT, "web/data/female.json"), encoding="utf-8"))["parts"]
+    # piezas HuBMAP originales (algunas ya sustituidas por las de Denver en el catálogo publicado)
+    orig = os.path.join(ROOT, "data-raw/female-hubmap/female.json")
+    if os.path.exists(orig):
+        have = {p["id"] for p in female}
+        female += [p for p in json.load(open(orig, encoding="utf-8"))["parts"] if p["id"] not in have]
     return {p["id"]: p for p in male}, {p["id"]: p for p in female}
 
 

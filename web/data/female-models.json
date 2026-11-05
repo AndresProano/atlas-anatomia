@@ -29,9 +29,9 @@
  },
  "muscular": {
   "file": "models/f-muscular.glb",
-  "parts": 432,
-  "tris": 606206,
-  "bytes": 3602728
+  "parts": 430,
+  "tris": 644657,
+  "bytes": 3801068
  },
  "digestivo": {
   "file": "models/f-digestivo.glb",
@@ -70,14 +70,14 @@
  },
  "esqueletico": {
   "file": "models/f-esqueletico.glb",
-  "parts": 259,
-  "tris": 246889,
-  "bytes": 1620360
+  "parts": 199,
+  "tris": 284078,
+  "bytes": 1735916
  },
  "articular": {
   "file": "models/f-articular.glb",
-  "parts": 105,
-  "tris": 140508,
-  "bytes": 836836
+  "parts": 101,
+  "tris": 170132,
+  "bytes": 988500
  }
 }

@@ -24,20 +24,21 @@ Visible Human Project, Open Anatomy, NIH 3D, BioDigital, Pulse, BioGears y OpenS
 
 ## Cuerpo femenino completo
 
-HuBMAP (Visible Human Female) trae los órganos, la columna, la pelvis y las piernas de una mujer real, pero no
-el cráneo, las costillas, la cintura escapular, los brazos, las manos, los pies ni casi ningún músculo. Esas piezas
-se toman de BodyParts3D y se **ajustan a su cuerpo** (`npm run female`):
+La mujer combina tres fuentes, de más real a más aproximada:
 
-1. Puntos de referencia emparejados entre ambos cuerpos: vértebras, sacro, esternón, coxales, fémur/tibia/peroné,
-   y secciones de la piel a alturas equivalentes (tronco, cuello, cabeza, muslos, piernas, brazos, pies),
-   descontando la grasa subcutánea.
-2. Los brazos del hombre (colgando) se articulan en hombro, codo y muñeca hacia la postura de ella (abiertos).
-3. Deformación suave (thin-plate spline) de todas las piezas y limpieza final: lo que queda fuera de la piel se
-   empuja hacia dentro.
-4. `female_check.py` informa qué se sale de la piel y `female_stretch.py` qué piezas se estiraron demasiado.
+1. **HuBMAP** (Visible Human Female): órganos, mamas, aparato reproductor, cerebro, columna, vasos y piel.
+2. **Universidad de Denver** ([Andreassen et al. 2023](https://doi.org/10.1038/s41597-022-01905-2), CC BY 4.0):
+   cadera y piernas **reales de la misma mujer** — pelvis completa, fémur, tibia, peroné, rótula, pie, 38 músculos por
+   lado, cartílagos y ligamentos de rodilla. `du_import.py` las alinea hueso a hueso con HuBMAP (que colocó las
+   piernas más separadas) y gira los pies (el cadáver los tiene en punta).
+3. **BodyParts3D adaptado** (aproximado): cráneo, costillas, cintura escapular, brazos, manos y músculos de tronco,
+   cuello, cabeza y brazos. `female_fit.py` los ajusta con puntos de referencia (huesos comunes, pelvis real, secciones
+   de piel descontando la grasa), articula los brazos hacia su postura, deforma con thin-plate spline y empuja hacia
+   dentro lo que se sale de la piel.
 
-Resultado: +202 huesos, +416 músculos y +29 cartílagos/ligamentos (1590 piezas). Las proporciones de esas piezas
-son aproximadas: vienen de un cuerpo masculino adaptado, no de una disección femenina.
+Para regenerar: descargar "Final 3D STL Models" de https://digitalcommons.du.edu/visiblehuman/1/ (el sitio no admite
+descargas automáticas), descomprimir en `data-raw/du-vhf/stl/` y ejecutar `npm run female`.
+Controles de calidad: `female_check.py` (qué se sale de la piel) y `female_stretch.py` (qué se estiró demasiado).
 
 ## Estructura
 
@@ -53,7 +54,7 @@ scripts/
   classify.py        clasifica piezas por sistema (FMA is_a + part_of) y traduce
   build-models.mjs   OBJ → GLB por sistema (gltf-transform + meshoptimizer)
   build-female.mjs   HuBMAP united-female → f-<sistema>.glb
-  female_fit.py, build-female-complete.mjs   completa el cuerpo femenino (ver arriba)
+  du_import.py, female_fit.py, build-female-complete.mjs   completan el cuerpo femenino (ver arriba)
   hubmap.py, terms.py, serve.py
 ```
 

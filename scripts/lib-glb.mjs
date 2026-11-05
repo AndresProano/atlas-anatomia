@@ -19,7 +19,7 @@ function mulMat4(m, x, y, z) {
 
 // Devuelve [{ name, pos: Float32Array (mundo), index: Uint32Array }] de un GLB.
 export async function readParts(file) {
-  const doc = await io.read(path.join(ROOT, 'web', file));
+  const doc = await io.read(path.isAbsolute(file) ? file : path.join(ROOT, 'web', file));
   const out = [];
   for (const node of doc.getRoot().listNodes()) {
     const mesh = node.getMesh();

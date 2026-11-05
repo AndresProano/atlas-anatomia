@@ -1,21 +1,73 @@
 // Completa el cuerpo femenino con piezas de BodyParts3D (hombre) ya deformadas para encajar en ella.
 // Requiere: scripts/female_fit.py -> <fit-dir>/<sistema>.warped.bin (mismo orden que readParts del GLB masculino)
-// Uso: node scripts/build-female-complete.mjs <fit-dir>
+// Opcional: <du-dir> = salida de scripts/du_import.py (cadera y piernas reales de la Visible Human Female,
+//           Universidad de Denver, CC BY 4.0). Si se da, sustituye a las piezas equivalentes de HuBMAP y del hombre.
+// Uso: node scripts/build-female-complete.mjs <fit-dir> [<du-dir>]
 // Reescribe web/models/f-<sistema>.glb (conserva las piezas HuBMAP "F0000") y actualiza web/data/female*.json.
 import fs from 'node:fs';
 import path from 'node:path';
 import { Document } from '@gltf-transform/core';
 import { quantize, meshopt } from '@gltf-transform/functions';
-import { MeshoptEncoder } from 'meshoptimizer';
+import { MeshoptEncoder, MeshoptSimplifier } from 'meshoptimizer';
 import { ROOT, io, readParts } from './lib-glb.mjs';
 
 const FIT = process.argv[2];
+const DU = process.argv[3];
+await MeshoptSimplifier.ready;
 const web = (f) => path.join(ROOT, 'web', f);
 const maleCat = JSON.parse(fs.readFileSync(web('data/parts.json'), 'utf8'));
 const femCat = JSON.parse(fs.readFileSync(web('data/female.json'), 'utf8'));
 const femModels = JSON.parse(fs.readFileSync(web('data/female-models.json'), 'utf8'));
 const mById = new Map(maleCat.parts.map((p) => [p.id, p]));
 const isHubmap = (id) => /^F\d{4}$/.test(id);
+const femById = new Map(femCat.parts.map((p) => [p.id, p]));
+
+// --- cadera y piernas reales (Denver) -----------------------------------------------------------
+const KIND_SYS = { Bone: 'esqueletico', Muscle: 'muscular', Cartilage: 'articular', Ligament: 'articular' };
+const duItems = { esqueletico: [], muscular: [], articular: [] };
+// lo que Denver sustituye: en HuBMAP (huesos y rodilla) y en el hombre ajustado (cadera, muslo, pierna, pie)
+const DU_REPLACES_HUBMAP = /^(femur|tibia|fibula|patella|ilium|sacrum|coccyx|rectus femoris)|cruciate|collateral ligament|articular cartilage of knee|condyle|enthesis|perichond|trochlear groove|intercondylar fossa|distal most point/i;
+const DU_REPLACES_MALE = /\b(left|right) (calcaneus|talus|cuboid bone|(medial|intermediate|lateral) cuneiform bone)|navicular bone of|metatarsal|phalanx of .*(toe|hallux)|sesamoid bone of|adductor (brevis|longus|magnus|minimus)|biceps femoris|extensor digitorum longus|extensor hallucis longus|flexor digitorum longus|flexor hallucis longus|gastrocnemius|gluteus|gracilis|iliacus|gemellus|obturator|pectineus|fibularis longus|piriformis|plantaris|popliteus|psoas major|quadratus femoris|sartorius|semimembranosus|semitendinosus|soleus|tensor fasciae latae|tibialis (anterior|posterior)|vastus|iliotibial tract|interosseous membrane of (left|right) leg|calcaneal tendon/i;
+function simplifyPart(pos, idx, ratio = 0.05, minTris = 300) {
+  const target = Math.max(minTris * 3, Math.floor((idx.length * ratio) / 3) * 3);
+  const [out] = MeshoptSimplifier.simplify(idx, pos, 3, Math.min(target, idx.length), 0.002, ['LockBorder']);
+  const remap = new Int32Array(pos.length / 3).fill(-1); let n = 0;
+  for (const i of out) if (remap[i] < 0) remap[i] = n++;
+  const p2 = new Float32Array(n * 3);
+  for (let i = 0; i < remap.length; i++) if (remap[i] >= 0) p2.set(pos.subarray(i * 3, i * 3 + 3), remap[i] * 3);
+  return { pos: p2, index: Uint32Array.from(out, (i) => remap[i]) };
+}
+if (DU) {
+  const names = JSON.parse(fs.readFileSync(path.join(ROOT, 'scripts/du_names.json'), 'utf8'));
+  const maleByEn = new Map(maleCat.parts.map((p) => [p.en.toLowerCase(), p]));
+  const idx = JSON.parse(fs.readFileSync(path.join(DU, 'du.json'), 'utf8'));
+  const V = new Float32Array(fs.readFileSync(path.join(DU, 'du.bin')).buffer.slice(0));
+  const T = new Uint32Array(fs.readFileSync(path.join(DU, 'du.tri.bin')).buffer.slice(0));
+  let triOff = 0, tIn = 0, tOut = 0;
+  for (const e of idx) {
+    const pos = V.slice(e.off * 3, (e.off + e.n) * 3);
+    const tri = T.slice(triOff * 3, (triOff + e.ntri) * 3).map((i) => i - e.off); triOff += e.ntri;
+    const spec = names[e.kind]?.[e.name];
+    if (!spec) { console.warn('sin nombre:', e.kind, e.name); continue; }
+    const side = e.side.toLowerCase(), Side = e.side;
+    if (spec.single && e.side === 'Right') continue; // sacro y cóccix vienen repetidos en ambas carpetas
+    const fill = (s) => s?.replaceAll('{side}', side).replaceAll('{Side}', Side);
+    const m = spec.match ? maleByEn.get(fill(spec.match).toLowerCase()) : null;
+    const sfx = spec.single ? '' : ` (${side === 'left' ? 'izq.' : 'der.'})`;
+    const id = `DU-${spec.single ? '' : side[0].toUpperCase() + '-'}${e.kind[0]}-${e.name}`;
+    const simp = simplifyPart(pos, tri);
+    tIn += tri.length / 3; tOut += simp.index.length / 3;
+    const system = KIND_SYS[e.kind];
+    duItems[system].push({ name: id, pos: simp.pos, index: simp.index });
+    duItems[system].meta ??= [];
+    duItems[system].meta.push({
+      id, system, from: 'Visible Human Female (Univ. de Denver)',
+      en: m ? m.en : fill(spec.en), es: m ? m.es : (spec.es ? spec.es + sfx : null), la: m ? m.la : spec.la ?? null,
+      ...(m?.wiki ? { wiki: m.wiki } : {}),
+    });
+  }
+  console.log(`Denver: ${(tIn / 1e6).toFixed(2)}M -> ${(tOut / 1e3).toFixed(0)}k triángulos`);
+}
 
 // lo que ella ya tiene (HuBMAP) no se duplica
 const SKIP = {
@@ -42,11 +94,13 @@ const boxVol = (pos) => {
   return (b[3] - b[0]) * (b[4] - b[1]) * (b[5] - b[2]);
 };
 
-const newParts = femCat.parts.filter((p) => isHubmap(p.id));
+const newParts = femCat.parts.filter((p) => isHubmap(p.id) && !(DU && DU_REPLACES_HUBMAP.test(p.en)));
 for (const system of Object.keys(SKIP)) {
   // 1) piezas de ella (sin las añadidas en corridas anteriores)
   const femFile = `models/f-${system}.glb`;
-  const items = fs.existsSync(web(femFile)) ? (await readParts(femFile)).filter((p) => isHubmap(p.name)) : [];
+  const items = fs.existsSync(web(femFile)) ? (await readParts(femFile)).filter((p) => isHubmap(p.name)
+    && !(DU && DU_REPLACES_HUBMAP.test(femById.get(p.name.replace(/_\d+$/, ''))?.en || ''))) : [];
+  items.push(...duItems[system]);
   // 2) piezas de él, deformadas
   const male = await readParts(`models/${system}.glb`);
   const warped = new Float32Array(fs.readFileSync(path.join(FIT, `${system}.warped.bin`)).buffer.slice(0));
@@ -57,7 +111,7 @@ for (const system of Object.keys(SKIP)) {
     const pos = warped.slice(off, off + n); off += n;
     const id = p.name.replace(/_\d+$/, '');
     const cat = mById.get(id);
-    if (!cat || SKIP[system].test(cat.en)) continue;
+    if (!cat || SKIP[system].test(cat.en) || (DU && DU_REPLACES_MALE.test(cat.en))) continue;
     items.push({ name: seen.has(id) ? `${id}_${seen.size}` : id, pos, index: p.index });
     if (!seen.has(id)) {
       seen.add(id);
@@ -66,6 +120,7 @@ for (const system of Object.keys(SKIP)) {
       added++;
     }
   }
+  for (const m of duItems[system].meta ?? []) newParts.push(m);
   if (off !== warped.length) throw new Error(`${system}: el volcado deformado no coincide (${off} vs ${warped.length})`);
   // 3) escribir
   const doc = new Document();

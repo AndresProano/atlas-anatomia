@@ -3,6 +3,8 @@
 // el progreso se sube solo y se recupera al iniciar sesión en otro dispositivo.
 // Se mantiene el "código de sincronización" de la versión anterior para quien ya lo activó.
 const DEFAULT_URL = 'https://atlas-sync.freelance-sites.workers.dev';
+// ID de cliente OAuth de Google (público). Vacío = el botón de Google no aparece.
+export const GOOGLE_CLIENT_ID = '';
 const ALPHABET = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
 export const CODE_RE = /^[A-Z2-9]{4}-[A-Z2-9]{4}-[A-Z2-9]{4}$/;
 
@@ -26,6 +28,27 @@ function mergeInto(local, remote) {
     if (!l || (r.t || 0) > (l.t || 0)) { local[k] = r; changed = true; }
   }
   return changed;
+}
+
+// carga el script oficial de "Continuar con Google" (una sola vez)
+let gisPromise = null;
+export function loadGoogle() {
+  if (!GOOGLE_CLIENT_ID) return Promise.reject(new Error('Google no configurado'));
+  gisPromise ??= new Promise((resolve, reject) => {
+    const sc = document.createElement('script');
+    sc.src = 'https://accounts.google.com/gsi/client';
+    sc.async = true;
+    sc.onload = () => resolve(window.google);
+    sc.onerror = () => { gisPromise = null; reject(new Error('No se pudo cargar Google')); };
+    document.head.append(sc);
+  });
+  return gisPromise;
+}
+// dibuja el botón oficial dentro de `el`; onCredential recibe el ID token
+export async function renderGoogleButton(el, onCredential) {
+  const google = await loadGoogle();
+  google.accounts.id.initialize({ client_id: GOOGLE_CLIENT_ID, callback: (r) => onCredential(r.credential), ux_mode: 'popup', auto_select: false, cancel_on_tap_outside: true });
+  google.accounts.id.renderButton(el, { type: 'standard', theme: 'filled_blue', size: 'large', text: 'continue_with', shape: 'pill', locale: 'es', width: Math.min(el.clientWidth || 300, 400) });
 }
 
 export function createSync(profiles, { onStatus } = {}) {
@@ -131,6 +154,14 @@ export function createSync(profiles, { onStatus } = {}) {
     },
     async login(email, password) {
       const res = await call('POST', '/v1/auth/login', { email, password });
+      bind(res);
+      await pull();
+      await push();
+      return res;
+    },
+    google: !!GOOGLE_CLIENT_ID,
+    async loginGoogle(credential) {
+      const res = await call('POST', '/v1/auth/google', { credential });
       bind(res);
       await pull();
       await push();

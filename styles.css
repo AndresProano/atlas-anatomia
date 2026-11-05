@@ -328,3 +328,24 @@ body.sheet-open .dock { opacity: 0; transform: translateY(10px); pointer-events:
 .old-code { margin-top: 10px; font-size: 13px; color: var(--muted); }
 .old-code summary { cursor: pointer; }
 .old-code form { margin-top: 8px; }
+
+/* Google */
+.g-btn { min-height: 44px; margin: 6px 0; display: flex; justify-content: center; }
+.or { text-align: center; color: var(--muted); font-size: 13px; margin: 10px 0 2px; }
+
+/* Ruta: anatomía > fisiología > fisiopatología */
+.stages { display: flex; align-items: center; gap: 4px; margin: 2px 0 4px; }
+.stages button {
+  flex: 1; display: grid; justify-items: center; gap: 1px; padding: 8px 4px; border-radius: 14px;
+  background: var(--surface-2); color: var(--muted); border: 2px solid transparent; min-width: 0;
+}
+.stages button b { width: 22px; height: 22px; border-radius: 50%; display: grid; place-items: center; background: var(--border); color: var(--text); font-size: 12px; }
+.stages button span { font-size: 12px; font-weight: 700; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%; }
+.stages button small { font-size: 11px; }
+.stages button.active { border-color: var(--accent); background: var(--accent-soft); }
+.stages button.active b { background: var(--accent); color: var(--accent-ink); }
+.stages .arrow { color: var(--muted); font-style: normal; font-size: 16px; }
+.stage-hint { margin: 2px 0 8px; font-size: 12px; color: var(--muted); text-align: center; }
+.tip { margin: 0 0 8px; padding: 8px 10px; border-radius: 12px; background: color-mix(in srgb, #d97706 14%, transparent); font-size: 13px; }
+.clue { margin: 4px 0 10px; padding: 10px 12px; border-left: 3px solid var(--accent); background: var(--surface-2); border-radius: 0 12px 12px 0; font-size: 15px; }
+.stage-sum { margin-bottom: 14px; }

@@ -45,12 +45,41 @@ export function createViewer(canvas) {
   controls.enableDamping = true;
   controls.dampingFactor = 0.12;
   controls.screenSpacePanning = true;
-  // Navegación tipo mapa: clic izquierdo arrastra (mano); derecho o Shift/Ctrl/Cmd + arrastre gira.
-  controls.mouseButtons = { LEFT: THREE.MOUSE.PAN, MIDDLE: THREE.MOUSE.DOLLY, RIGHT: THREE.MOUSE.ROTATE };
-  canvas.style.cursor = 'grab';
-  canvas.addEventListener('pointerdown', (e) => { if (e.pointerType === 'mouse') canvas.style.cursor = e.button === 0 && !(e.shiftKey || e.ctrlKey || e.metaKey) ? 'grabbing' : 'move'; });
-  window.addEventListener('pointerup', () => { canvas.style.cursor = 'grab'; });
+  // Modo de navegación: 'pan' (mano, arrastra el cuerpo) o 'rotate' (gira alrededor del cuerpo).
+  // El clic derecho / Shift+arrastre siempre hace lo contrario del modo activo.
+  const ROT_CURSOR = `url("data:image/svg+xml,${encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="2.5" stroke-linecap="round"><path d="M21 12a9 9 0 1 1-3-6.7" stroke="white" stroke-width="5"/><path d="M21 4v5h-5" stroke="white" stroke-width="5"/><path d="M21 12a9 9 0 1 1-3-6.7"/><path d="M21 4v5h-5"/></svg>')}") 12 12, move`;
+  let navMode = 'rotate';
+  const idleCursor = () => (navMode === 'pan' ? 'grab' : ROT_CURSOR);
+  function setNavMode(m) {
+    navMode = m === 'pan' ? 'pan' : 'rotate';
+    const pan = navMode === 'pan';
+    controls.mouseButtons = { LEFT: pan ? THREE.MOUSE.PAN : THREE.MOUSE.ROTATE, MIDDLE: THREE.MOUSE.DOLLY, RIGHT: pan ? THREE.MOUSE.ROTATE : THREE.MOUSE.PAN };
+    controls.touches = { ONE: pan ? THREE.TOUCH.PAN : THREE.TOUCH.ROTATE, TWO: THREE.TOUCH.DOLLY_PAN };
+    canvas.style.cursor = idleCursor();
+  }
+  setNavMode('rotate');
+  canvas.addEventListener('pointerdown', (e) => {
+    if (e.pointerType !== 'mouse') return;
+    const panning = (navMode === 'pan') !== (e.button === 2 || e.shiftKey || e.ctrlKey || e.metaKey);
+    canvas.style.cursor = panning ? 'grabbing' : ROT_CURSOR;
+  });
+  window.addEventListener('pointerup', () => { canvas.style.cursor = idleCursor(); });
   canvas.addEventListener('contextmenu', (e) => e.preventDefault());
+
+  // Giro por pasos (flechas en modo girar): rota la cámara alrededor del objetivo.
+  const _sph = new THREE.Spherical(), _off = new THREE.Vector3();
+  function orbitBy(dAz, dPol) {
+    _off.copy(camera.position).sub(controls.target);
+    _sph.setFromVector3(_off);
+    _sph.theta += dAz;
+    _sph.phi = THREE.MathUtils.clamp(_sph.phi + dPol, 0.01, Math.PI - 0.01);
+    camera.position.copy(controls.target).add(_off.setFromSpherical(_sph));
+    camera.lookAt(controls.target);
+    controls.update();
+    requestRender();
+  }
+  // Flechas genéricas: mueven o giran según el modo.
+  const nudge = (dx, dy) => (navMode === 'pan' ? panBy(dx, dy) : orbitBy(-dx * 0.12, dy * 0.12));
 
   // Desplazamiento con flechas: mueve cámara y objetivo juntos, proporcional a la distancia.
   const _right = new THREE.Vector3(), _up = new THREE.Vector3(), _delta = new THREE.Vector3();
@@ -81,7 +110,7 @@ export function createViewer(canvas) {
     if (!d) return;
     e.preventDefault();
     const m = e.shiftKey ? 3 : 1;
-    panBy(d[0] * m, d[1] * m);
+    nudge(d[0] * m, d[1] * m);
   });
 
   let dirty = true;
@@ -222,5 +251,5 @@ export function createViewer(canvas) {
     setTimeout(work, 300);
   }
 
-  return { gpuName, softwareGpu, THREE, renderer, scene, camera, controls, requestRender, panBy, zoomBy, fitTo, pick, setClip, clipState, registerMaterial, buildTreesIdle };
+  return { gpuName, softwareGpu, THREE, renderer, scene, camera, controls, requestRender, panBy, orbitBy, nudge, zoomBy, setNavMode, get navMode() { return navMode; }, fitTo, pick, setClip, clipState, registerMaterial, buildTreesIdle };
 }

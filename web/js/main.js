@@ -526,12 +526,34 @@ canvas.addEventListener('pointermove', (e) => {
 });
 canvas.addEventListener('pointerleave', () => { hoverLabel.hidden = true; });
 
+// Botón de modo: mano (mover) ⇄ girar. Se recuerda entre visitas.
+const navModeBtn = $('#navmode-btn');
+function applyNavMode(m) {
+  viewer.setNavMode(m);
+  const pan = m === 'pan';
+  navModeBtn.classList.toggle('on', pan);
+  navModeBtn.querySelector('.ico-pan').style.display = pan ? '' : 'none';
+  navModeBtn.querySelector('.ico-rot').style.display = pan ? 'none' : '';
+  navModeBtn.title = pan ? 'Modo mano: arrastra para mover (clic para cambiar a girar)' : 'Modo girar: arrastra para girar (clic para cambiar a mano)';
+  navModeBtn.setAttribute('aria-label', pan ? 'Modo mano activo' : 'Modo girar activo');
+}
+applyNavMode(store.get('navMode') === 'pan' ? 'pan' : 'rotate');
+navModeBtn.addEventListener('click', () => {
+  const m = viewer.navMode === 'pan' ? 'rotate' : 'pan';
+  applyNavMode(m); store.set('navMode', m);
+  toast(m === 'pan' ? '✋ Modo mano: arrastra para mover' : '🔄 Modo girar: arrastra para girar', 1600);
+});
+window.addEventListener('keydown', (e) => {
+  if (e.target.matches('input, select, textarea')) return;
+  if (e.key.toLowerCase() === 'm') navModeBtn.click();
+});
+
 // Panel de navegación: un toque = un paso; mantener pulsado = movimiento continuo.
 document.querySelectorAll('#navpad .nav-btn').forEach((b) => {
   let timer = null;
   const step = () => {
     if (b.dataset.zoom) viewer.zoomBy(Number(b.dataset.zoom));
-    else { const [x, y] = b.dataset.pan.split(',').map(Number); viewer.panBy(x * 0.5, y * 0.5); }
+    else { const [x, y] = b.dataset.pan.split(',').map(Number); viewer.nudge(x * 0.5, y * 0.5); }
   };
   const stop = () => { clearInterval(timer); timer = null; };
   b.addEventListener('pointerdown', (e) => { e.preventDefault(); step(); stop(); timer = setInterval(step, 60); });

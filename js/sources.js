@@ -10,13 +10,13 @@ const INTEGRATED = [
   {
     name: 'HuBMAP Human Reference Atlas', badge: 'Órganos en detalle',
     lic: 'CC BY 4.0 · HuBMAP / Indiana University CNS',
-    text: 'La base del cuerpo femenino (Visible Human Female, «united-female»): útero, ovarios, trompas, mamas, órganos, cerebro, columna y vasos en su lugar; y 81 órganos de referencia con subestructuras en el modo Órganos.',
+    text: 'Del cuerpo femenino de referencia (Visible Human Female, «united-female») salen el útero, los ovarios, las trompas, la vagina y las mamas de la mujer del atlas; y 81 órganos de referencia con subestructuras en el modo Órganos.',
     url: 'https://humanatlas.io/3d-reference-library',
   },
   {
-    name: 'Visible Human Female — Universidad de Denver', badge: 'Cadera y piernas de la mujer',
+    name: 'Visible Human Female — Universidad de Denver', badge: 'Pelvis femenina',
     lic: 'CC BY 4.0 · Center for Orthopaedic Biomechanics, University of Denver',
-    text: 'Geometría real de la misma mujer, segmentada de los cortes del Visible Human: pelvis completa, fémur, tibia, peroné, rótula y pie, 38 músculos por lado (glúteos, psoas, muslo y pierna), cartílagos y ligamentos de la rodilla. Se alineó hueso a hueso con el cuerpo de HuBMAP. El resto de músculos y huesos femeninos (tronco, brazos, cabeza) se adaptaron desde BodyParts3D y son aproximados.',
+    text: 'Pelvis, sacro y cóccix reales de una mujer, segmentados de los cortes del Visible Human. La mujer del atlas es el cuerpo de BodyParts3D con proporciones femeninas medias (estatura, hombros, cintura, caderas) y esta pelvis femenina; músculos, vasos y nervios se adaptan a ella. Es un modelo de estudio, no el cuerpo de una persona concreta.',
     url: 'https://doi.org/10.56902/COB.vh.2022.0',
     credit: 'Andreassen TE et al. "Three-dimensional lower extremity musculoskeletal geometry of the Visible Human Female and Male." Scientific Data 10:34 (2023), doi:10.1038/s41597-022-01905-2.',
   },

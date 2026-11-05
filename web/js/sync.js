@@ -4,7 +4,7 @@
 // Se mantiene el "código de sincronización" de la versión anterior para quien ya lo activó.
 const DEFAULT_URL = 'https://atlas-sync.freelance-sites.workers.dev';
 // ID de cliente OAuth de Google (público). Vacío = el botón de Google no aparece.
-export const GOOGLE_CLIENT_ID = '';
+export const GOOGLE_CLIENT_ID = '882446948533-b980vni0p4fdhs25gdb5ruqq0i0jtgni.apps.googleusercontent.com';
 const ALPHABET = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
 export const CODE_RE = /^[A-Z2-9]{4}-[A-Z2-9]{4}-[A-Z2-9]{4}$/;
 

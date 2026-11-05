@@ -7,3 +7,8 @@ compatibility_date = "2025-10-01"
 [[kv_namespaces]]
 binding = "ATLAS"
 id = "46dbcf18717141d88fa764e95d004f5d"
+
+# ID de cliente OAuth de Google (público) para "Continuar con Google".
+# Proyecto de Google Cloud: atlas-anatomico (cuenta mrproano…@gmail.com)
+[vars]
+GOOGLE_CLIENT_ID = "882446948533-b980vni0p4fdhs25gdb5ruqq0i0jtgni.apps.googleusercontent.com"

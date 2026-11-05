@@ -318,6 +318,8 @@ export async function createBody(viewer, { onProgress, onSystemLoaded, dataset =
     viewer.requestRender();
   }
 
+  function frameAll() { viewer.fitTo(bodyBox, new THREE.Vector3(0, 0.08, 1).normalize(), { margin: 1.05 }); }
+
   // guardar / restaurar capas (el quiz cambia la vista y luego la devuelve como estaba)
   function snapshot() {
     return {
@@ -337,6 +339,6 @@ export async function createBody(viewer, { onProgress, onSystemLoaded, dataset =
   return {
     root, catalog, byId, meshes, state, systems: catalog.systems, order: LOAD_ORDER, models, female,
     bodyBox, allLoaded, select, focus, reveal, hide, isolate, showAll, setSystemVisible, setSystemOpacity,
-    applyPreset, search, visibleMeshes, meshBox, pulse, snapshot, restore, setOverlay,
+    applyPreset, search, visibleMeshes, meshBox, pulse, snapshot, restore, setOverlay, frameAll,
   };
 }

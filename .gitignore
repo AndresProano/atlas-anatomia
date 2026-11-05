@@ -3,3 +3,5 @@ data-raw/
 *.log
 .claude/
 .wrangler/
+worker/.dev.vars
+worker/.test-google-key.json

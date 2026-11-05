@@ -4,8 +4,9 @@
 //  - Señalar: te dan el nombre y tocas la estructura en el modelo.
 //  - Función / Enfermedades (Comprender): respondes con tus palabras y se califica por ideas clave.
 // Repetición espaciada (cajas de Leitner): lo que fallas vuelve antes, lo que dominas sale menos.
-import { displayName } from './body.js?v=90fc0e85';
-import { gradeConcepts, gradeDisease } from './clinica.js?v=90fc0e85';
+import { displayName } from './body.js?v=60749a66';
+import { renderGoogleButton } from './sync.js?v=60749a66';
+import { gradeConcepts, gradeDisease } from './clinica.js?v=60749a66';
 
 export const QUIZ_GROUPS = {
   all: { label: 'Todo el cuerpo', systems: ['esqueletico', 'muscular', 'digestivo', 'respiratorio', 'urogenital', 'reproductor', 'endocrino', 'cardiovascular', 'nervioso'] },
@@ -16,8 +17,15 @@ export const QUIZ_GROUPS = {
   vasos: { label: 'Corazón y vasos', systems: ['cardiovascular'] },
   nervios: { label: 'Sistema nervioso', systems: ['nervioso'] },
 };
-const MODES = { choice: 'Opciones', type: 'Escribir', point: 'Señalar' };
-const COMP = { func: 'Función', disease: 'Enfermedades' };
+// Tres pruebas en el orden en que se estudia: anatomía -> fisiología -> fisiopatología
+const STAGES = {
+  anat: { n: 1, label: 'Anatomía', hint: 'Dónde está y cómo se llama', modes: { choice: 'Opciones', type: 'Escribir', point: 'Señalar' } },
+  fisio: { n: 2, label: 'Fisiología', hint: 'Cómo funciona', modes: { func: '¿Qué función tiene?', funcRev: '¿Quién lo hace?' } },
+  pato: { n: 3, label: 'Fisiopatología', hint: 'Qué pasa cuando falla', modes: { disease: 'Enfermedades', caseRev: 'Caso clínico' } },
+};
+const stageOfMode = (m) => Object.keys(STAGES).find((k) => m in STAGES[k].modes);
+const TAP_MODES = new Set(['point', 'funcRev', 'caseRev']); // se responde tocando el modelo
+const REVERSE = new Set(['funcRev', 'caseRev']);
 // qué se ve en pantalla según el sistema de la pregunta
 const SCENE = {
   esqueletico: { show: ['esqueletico', 'articular'] },
@@ -84,18 +92,22 @@ export function createQuiz(body, box, { onAnswer, profiles, clinica, sync } = {}
   const saveProgress = (p) => profiles.saveProgress(p);
   const sex = body.female ? 'F' : 'M';
   const baseName = (p) => displayName(p).replace(/\s*\((izq|der)\.\)/, '');
-  const isComp = () => mode in COMP;
+  const curStage = () => stageOfMode(mode);
+  const isComp = () => curStage() !== 'anat';
   const entryOf = (p) => (p && clinica ? clinica.forName(baseName(p)) : null);
   // identificar se guarda por nombre y cuerpo; comprender, por concepto (igual en ambos cuerpos)
-  const keyOf = (p) => (isComp() ? `c:${mode}:${entryOf(p)?.id}` : `${sex}:${baseName(p)}`);
+  // anatomía: por nombre y cuerpo · fisiología / fisiopatología: por concepto (igual en ambos cuerpos)
+  const keyOf = (p, st = curStage()) => (st === 'anat' ? `${sex}:${baseName(p)}` : `c:${st === 'fisio' ? 'func' : 'disease'}:${entryOf(p)?.id}`);
+  let currentCase = null;
+  const rand = (a) => a[Math.floor(Math.random() * a.length)];
   let compChoices = false, lastRec = null;
-  const rec = (p) => progress[keyOf(p)] || { a: 0, c: 0, box: 0 };
+  const rec = (p, st) => progress[keyOf(p, st)] || { a: 0, c: 0, box: 0 };
 
   // estructuras "de examen": con nombre conocido y tamaño visible
-  function poolFor(g) {
+  function poolFor(g, st = curStage()) {
     const sys = QUIZ_GROUPS[g].systems;
     return body.catalog.parts.filter((p) => p.es && (p.la || body.female) && body.meshes.has(p.id) && body.state.loaded.has(p.system)
-      && sys.includes(p.system) && (p.vol ?? 0) >= 1.5 && (!isComp() || entryOf(p)));
+      && sys.includes(p.system) && (p.vol ?? 0) >= 1.5 && (st === 'anat' || entryOf(p)));
   }
   // un elemento por nombre (izquierdo y derecho cuentan como uno)
   function uniqueByName(list) {
@@ -103,15 +115,24 @@ export function createQuiz(body, box, { onAnswer, profiles, clinica, sync } = {}
     for (const p of list) if (!seen.has(baseName(p))) seen.set(baseName(p), p);
     return [...seen.values()];
   }
-  function stats(g) {
-    const u = uniqueByName(poolFor(g));
-    const mastered = u.filter((p) => rec(p).box >= MASTERED).length;
-    const seen = u.filter((p) => rec(p).a > 0).length;
+  function stats(g, st = curStage()) {
+    let u = uniqueByName(poolFor(g, st));
+    if (st !== 'anat') { const seenE = new Set(); u = u.filter((p) => { const id = entryOf(p).id; if (seenE.has(id)) return false; seenE.add(id); return true; }); }
+    const mastered = u.filter((p) => rec(p, st).box >= MASTERED).length;
+    const seen = u.filter((p) => rec(p, st).a > 0).length;
     return { total: u.length, mastered, seen };
   }
 
   function pickWeighted(list) {
-    const ws = list.map((p) => WEIGHT[Math.min(rec(p).box, 4)]);
+    const st = curStage();
+    const ws = list.map((p) => {
+      let w = WEIGHT[Math.min(rec(p).box, 4)];
+      if (st !== 'anat') {
+        const prev = rec(p, st === 'pato' ? 'fisio' : 'anat');
+        w *= prev.box >= MASTERED ? 2 : prev.a > 0 ? 1.2 : 0.6;
+      }
+      return w;
+    });
     let r = Math.random() * ws.reduce((a, b) => a + b, 0);
     for (let i = 0; i < list.length; i++) { r -= ws[i]; if (r <= 0) return list[i]; }
     return list[list.length - 1];
@@ -133,7 +154,7 @@ export function createQuiz(body, box, { onAnswer, profiles, clinica, sync } = {}
     answered = false; hintLevel = 0;
     let ps = poolFor(group);
     // Señalar: solo estructuras que se puedan tocar (no las diminutas ni las muy profundas)
-    if (mode === 'point') {
+    if (TAP_MODES.has(mode)) {
       const big = ps.filter((p) => (p.vol ?? 0) >= (p.system === 'esqueletico' ? 3 : 8));
       if (big.length >= 4) ps = big;
     }
@@ -153,8 +174,14 @@ export function createQuiz(body, box, { onAnswer, profiles, clinica, sync } = {}
     let cand = pickWeighted(ps);
     for (let i = 0; i < 5 && baseName(cand) === prev; i++) cand = pickWeighted(ps);
     current = cand;
+    currentCase = mode === 'caseRev' ? rand(entryOf(current).enfermedades) : null;
     stage(current);
-    if (mode === 'point') {
+    if (REVERSE.has(mode)) {
+      // no se dice cuál es: se ve la capa completa y hay que encontrarla
+      body.select(null);
+      body.setOverlay(null);
+      body.frameAll();
+    } else if (mode === 'point') {
       // no se resalta: hay que encontrarla. La cámara muestra la región con contexto amplio.
       body.select(null);
       body.setOverlay(null);
@@ -175,15 +202,26 @@ export function createQuiz(body, box, { onAnswer, profiles, clinica, sync } = {}
     const who = profiles.current;
     return `
       <button class="who" id="quiz-who" title="Cambiar de persona"><i style="background:${who?.color || 'var(--accent)'}">${esc((who?.name || '?')[0].toUpperCase())}</i>${esc(who?.name || 'Elegir persona')}</button>
-      <div class="seg quiz-family">
-        <button data-family="id" class="${isComp() ? '' : 'active'}">Identificar</button>
-        <button data-family="comp" class="${isComp() ? 'active' : ''}">Comprender</button>
-      </div>
-      <div class="seg quiz-modes">${Object.entries(isComp() ? COMP : MODES).map(([k, l]) => `<button data-mode="${k}" class="${k === mode ? 'active' : ''}">${l}</button>`).join('')}</div>
+      <div class="stages">${Object.entries(STAGES).map(([k, S]) => {
+        const x = stats(group, k);
+        return `<button data-stage="${k}" class="${k === curStage() ? 'active' : ''}"><b>${S.n}</b><span>${S.label}</span><small>${x.mastered}/${x.total}</small></button>`;
+      }).join('<i class="arrow">›</i>')}</div>
+      <p class="stage-hint">${STAGES[curStage()].hint}</p>
+      ${tipHtml()}
+      <div class="seg quiz-modes">${Object.entries(STAGES[curStage()].modes).map(([k, l]) => `<button data-mode="${k}" class="${k === mode ? 'active' : ''}">${l}</button>`).join('')}</div>
       <div class="progress-line">
         <div class="bar"><span style="width:${pct}%"></span></div>
-        <span>${st.mastered}/${st.total} ${isComp() ? 'conceptos' : 'dominadas'}</span>
+        <span>${st.mastered}/${st.total} dominadas</span>
       </div>`;
+  }
+  // sugerir el orden recomendado si se salta una etapa
+  function tipHtml() {
+    const st = curStage();
+    if (st === 'anat') return '';
+    const prevKey = st === 'pato' ? 'fisio' : 'anat';
+    const prev = stats(group, prevKey);
+    if (!prev.total || prev.mastered / prev.total >= 0.2) return '';
+    return `<p class="tip">Sugerencia: avanza primero en <b>${STAGES[prevKey].label}</b> (llevas ${prev.mastered}/${prev.total}). Aquí salen primero las estructuras que ya dominas allí.</p>`;
   }
   function footer() {
     return `
@@ -240,6 +278,16 @@ export function createQuiz(body, box, { onAnswer, profiles, clinica, sync } = {}
           <button class="btn" type="submit">Calificar</button>
         </form>
         <button class="link" type="button" id="comp-opts">Prefiero opciones</button>`}`;
+    } else if (mode === 'funcRev') {
+      q = `<h3>¿Qué estructura cumple esta función?</h3>
+        <p class="clue">«${esc(mask(entryOf(current).funcion))}»</p>
+        ${compChoices ? `<div class="opts">${options().map((o) => `<button data-opt="${o.replace(/"/g, '&quot;')}">${o}</button>`).join('')}</div>`
+          : '<p class="sub">Tócala en el modelo (puedes girarlo y hacer zoom). <button class="link" type="button" id="comp-opts">Prefiero opciones</button></p>'}`;
+    } else if (mode === 'caseRev') {
+      q = `<h3>Caso clínico: ¿qué estructura está afectada?</h3>
+        <p class="clue"><b>${esc(mask(currentCase.nombre))}</b>: ${esc(mask(currentCase.nota))}</p>
+        ${compChoices ? `<div class="opts">${options().map((o) => `<button data-opt="${o.replace(/"/g, '&quot;')}">${o}</button>`).join('')}</div>`
+          : '<p class="sub">Tócala en el modelo. <button class="link" type="button" id="comp-opts">Prefiero opciones</button></p>'}`;
     } else {
       q = `<h3>Señala en el modelo:</h3>
         <p class="target-name">${baseName(current)}</p>
@@ -252,10 +300,9 @@ export function createQuiz(body, box, { onAnswer, profiles, clinica, sync } = {}
 
   function wire() {
     box.querySelectorAll('.quiz-modes [data-mode]').forEach((b) => b.addEventListener('click', () => { mode = b.dataset.mode; next(); }));
-    box.querySelectorAll('.quiz-family [data-family]').forEach((b) => b.addEventListener('click', () => {
-      const comp = b.dataset.family === 'comp';
-      if (comp === isComp()) return;
-      mode = comp ? 'func' : 'choice'; next();
+    box.querySelectorAll('.stages [data-stage]').forEach((b) => b.addEventListener('click', () => {
+      if (b.dataset.stage === curStage()) return;
+      mode = Object.keys(STAGES[b.dataset.stage].modes)[0]; next();
     }));
     box.querySelector('#comp-opts')?.addEventListener('click', () => { compChoices = true; render(); });
     box.querySelectorAll('[data-copt]').forEach((b) => b.addEventListener('click', () => answerCompChoice(b)));
@@ -307,8 +354,15 @@ export function createQuiz(body, box, { onAnswer, profiles, clinica, sync } = {}
     btn.classList.add(ok ? 'ok' : 'bad');
     if (!ok) opts.querySelector(`[data-opt="${CSS.escape(right)}"]`)?.classList.add('ok');
     record(ok ? 1 : 0);
+    if (REVERSE.has(mode)) { revealTarget(); compFeedback(ok ? 'ok' : 'bad', ok ? `¡Correcto! ${esc(right)}` : `Era: ${esc(right)}`, '', false); return; }
     feedback(ok ? 'ok' : 'bad', ok ? '¡Correcto!' : 'Era:');
     body.pulse(current.id, 1200);
+  }
+  function revealTarget() {
+    body.select(current.id);
+    body.setOverlay(current.id);
+    body.focus(current.id, 4);
+    body.pulse(current.id, 1600);
   }
 
   function answerText() {
@@ -324,6 +378,14 @@ export function createQuiz(body, box, { onAnswer, profiles, clinica, sync } = {}
     body.pulse(current.id, 1200);
   }
 
+  function mask(text) {
+    const e = entryOf(current);
+    let t = String(text || '');
+    const names = (e?.nombres || []).flatMap((n) => [n, n.replace(/^(Hueso|Músculo) /, '')]).filter((n) => n.length >= 4)
+      .sort((a, b) => b.length - a.length);
+    for (const n of names) t = t.replace(new RegExp(n.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'gi'), '[…]');
+    return t;
+  }
   // --- comprender -----------------------------------------------------------------------------
   function compOptions() {
     const e = entryOf(current);
@@ -339,22 +401,22 @@ export function createQuiz(body, box, { onAnswer, profiles, clinica, sync } = {}
     return pick([{ id: e.id, text: right.nombre }, ...pick(pool, 3)], 4);
   }
   function modelAnswer(e, extra = '') {
-    const list = mode === 'disease'
+    const list = curStage() === 'pato'
       ? `<ul class="dz">${e.enfermedades.map((d) => `<li><b>${esc(d.nombre)}</b>: ${esc(d.nota)}</li>`).join('')}</ul>`
       : `<p>${esc(e.funcion)}</p>`;
     return `${extra}${list}${e.dato ? `<p class="dato">${esc(e.dato)}</p>` : ''}`;
   }
-  function compFeedback(kind, title, extra = '') {
+  function compFeedback(kind, title, extra = '', allowOverride = true) {
     const e = entryOf(current);
     const el = box.querySelector('#quiz-feedback');
     el.innerHTML = `<div class="explain ${kind}"><strong>${title}</strong>${modelAnswer(e, extra)}
-      ${kind !== 'ok' && !compChoices ? '<button class="link" id="override">Mi respuesta estaba bien</button>' : ''}</div>`;
+      ${kind !== 'ok' && !compChoices && allowOverride ? '<button class="link" id="override">Mi respuesta estaba bien</button>' : ''}</div>`;
     el.querySelector('#override')?.addEventListener('click', overrideOk);
     const skip = box.querySelector('#quiz-skip');
     skip.textContent = 'Siguiente'; skip.className = 'btn';
     box.querySelector('.score').textContent = `${Math.round(score * 10) / 10} / ${total}${review ? ' · repaso' : ''}`;
     const st = stats(group);
-    box.querySelector('.progress-line').innerHTML = `<div class="bar"><span style="width:${st.total ? Math.round((st.mastered / st.total) * 100) : 0}%"></span></div><span>${st.mastered}/${st.total} conceptos</span>`;
+    box.querySelector('.progress-line').innerHTML = `<div class="bar"><span style="width:${st.total ? Math.round((st.mastered / st.total) * 100) : 0}%"></span></div><span>${st.mastered}/${st.total} dominadas</span>`;
   }
   function answerComp() {
     if (!current || answered) return;
@@ -416,10 +478,21 @@ export function createQuiz(body, box, { onAnswer, profiles, clinica, sync } = {}
 
   // modo señalar: main.js llama a tap() con la pieza tocada
   function tap(id) {
-    if (mode !== 'point' || !current || answered) return;
+    if (!TAP_MODES.has(mode) || !current || answered) return;
     const hit = id && body.byId.get(id);
     if (!hit) return; // tocar el fondo no cuenta
-    const ok = hit.id === current.id || baseName(hit) === baseName(current);
+    let ok = hit.id === current.id || baseName(hit) === baseName(current);
+    if (!ok && REVERSE.has(mode)) {
+      // en fisiología/fisiopatología vale cualquier parte del mismo órgano (p. ej. un lóbulo del hígado)
+      const ctx = clinica?.forContext(baseName(hit));
+      ok = !!ctx && ctx.entry.id === entryOf(current).id;
+    }
+    if (REVERSE.has(mode)) {
+      record(ok ? 1 : 0);
+      revealTarget();
+      compFeedback(ok ? 'ok' : 'bad', ok ? `¡Correcto! ${esc(baseName(current))}` : `Tocaste: ${esc(baseName(hit))}. Era: ${esc(baseName(current))}`, '', false);
+      return;
+    }
     record(ok ? 1 : 0);
     body.select(current.id);
     body.setOverlay(current.id);
@@ -441,6 +514,10 @@ export function createQuiz(body, box, { onAnswer, profiles, clinica, sync } = {}
     box.innerHTML = `<h3>Progreso de ${esc(me?.name || '…')} <span class="sub">· cuerpo ${body.female ? 'femenino' : 'masculino'}</span></h3>
       <div class="people">${profiles.list.map((p) => `<button data-pid="${p.id}" class="${p.id === me?.id ? 'active' : ''}"><i style="background:${p.color}">${esc(p.name[0].toUpperCase())}</i>${esc(p.name)}</button>`).join('')}
         <button data-new class="add">+ Otra persona</button></div>
+      <div class="section-title">Ruta de estudio</div>
+      <ul class="stats stage-sum">${Object.entries(STAGES).map(([k, S]) => { const x = stats('all', k); const pc = x.total ? Math.round((x.mastered / x.total) * 100) : 0;
+        return `<li><div class="st-head"><span>${S.n}. ${S.label}</span><span>${x.mastered}/${x.total}</span></div><div class="bar"><span style="width:${pc}%"></span></div><small>${S.hint} · ${pc}%</small></li>`; }).join('')}</ul>
+      <div class="section-title">${STAGES[curStage()].label} por tema</div>
       <p class="sub">Una estructura queda "dominada" cuando la aciertas 2 veces seguidas.</p>
       <ul class="stats">${rows}</ul>
       <p class="sub">${att} respuestas en total · ${att ? Math.round((cor / att) * 100) : 0}% de aciertos</p>
@@ -492,7 +569,7 @@ export function createQuiz(body, box, { onAnswer, profiles, clinica, sync } = {}
 
 
   // --- cuenta (Cloudflare) ---------------------------------------------------------------
-  let accTab = 'login', recoveryShown = null, recoveryTitle = 'Cuenta creada';
+  let accTab = 'login', recoveryShown = null, recoveryTitle = 'Cuenta creada', accEmailOpen = false;
   function accountHtml(me) {
     if (recoveryShown) {
       return `<div class="section-title">${recoveryTitle}</div>
@@ -525,9 +602,10 @@ export function createQuiz(body, box, { onAnswer, profiles, clinica, sync } = {}
     return `<div class="section-title">Cuenta</div>
       ${acc?.expired ? '<p class="sub warn">Tu sesión venció. Vuelve a iniciar sesión para seguir guardando en la nube.</p>'
         : `<p class="sub">${legacy ? `Usas el código <b>${esc(me.sync)}</b>. Crea una cuenta para entrar con correo y contraseña.` : `Inicia sesión para guardar el progreso de ${esc(me?.name || 'esta persona')} en la nube y usarlo en cualquier dispositivo.`}</p>`}
+      ${sync.google ? '<div class="g-btn" id="g-btn"></div><p class="sub" id="acc-msg"></p><details class="old-code" id="acc-email-box"' + (accEmailOpen ? ' open' : '') + '><summary>Usar correo y contraseña</summary>' : ''}
       <div class="seg acc-tabs">${Object.entries(tabs).map(([k, l]) => `<button data-acctab="${k}" class="${k === accTab ? 'active' : ''}">${l}</button>`).join('')}</div>
       <form class="acc-form" id="acc-form" autocomplete="on">${f[accTab]}</form>
-      <p class="sub" id="acc-msg"></p>
+      ${sync.google ? '</details>' : '<p class="sub" id="acc-msg"></p>'}
       ${legacy ? '' : `<details class="old-code"><summary>Tengo un código de sincronización</summary>
         <form class="type-answer" id="sync-join" autocomplete="off"><input id="sync-input" placeholder="XXXX-XXXX-XXXX" autocapitalize="characters" spellcheck="false"><button class="btn ghost" type="submit">Entrar</button></form></details>`}`;
   }
@@ -536,7 +614,14 @@ export function createQuiz(body, box, { onAnswer, profiles, clinica, sync } = {}
     if (!el) return;
     const msg = (t) => { const m = box.querySelector('#acc-msg'); if (m) m.textContent = t; };
     const val = (id) => box.querySelector(id)?.value || '';
-    el.querySelectorAll('[data-acctab]').forEach((b) => b.addEventListener('click', () => { accTab = b.dataset.acctab; showStats(); }));
+    el.querySelectorAll('[data-acctab]').forEach((b) => b.addEventListener('click', () => { accTab = b.dataset.acctab; accEmailOpen = true; showStats(); }));
+    const gEl = box.querySelector('#g-btn');
+    if (gEl) {
+      renderGoogleButton(gEl, async (credential) => {
+        msg('Entrando con Google…');
+        try { await sync.loginGoogle(credential); progress = profiles.loadProgress(); showStats(); } catch (err) { msg(err.message); }
+      }).catch((err) => { gEl.remove(); msg(err.message + '. Usa tu correo.'); });
+    }
     box.querySelector('#acc-form')?.addEventListener('submit', async (e) => {
       e.preventDefault();
       const btn = e.target.querySelector('button[type=submit]');
@@ -573,6 +658,7 @@ export function createQuiz(body, box, { onAnswer, profiles, clinica, sync } = {}
         <button class="btn" type="submit">Empezar</button>
       </form>
       ${adding ? '<button class="link" id="who-cancel">Cancelar</button>' : ''}
+      ${sync?.google && !adding ? '<div class="or">o</div><div class="g-btn" id="who-google"></div><p class="sub" id="who-msg"></p>' : ''}
       ${sync?.configured ? '<p class="sub">¿Ya tienes cuenta? <button class="link" id="who-login">Inicia sesión</button></p>' : ''}`;
     box.querySelector('#who-form').addEventListener('submit', (e) => {
       e.preventDefault();
@@ -583,6 +669,14 @@ export function createQuiz(body, box, { onAnswer, profiles, clinica, sync } = {}
       next();
     });
     box.querySelector('#who-cancel')?.addEventListener('click', showStats);
+    const wg = box.querySelector('#who-google');
+    if (wg) {
+      renderGoogleButton(wg, async (credential) => {
+        box.querySelector('#who-msg').textContent = 'Entrando con Google…';
+        try { await sync.loginGoogle(credential); progress = profiles.loadProgress(); next(); }
+        catch (err) { box.querySelector('#who-msg').textContent = err.message; }
+      }).catch(() => wg.remove());
+    }
     box.querySelector('#who-login')?.addEventListener('click', () => { accTab = 'login'; showStats(); setTimeout(() => box.querySelector('#account')?.scrollIntoView({ block: 'start' }), 50); });
     if (!matchMedia('(max-width: 899px)').matches) box.querySelector('#who-name').focus();
   }
@@ -598,5 +692,6 @@ export function createQuiz(body, box, { onAnswer, profiles, clinica, sync } = {}
     stop() { if (saved) body.restore(saved); saved = null; current = null; body.select(null); body.setOverlay(null); },
     get current() { return current; },
     get mode() { return mode; },
+    get tapMode() { return TAP_MODES.has(mode) && !compChoices; },
   };
 }

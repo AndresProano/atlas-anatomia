@@ -1,14 +1,14 @@
 // Interfaz tipo app: visor a pantalla completa, buscador flotante, capas en chips,
 // ficha como hoja inferior (móvil) o tarjeta lateral (escritorio) y barra de pestañas.
-import { createViewer, VIEWS } from './scene.js?v=90fc0e85';
-import { createBody, SYSTEM_COLORS, displayName } from './body.js?v=90fc0e85';
-import { createOrgans } from './organs.js?v=90fc0e85';
-import { createProfiles } from './profiles.js?v=90fc0e85';
-import { loadClinica } from './clinica.js?v=90fc0e85';
-import { createSync } from './sync.js?v=90fc0e85';
-import { createQuiz } from './quiz.js?v=90fc0e85';
-import { renderSources } from './sources.js?v=90fc0e85';
-import { wikiFor } from './wiki.js?v=90fc0e85';
+import { createViewer, VIEWS } from './scene.js?v=60749a66';
+import { createBody, SYSTEM_COLORS, displayName } from './body.js?v=60749a66';
+import { createOrgans } from './organs.js?v=60749a66';
+import { createProfiles } from './profiles.js?v=60749a66';
+import { loadClinica } from './clinica.js?v=60749a66';
+import { createSync } from './sync.js?v=60749a66';
+import { createQuiz } from './quiz.js?v=60749a66';
+import { renderSources } from './sources.js?v=60749a66';
+import { wikiFor } from './wiki.js?v=60749a66';
 
 const $ = (s) => document.querySelector(s);
 const V = window.ATLAS_V || '';
@@ -489,7 +489,7 @@ canvas.addEventListener('pointerup', (e) => {
   if (mode === 'sources') return;
   if (mode === 'quiz') {
     // modo Señalar: solo cuentan las capas sólidas (el esqueleto tenue de referencia no "roba" el toque)
-    if (quiz.mode !== 'point') return;
+    if (!quiz.tapMode) return;
     const solid = [...body.meshes.values()].filter((m) => body.state.sysOpacity[m.userData.part.system] >= 0.5);
     const h = viewer.pick(e.clientX, e.clientY, solid);
     quiz.tap(h ? h.object.userData.part.id : null);

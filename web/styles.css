@@ -63,6 +63,18 @@ button { cursor: pointer; border: 0; background: none; padding: 0; }
   backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); transition: transform .12s;
 }
 .round:active { transform: scale(.94); }
+/* Panel de navegación (zoom + flechas) */
+.navpad { margin-top: 6px; display: grid; grid-template-columns: 44px; gap: 8px; justify-items: center; }
+.navpad .dpad { display: grid; grid-template-columns: repeat(3, 32px); grid-template-rows: repeat(3, 32px); margin-right: 34px; margin-top: 4px; }
+.nav-btn {
+  width: 44px; height: 44px; border-radius: 50%; display: grid; place-items: center;
+  background: var(--surface); color: var(--text); box-shadow: var(--shadow); touch-action: none; user-select: none;
+  backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); transition: transform .12s;
+}
+.nav-btn:active { transform: scale(.92); background: var(--accent); color: var(--accent-ink); }
+.dpad .nav-btn { width: 32px; height: 32px; border-radius: 10px; }
+.dpad .nav-btn .ico { width: 18px; height: 18px; }
+.dpad .up { grid-area: 1 / 2; } .dpad .left { grid-area: 2 / 1; } .dpad .right { grid-area: 2 / 3; } .dpad .down { grid-area: 3 / 2; }
 .round.on { background: var(--accent); color: var(--accent-ink); }
 
 /* Buscador */

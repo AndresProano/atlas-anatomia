@@ -57,6 +57,17 @@
     <button class="round" id="show-all" aria-label="Mostrar todo" title="Mostrar todo lo oculto" hidden>
       <svg class="ico" viewBox="0 0 24 24"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg>
     </button>
+    <!-- Navegación: zoom y flechas (mantener pulsado para seguir moviendo) -->
+    <div class="navpad" id="navpad" aria-label="Navegación">
+      <button class="nav-btn" data-zoom="0.85" aria-label="Acercar" title="Acercar (+)"><svg class="ico" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></button>
+      <button class="nav-btn" data-zoom="1.1765" aria-label="Alejar" title="Alejar (−)"><svg class="ico" viewBox="0 0 24 24"><path d="M5 12h14"/></svg></button>
+      <div class="dpad">
+        <button class="nav-btn up" data-pan="0,1" aria-label="Mover arriba" title="Arriba (↑)"><svg class="ico" viewBox="0 0 24 24"><path d="m6 15 6-6 6 6"/></svg></button>
+        <button class="nav-btn left" data-pan="-1,0" aria-label="Mover a la izquierda" title="Izquierda (←)"><svg class="ico" viewBox="0 0 24 24"><path d="m15 6-6 6 6 6"/></svg></button>
+        <button class="nav-btn right" data-pan="1,0" aria-label="Mover a la derecha" title="Derecha (→)"><svg class="ico" viewBox="0 0 24 24"><path d="m9 6 6 6-6 6"/></svg></button>
+        <button class="nav-btn down" data-pan="0,-1" aria-label="Mover abajo" title="Abajo (↓)"><svg class="ico" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></svg></button>
+      </div>
+    </div>
   </div>
 
   <!-- Corte -->

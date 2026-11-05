@@ -65,8 +65,18 @@ export function createViewer(canvas) {
     controls.update();
     requestRender();
   }
+  // Zoom por pasos (botones +/−): acerca o aleja la cámara hacia el objetivo, respetando los límites.
+  function zoomBy(factor) {
+    const off = camera.position.clone().sub(controls.target);
+    const d = THREE.MathUtils.clamp(off.length() * factor, controls.minDistance, controls.maxDistance);
+    camera.position.copy(controls.target).add(off.setLength(d));
+    controls.update();
+    requestRender();
+  }
   window.addEventListener('keydown', (e) => {
     if (e.target.matches?.('input, select, textarea')) return;
+    if (e.key === '+' || e.key === '=') { zoomBy(0.85); return; }
+    if (e.key === '-' || e.key === '_') { zoomBy(1 / 0.85); return; }
     const d = { ArrowLeft: [-1, 0], ArrowRight: [1, 0], ArrowUp: [0, 1], ArrowDown: [0, -1] }[e.key];
     if (!d) return;
     e.preventDefault();
@@ -212,5 +222,5 @@ export function createViewer(canvas) {
     setTimeout(work, 300);
   }
 
-  return { gpuName, softwareGpu, THREE, renderer, scene, camera, controls, requestRender, fitTo, pick, setClip, clipState, registerMaterial, buildTreesIdle };
+  return { gpuName, softwareGpu, THREE, renderer, scene, camera, controls, requestRender, panBy, zoomBy, fitTo, pick, setClip, clipState, registerMaterial, buildTreesIdle };
 }

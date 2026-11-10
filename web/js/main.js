@@ -10,6 +10,7 @@ import { createQuiz } from './quiz.js?v=9d8bd228';
 import { renderSources } from './sources.js?v=9d8bd228';
 import { wikiFor } from './wiki.js?v=9d8bd228';
 import { createPhysio } from './physio.js?v=9d8bd228';
+import { setupLaunch } from './launch.js?v=9d8bd228';
 
 const $ = (s) => document.querySelector(s);
 const V = window.ATLAS_V || '';
@@ -377,6 +378,8 @@ const profiles = createProfiles();
 clinica = await loadClinica(V);
 const sync = createSync(profiles);
 let quiz = createQuiz(body, quizBox, { profiles, clinica, sync });
+
+setupLaunch({ toast });
 
 // --- fisiología en movimiento -------------------------------------------------------------------
 const physioBox = $('#physio-box');

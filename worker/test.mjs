@@ -31,5 +31,16 @@ check('datos inválidos -> 400', r.status === 400);
 r = await fetch(`${BASE}/v1/p/${CODE}`, { method: 'PUT', headers: H, body: JSON.stringify({ name: 'x', progress: { k: { a: 'mucho', box: 99, t: -5 } } }) });
 d = await r.json();
 check('limpia valores raros', d.progress.k && d.progress.k.box === 4 && d.progress.k.a === 0);
+// opiniones
+r = await fetch(`${BASE}/v1/feedback`, { method: 'POST', headers: H, body: JSON.stringify({ text: 'Prueba automática: falta el páncreas en digestión', kind: 'idea', where: 'physio:digestion' }) });
+check('opinión se guarda -> 201', r.status === 201);
+r = await fetch(`${BASE}/v1/feedback`, { method: 'POST', headers: H, body: JSON.stringify({ text: ' ' }) });
+check('opinión vacía -> 400', r.status === 400);
+r = await fetch(`${BASE}/v1/feedback`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ text: 'sin origen' }) });
+check('opinión sin origen -> 403', r.status === 403);
+r = await fetch(`${BASE}/v1/feedback`, { method: 'POST', headers: { ...H, Origin: 'https://otra-pagina.com' }, body: JSON.stringify({ text: 'spam' }) });
+check('opinión de otra página -> 403', r.status === 403);
+for (let i = 0; i < 5; i++) r = await fetch(`${BASE}/v1/feedback`, { method: 'POST', headers: H, body: JSON.stringify({ text: 'repetida ' + i }) });
+check('más de 5 por hora -> 429', r.status === 429);
 console.log(fails ? `${fails} fallas` : 'todos pasan');
 process.exit(fails ? 1 : 0);

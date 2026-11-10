@@ -81,11 +81,16 @@ const card = (s) => `
     <a href="${s.url}" target="_blank" rel="noopener">${new URL(s.url).hostname} →</a>
   </div>`;
 
+import { donateHtml } from './launch.js?v=9d8bd228';
+
 export function renderSources(el) {
   el.innerHTML = `
     <h2>Fuentes de datos</h2>
-    <p>Este atlas junta varias bases de datos anatómicas abiertas en un solo visor, para estudio personal y sin fines comerciales.
+    <p>Este atlas es gratuito y junta varias bases de datos anatómicas abiertas en un solo visor.
     Visible Body y Complete Anatomy no publican sus datos, así que todo lo que ves viene de proyectos con licencia libre.</p>
+    <p class="notice-inline"><b>Material educativo.</b> No reemplaza el consejo de un médico ni sirve para diagnosticar. Las animaciones de fisiología son esquemas simplificados.
+    Si encuentras un error, usa el botón de opinión (arriba) para avisarme.</p>
+    ${donateHtml('El atlas es gratis. Si te sirve, puedes ayudar a mantenerlo.')}
     <div class="cards">${INTEGRATED.map(card).join('')}</div>
     <h2>Otras fuentes recomendadas</h2>
     <p>Recursos que no se integran en el visor porque son otro tipo de dato (volúmenes de imagen, motores de simulación) o tienen licencia propia, pero sirven para profundizar.</p>

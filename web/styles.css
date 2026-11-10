@@ -460,3 +460,41 @@ body[data-mode="physio"] .navpad { display: none; }
 .px-case-btns { display: flex; gap: 8px; flex-wrap: wrap; }
 .px-case-btns .btn { flex: 1; }
 .btn.ghost { background: var(--surface-2); color: var(--text); }
+
+/* Lanzamiento: aviso educativo, opiniones, donación */
+.notice {
+  position: fixed; z-index: 45; left: 12px; right: 12px; top: calc(70px + var(--safe-t));
+  display: flex; align-items: center; gap: 12px; padding: 12px 14px; border-radius: 16px;
+  background: var(--surface-solid); box-shadow: var(--shadow); border-left: 4px solid #f59e0b; animation: up .25s ease-out;
+}
+.notice p { margin: 0; font-size: 13px; line-height: 1.4; }
+.notice .btn { padding: 8px 14px; flex-shrink: 0; }
+@media (min-width: 900px) { .notice { left: 16px; right: auto; width: 480px; top: 76px; } }
+.notice-inline { padding: 10px 12px; border-radius: 12px; border-left: 4px solid #f59e0b; background: var(--surface-2); font-size: 14px; }
+dialog.feedback {
+  border: 0; padding: 0; border-radius: 20px; width: min(440px, calc(100vw - 32px)); max-height: calc(100vh - 32px);
+  background: var(--surface-solid); color: var(--text); box-shadow: 0 20px 60px rgba(0, 0, 0, .35);
+}
+dialog.feedback::backdrop { background: rgba(15, 23, 42, .45); }
+dialog.feedback form { padding: 20px; display: grid; gap: 10px; }
+dialog.feedback h2 { margin: 0; font-size: 20px; }
+dialog.feedback .muted { margin: 0; color: var(--muted); font-size: 14px; }
+.fb-kind { display: flex; flex-wrap: wrap; gap: 6px; }
+.fb-kind button { padding: 7px 12px; border-radius: 16px; font-size: 13px; font-weight: 600; background: var(--surface-2); color: var(--muted); }
+.fb-kind button.active { background: var(--accent); color: var(--accent-ink); }
+dialog.feedback textarea, dialog.feedback input {
+  width: 100%; box-sizing: border-box; padding: 10px 12px; border-radius: 12px; border: 1px solid var(--border);
+  background: var(--surface-2); color: var(--text); font: inherit; font-size: 15px; resize: vertical;
+}
+dialog.feedback textarea:focus, dialog.feedback input:focus { outline: 2px solid var(--accent); border-color: transparent; }
+.fb-status { margin: 0; min-height: 1.2em; font-size: 13px; color: #e11d48; }
+.fb-btns { display: flex; gap: 8px; }
+.fb-btns .btn { flex: 1; }
+.fb-donate:empty { display: none; }
+.donate {
+  display: grid; grid-template-columns: auto 1fr; align-items: center; gap: 2px 10px; padding: 10px 14px; margin: 10px 0;
+  border-radius: 14px; background: color-mix(in srgb, #0070ba 12%, var(--surface-2)); color: var(--text); text-decoration: none; font-size: 13px;
+}
+.donate .ico { grid-row: span 2; color: #e11d48; }
+.donate b { color: #2d8fd8; font-size: 14px; }
+.px-final { margin: 12px 0 0; font-size: 15px; }

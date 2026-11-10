@@ -12,7 +12,7 @@ const HEART = '<svg class="ico" viewBox="0 0 24 24"><path d="M12 20s-7-4.5-7-10a
 export const hasDonate = () => !!DONATE_URL;
 export function donateHtml(text = '¿Te sirve el atlas? Ayúdame a mantenerlo gratis.') {
   if (!DONATE_URL) return '';
-  return `<a class="donate" href="${esc(DONATE_URL)}" target="_blank" rel="noopener">${HEART}<span>${esc(text)}</span><b>Donar con PayPal</b></a>`;
+  return `<a class="donate" href="${esc(DONATE_URL)}" target="_blank" rel="noopener">${HEART}<span>${esc(text)}</span><b>Donar con PayPal o tarjeta</b></a>`;
 }
 
 export function setupLaunch({ toast }) {

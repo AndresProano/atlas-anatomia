@@ -1,8 +1,9 @@
 // Ajustes del sitio que se cambian sin tocar el resto del código.
 
-// Donaciones por PayPal: enlace de PayPal.me (https://paypal.me/usuario) o de un botón de donación de PayPal.
+// Donaciones: enlace de pago de PayPal (cuenta Empresas, «precio fijo del cliente»: quien dona elige el monto; PayPal o tarjeta).
+// En Ecuador no hay PayPal.me ni páginas de donación, por eso es un enlace de pago.
 // Vacío = no aparece ningún botón de donar.
-export const DONATE_URL = '';
+export const DONATE_URL = 'https://www.paypal.com/ncp/payment/GFTY6NKPUN9G6';
 
 // Cloudflare Web Analytics (gratis, sin cookies): el token que da Cloudflare al agregar el sitio.
 // Vacío = sin analítica.

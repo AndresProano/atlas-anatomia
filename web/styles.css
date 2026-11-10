@@ -373,3 +373,52 @@ body.sheet-open .dock { opacity: 0; transform: translateY(10px); pointer-events:
 .tip { margin: 0 0 8px; padding: 8px 10px; border-radius: 12px; background: color-mix(in srgb, #d97706 14%, transparent); font-size: 13px; }
 .clue { margin: 4px 0 10px; padding: 10px 12px; border-left: 3px solid var(--accent); background: var(--surface-2); border-radius: 0 12px 12px 0; font-size: 15px; }
 .stage-sum { margin-bottom: 14px; }
+
+/* Fisiología en movimiento */
+.physio .px-intro { margin: 0 0 12px; color: var(--muted); font-size: 14px; }
+.px-procs { margin: 0 -20px 10px; padding: 2px 20px 6px; }
+.px-procs .chip { height: 34px; box-shadow: none; background: var(--surface-2); font-size: 13px; }
+.px-procs .chip.on { background: var(--accent); color: var(--accent-ink); }
+.px-ctrl { display: flex; align-items: center; gap: 6px; margin-bottom: 8px; }
+.px-ctrl .round { width: 36px; height: 36px; box-shadow: none; background: var(--surface-2); }
+.px-ctrl .px-play { background: var(--accent); color: var(--accent-ink); }
+.px-count { font-size: 13px; font-weight: 600; color: var(--muted); min-width: 82px; text-align: center; }
+.px-speed { margin-left: auto; display: flex; gap: 2px; padding: 3px; border-radius: 14px; background: var(--surface-2); }
+.px-speed button { padding: 5px 8px; border-radius: 10px; font-size: 12px; font-weight: 600; color: var(--muted); }
+.px-speed button.active { background: var(--surface-solid); color: var(--text); box-shadow: 0 1px 3px rgba(0, 0, 0, .12); }
+.px-progress { height: 4px; border-radius: 2px; background: var(--surface-2); overflow: hidden; margin-bottom: 12px; }
+.px-progress span { display: block; height: 100%; width: 0; background: var(--accent); }
+.px-rate { display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 10px; font-size: 13px; margin-bottom: 10px; }
+.px-rate span { color: var(--muted); font-weight: 600; }
+.px-rate input { accent-color: var(--accent); width: 100%; }
+.px-rate b { min-width: 64px; text-align: right; }
+.px-graph { position: relative; height: 64px; border-radius: 12px; background: var(--surface-2); margin-bottom: 12px; overflow: hidden; }
+.px-graph canvas { width: 100%; height: 100%; display: block; }
+.px-graph span { position: absolute; left: 10px; top: 6px; font-size: 11px; font-weight: 600; color: var(--muted); }
+.px-step { padding: 12px 14px; border-radius: 14px; background: var(--accent-soft); margin-bottom: 12px; }
+.px-step h3 { margin: 0 0 6px; font-size: 17px; }
+.px-step p { margin: 0 0 8px; font-size: 14px; line-height: 1.5; }
+.px-step p:last-child { margin-bottom: 0; }
+.px-step .dato { padding: 8px 10px; border-radius: 10px; background: var(--surface-solid); font-size: 13px; }
+.px-step .dato::before { content: '💡 '; }
+.px-tour { min-height: 2.6em; font-size: 15px !important; }
+.px-tour b { color: var(--accent); }
+.px-tour-list { display: flex; flex-wrap: wrap; gap: 4px; margin: 0 0 8px; padding: 0; list-style: none; }
+.px-tour-list li { padding: 3px 8px; border-radius: 10px; font-size: 11px; background: var(--surface-solid); color: var(--muted); }
+.px-tour-list li.on { background: #3ff0ff; color: #003b40; font-weight: 600; }
+.px-legend { display: flex; flex-wrap: wrap; gap: 6px 14px; font-size: 12px; color: var(--muted); margin-bottom: 14px; }
+.px-legend span { display: inline-flex; align-items: center; gap: 6px; }
+.px-legend i { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
+.px-steps { margin: 0 0 12px; padding: 0; list-style: none; display: grid; gap: 4px; }
+.px-steps button { width: 100%; text-align: left; padding: 8px 12px; border-radius: 12px; font-size: 14px; background: var(--surface-2); }
+.px-steps button.active { background: var(--accent); color: var(--accent-ink); font-weight: 600; }
+.px-note { font-size: 11px; color: var(--muted); margin: 0; }
+/* en el celular los procesos van dentro del panel; en escritorio, abajo en el dock */
+body[data-mode="physio"] .dock { display: none; }
+body[data-mode="physio"] .navpad { display: none; }
+@media (min-width: 900px) {
+  body[data-mode="physio"] .dock { display: flex; right: 396px; }
+  body[data-mode="physio"] .navpad { display: flex; right: 412px; top: 50%; }
+  .px-procs { display: none; }
+  .tabbar { width: 480px; }
+}

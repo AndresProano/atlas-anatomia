@@ -143,10 +143,16 @@ export function createViewer(canvas) {
   new ResizeObserver(resize).observe(canvas.parentElement);
   resize();
 
+  // animaciones continuas (fisiología): cada función recibe dt en segundos y fuerza el redibujo
+  const tickers = new Set();
+  let lastT = performance.now();
   (function loop() {
     requestAnimationFrame(loop);
+    const now = performance.now(), dt = Math.min((now - lastT) / 1000, 0.1);
+    lastT = now;
+    for (const f of tickers) f(dt, now / 1000);
     const moved = controls.update();
-    if (dirty || moved) {
+    if (dirty || moved || tickers.size) {
       dirty = false;
       renderer.render(scene, camera);
     }
@@ -262,5 +268,7 @@ export function createViewer(canvas) {
     setTimeout(work, 300);
   }
 
-  return { gpuName, softwareGpu, THREE, renderer, scene, camera, controls, requestRender, panBy, orbitBy, nudge, zoomBy, setNavMode, get navMode() { return navMode; }, fitTo, pick, setClip, clipState, registerMaterial, buildTreesIdle };
+  const addTicker = (f) => { tickers.add(f); return () => tickers.delete(f); };
+
+  return { addTicker, gpuName, softwareGpu, THREE, renderer, scene, camera, controls, requestRender, panBy, orbitBy, nudge, zoomBy, setNavMode, get navMode() { return navMode; }, fitTo, pick, setClip, clipState, registerMaterial, buildTreesIdle };
 }

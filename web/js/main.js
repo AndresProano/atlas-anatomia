@@ -9,6 +9,7 @@ import { createSync } from './sync.js?v=579efcd3';
 import { createQuiz } from './quiz.js?v=579efcd3';
 import { renderSources } from './sources.js?v=579efcd3';
 import { wikiFor } from './wiki.js?v=579efcd3';
+import { createPhysio } from './physio.js?v=579efcd3';
 
 const $ = (s) => document.querySelector(s);
 const V = window.ATLAS_V || '';
@@ -377,6 +378,10 @@ clinica = await loadClinica(V);
 const sync = createSync(profiles);
 let quiz = createQuiz(body, quizBox, { profiles, clinica, sync });
 
+// --- fisiología en movimiento -------------------------------------------------------------------
+const physioBox = $('#physio-box');
+const physio = createPhysio(viewer, physioBox, $('#physio-chips'), { toast });
+
 // --- cuerpo masculino / femenino ----------------------------------------------------------------
 const bodies = { M: body };
 let bodySex = 'M';
@@ -400,11 +405,12 @@ async function switchBody(sx) {
     holder.b.allLoaded.then(() => { loaderDone(); updateClip(); });
   }
   if (mode === 'quiz') quiz.stop();
+  if (mode === 'physio') physio.stop();
   body.select(null);
   body.root.visible = false;
   bodySex = sx;
   body = bodies[sx];
-  body.root.visible = mode === 'body' || mode === 'quiz';
+  body.root.visible = mode === 'body' || mode === 'quiz' || mode === 'physio';
   xray = false;
   quiz = createQuiz(body, quizBox, { profiles, clinica, sync });
   closeSheet();
@@ -414,6 +420,7 @@ async function switchBody(sx) {
   updateClip();
   viewer.fitTo(body.bodyBox, VIEWS.front);
   if (mode === 'quiz') quiz.start();
+  if (mode === 'physio') physio.start(body);
   if (sx === 'F' && !store.get('atlas-female-hint')) {
     store.set('atlas-female-hint', '1');
     toast('Cuerpo femenino (HuBMAP): órganos en su lugar, pelvis femenina y silueta de piel', 4500);
@@ -424,17 +431,19 @@ sexBtns.forEach((b) => b.addEventListener('click', () => switchBody(b.dataset.se
 // --- modos ------------------------------------------------------------------------------------
 function setMode(m) {
   if (mode === 'quiz' && m !== 'quiz') { quiz.stop(); renderLayers(); }
+  if (mode === 'physio' && m !== 'physio') physio.stop();
   mode = m;
   document.body.dataset.mode = m;
   document.querySelectorAll('.tab').forEach((t) => t.classList.toggle('active', t.dataset.mode === m));
-  body.root.visible = m === 'body' || m === 'quiz';
+  body.root.visible = m === 'body' || m === 'quiz' || m === 'physio';
   organs.root.visible = m === 'organs';
   $('#search-pill').hidden = m !== 'body';
-  $('#body-sex').hidden = m !== 'body' && m !== 'quiz';
-  $('#tools').hidden = m === 'quiz' || m === 'sources';
+  $('#body-sex').hidden = m !== 'body' && m !== 'quiz' && m !== 'physio';
+  $('#tools').hidden = m === 'quiz' || m === 'sources' || m === 'physio';
   $('#navpad').hidden = m === 'sources';
   $('#layers').hidden = m !== 'body';
   $('#organ-bar').hidden = m !== 'organs';
+  $('#physio-chips').hidden = m !== 'physio';
   $('.dock').hidden = m === 'quiz' || m === 'sources';
   quizBox.hidden = m !== 'quiz';
   $('#sources-page').hidden = m !== 'sources';
@@ -449,6 +458,7 @@ function setMode(m) {
     else openOrgan(hubmap.find((o) => o.id === '3d-vh-f-heart') || hubmap[0]); // nunca abrir vacío
   }
   if (m === 'quiz') quiz.start();
+  if (m === 'physio') { clipAxis = 'none'; physio.start(body); }
   if (m === 'sources') renderSources($('#sources-page'));
   updateClip();
   updateShowAll();
@@ -462,7 +472,7 @@ function layout() {
   document.body.classList.toggle('sheet-open', !sheet.hidden);
   const cam = viewer.camera;
   const w = canvas.clientWidth, h = canvas.clientHeight;
-  const panel = !sheet.hidden ? sheet : (!quizBox.hidden ? quizBox : null);
+  const panel = !sheet.hidden ? sheet : (!quizBox.hidden ? quizBox : (!physioBox.hidden ? physioBox : null));
   let dx = 0, dy = 0;
   if (panel) {
     if (isMobile()) dy = Math.min(panel.offsetHeight, h * 0.6) / 2;
@@ -474,6 +484,7 @@ function layout() {
 }
 new ResizeObserver(() => layout()).observe(sheet);
 new ResizeObserver(() => layout()).observe(quizBox);
+new ResizeObserver(() => layout()).observe(physioBox);
 window.addEventListener('resize', layout);
 
 // --- puntero -----------------------------------------------------------------------------------
@@ -488,6 +499,11 @@ canvas.addEventListener('pointerdown', (e) => {
 canvas.addEventListener('pointerup', (e) => {
   if (!down || Math.hypot(e.clientX - down.x, e.clientY - down.y) > 8 || e.button !== 0) return;
   if (mode === 'sources') return;
+  if (mode === 'physio') {
+    const h = viewer.pick(e.clientX, e.clientY, [...body.meshes.values()]);
+    if (h) toast(displayName(h.object.userData.part), 1800);
+    return;
+  }
   if (mode === 'quiz') {
     // modo Señalar: solo cuentan las capas sólidas (el esqueleto tenue de referencia no "roba" el toque)
     if (!quiz.tapMode) return;
@@ -571,4 +587,4 @@ window.addEventListener('keydown', (e) => {
 });
 
 setMode('body');
-window.__atlas = { viewer, get body() { return body; }, organs, get quiz() { return quiz; }, switchBody }; // depuración y pruebas
+window.__atlas = { viewer, get body() { return body; }, organs, get quiz() { return quiz; }, physio, switchBody, setMode }; // depuración y pruebas

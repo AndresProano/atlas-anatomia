@@ -422,3 +422,41 @@ body[data-mode="physio"] .navpad { display: none; }
   .px-procs { display: none; }
   .tabbar { width: 480px; }
 }
+
+/* Sano / enfermo */
+.px-dz-row { display: flex; flex-wrap: wrap; gap: 6px; margin: 0 0 10px; }
+.px-dz-row button { padding: 7px 12px; border-radius: 16px; font-size: 13px; font-weight: 600; background: var(--surface-2); color: var(--muted); }
+.px-dz-row button.active { background: var(--accent); color: var(--accent-ink); }
+.px-dz-row button.active.bad { background: #e11d48; color: #fff; }
+.px-dz-card { padding: 12px 14px; border-radius: 14px; margin-bottom: 12px; border-left: 4px solid #e11d48;
+  background: color-mix(in srgb, #e11d48 10%, var(--surface-solid)); }
+.px-dz-card h3 { margin: 0 0 6px; font-size: 16px; }
+.px-dz-card p { margin: 0 0 6px; font-size: 14px; line-height: 1.45; }
+.px-dz-card p:last-child { margin: 0; }
+/* Wiggers */
+.px-graph.tall { height: 190px; }
+.px-wleg { display: flex; flex-wrap: wrap; gap: 4px 12px; font-size: 11px; color: var(--muted); margin: -6px 0 4px; }
+.px-wleg span { display: inline-flex; align-items: center; gap: 5px; }
+.px-wleg i { width: 12px; height: 3px; border-radius: 2px; display: inline-block; }
+.px-ef { margin: 0 0 12px; font-size: 13px; }
+/* Casos clínicos */
+.px-case-head { display: flex; justify-content: space-between; font-size: 13px; color: var(--muted); margin-bottom: 8px; }
+.px-case { padding: 12px 14px; border-radius: 14px; background: var(--surface-2); margin-bottom: 10px; }
+.px-case .who { margin: 0 0 4px; font-weight: 700; }
+.px-case .who::before { content: '👤 '; }
+.px-case p { margin: 0; font-size: 15px; line-height: 1.45; }
+.px-q { font-weight: 700; margin: 4px 0 8px; }
+.px-opts { display: grid; gap: 8px; margin-bottom: 10px; }
+.px-opts button { text-align: left; padding: 12px 14px; border-radius: 14px; background: var(--surface-2); font-size: 15px; border: 2px solid transparent; }
+.px-opts button:not(:disabled):hover { border-color: var(--accent); }
+.px-opts button.ok { border-color: #22c55e; background: color-mix(in srgb, #22c55e 15%, transparent); font-weight: 600; }
+.px-opts button.bad { border-color: #ef4444; background: color-mix(in srgb, #ef4444 12%, transparent); }
+.px-opts button.dim { opacity: .5; }
+.px-hint { font-size: 12px; color: var(--muted); margin: 0; }
+.px-fb { padding: 12px 14px; border-radius: 14px; margin-bottom: 10px; }
+.px-fb.ok { background: color-mix(in srgb, #22c55e 14%, transparent); }
+.px-fb.bad { background: color-mix(in srgb, #ef4444 12%, transparent); }
+.px-fb p { margin: 6px 0 0; font-size: 14px; line-height: 1.45; }
+.px-case-btns { display: flex; gap: 8px; flex-wrap: wrap; }
+.px-case-btns .btn { flex: 1; }
+.btn.ghost { background: var(--surface-2); color: var(--text); }

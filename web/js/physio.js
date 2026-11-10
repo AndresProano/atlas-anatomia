@@ -2,7 +2,7 @@
 // digestión y orina). Las rutas se calculan a partir de la geometría real de cada pieza (línea central).
 import * as THREE from 'three';
 import { ConvexGeometry } from 'three/addons/geometries/ConvexGeometry.js';
-import { PROCESSES, ROUTES, SPINE, NERVE_TUBES } from './physio-data.js?v=579efcd3';
+import { PROCESSES, ROUTES, SPINE, NERVE_TUBES } from './physio-data.js?v=9d8bd228';
 
 const V3 = THREE.Vector3;
 const esc = (s) => String(s ?? '').replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));

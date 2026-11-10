@@ -33,6 +33,14 @@ Animaciones sobre el mismo cuerpo 3D, con pasos narrados, cámara automática, p
 - **Digestión**: el bolo recorre boca → esófago → estómago → intestinos → recto; bilis y jugo pancreático.
 - **Riñones**: sangre que entra y sale, orina por uréteres hasta la vejiga.
 
+**Para estudiantes de medicina** (simple a propósito: un botón y tres líneas de texto):
+
+- **Sano / enfermo** en 4 procesos: infarto y fibrilación auricular (Corazón), asma (Respiración), ACV derecho (Cerebro) y cálculo renal (Riñones). La animación cambia (zona sin oxígeno, ECG con ST elevado o sin onda P, ritmo irregular, bronquios cerrados, impulso que se apaga, orina que se acumula) y una tarjeta dice qué pasa, qué siente el paciente y en qué fijarse.
+- **Diagrama de Wiggers** en Corazón: ECG, presiones de aorta, ventrículo y aurícula izquierdos, volumen del ventrículo, S1/S2 y fracción de eyección, sincronizados con el latido. Botón 🔊 para escuchar el «lub-dub».
+- **Casos clínicos**: 7 pacientes cortos; se elige entre 4 opciones, se ilumina la estructura en el modelo, se explica el porqué y hay un botón para ver la animación de esa enfermedad.
+
+`node scripts/test-physio.mjs` comprueba que todos los nombres que usa el módulo existan en los catálogos del hombre y la mujer.
+
 Las rutas se calculan desde la geometría real: de cada pieza nombrada (p. ej. «Left femoral artery») se saca su línea central
 (vóxeles → grafo → camino más largo) y se encadenan, cortando en los empalmes en T. BodyParts3D no tiene médula espinal,
 nervios periféricos ni pulmones como malla: la médula se dibuja por el canal de las vértebras, el nervio del brazo junto a la

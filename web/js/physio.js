@@ -276,6 +276,123 @@ export function createPhysio(viewer, panel, chipsEl, { toast } = {}) {
   let streams = [], snapshot = null, disposeTick = null, extras = [], movers = [], flashes = [];
   let heart = null, lungs = null, diaphragm = null, rate = 72, phase = 0, breath = 0, graphBuf = [], tourT = 0, tourI = -1;
   let visibleStreams = null;
+  // enfermedad activa, objetos que dibuja y casos clínicos
+  let dz = null, dzMarks = [], dzObjs = [], beatObjs = [], beatK = 1, tNow = 0;
+  let audio = null, soundOn = false, caseIdx = 0, caseAns = null, score = [0, 0];
+  const fx = () => dz?.fx;
+
+  // marca fija sobre una pieza (lesión, órgano afectado); se borra al cambiar de enfermedad o de caso
+  function mark(m, color, opacity = 0.75, depthTest = false, beats = false) {
+    const mat = new THREE.MeshBasicMaterial({ color, transparent: true, opacity, depthTest, depthWrite: false, toneMapped: false });
+    const o = new THREE.Mesh(m.geometry, mat);
+    o.matrixAutoUpdate = false; o.matrix.copy(m.matrixWorld); o.renderOrder = 997; o.raycast = () => {};
+    root.add(o);
+    dzMarks.push(o);
+    if (beats) beatObjs.push({ o, base: m.matrixWorld.clone() });
+    return o;
+  }
+  function ball(p, r, color) {
+    const o = new THREE.Mesh(new THREE.SphereGeometry(r, 20, 14), new THREE.MeshStandardMaterial({ color, roughness: 0.55 }));
+    o.position.copy(p); o.raycast = () => {}; o.renderOrder = 999;
+    root.add(o);
+    dzObjs.push(o);
+    return o;
+  }
+  function clearDisease() {
+    for (const o of dzMarks) { root.remove(o); o.material.dispose(); }
+    for (const o of dzObjs) { root.remove(o); o.geometry.dispose(); o.material.dispose(); }
+    dzMarks = []; dzObjs = []; beatObjs = [];
+    for (const st of streams) st.blockU = null;
+    for (const mv of movers.filter((mv) => mv.dz)) mv.reset();
+    movers = movers.filter((mv) => !mv.dz);
+    dz = null; beatK = 1;
+  }
+  // corta un flujo a mitad de una pieza (lesión, piedra); devuelve el punto del corte
+  function block(id, name, frac) {
+    const st = streams.find((s) => s.id === id);
+    const pc = st?.route.pieces.find((p) => p.meshes.some((m) => m.userData.part.en === name));
+    if (!pc) return null;
+    st.blockU = pc.u0 + (pc.u1 - pc.u0) * frac;
+    return sample(st.route, st.blockU, new V3());
+  }
+  function setupInfarct() {
+    const LAD = ['Trunk of anterior interventricular branch of left coronary artery', 'Diagonal branch of anterior descending branch of left coronary artery',
+      'First right anterior branch of anterior interventricular branch of left coronary artery', 'Second right anterior branch of anterior interventricular branch of left coronary artery',
+      'Third right anterior branch of anterior interventricular branch of left coronary artery', 'Septal branch of anterior interventricular artery'];
+    const lad = LAD.flatMap((n) => geo.byName.get(n) || []);
+    lad.forEach((m) => mark(m, '#241414', 0.9, false, true));
+    // coágulo al inicio de la descendente anterior
+    const trunk = geo.byName.get('Trunk of anterior interventricular branch of left coronary artery')?.[0];
+    const lct = geo.byName.get('Trunk of left coronary artery')?.[0];
+    let clotY = Infinity;
+    if (trunk) {
+      const line = centerline(meshPoints(trunk));
+      const ref = lct ? geo.center(lct) : line[0];
+      const s = line[0].distanceTo(ref) <= line[line.length - 1].distanceTo(ref) ? line[0] : line[line.length - 1];
+      ball(s, geo.H * 0.0045, '#111111');
+      clotY = s.y;
+    }
+    // zona sin oxígeno: los triángulos de la pared ventricular cerca de la arteria tapada
+    const wall = geo.byName.get('Wall of ventricle')?.[0];
+    // territorio del ventrículo izquierdo: tronco, diagonal y septal (no las ramas que van al ventrículo derecho)
+    const P = lad.filter((m) => !/right anterior branch/i.test(m.userData.part.en))
+      .flatMap((m) => meshPoints(m, 80)).filter((p) => p.y < clotY - geo.H * 0.008);
+    if (!wall || !P.length) return;
+    const pos = wall.geometry.attributes.position, idx = wall.geometry.index, R2 = (geo.H * 0.011) ** 2;
+    const out = [], a = new V3(), b = new V3(), c = new V3(), g = new V3();
+    const nTri = idx ? idx.count / 3 : pos.count / 3;
+    for (let t = 0; t < nTri; t++) {
+      const i0 = idx ? idx.getX(t * 3) : t * 3, i1 = idx ? idx.getX(t * 3 + 1) : t * 3 + 1, i2 = idx ? idx.getX(t * 3 + 2) : t * 3 + 2;
+      a.fromBufferAttribute(pos, i0).applyMatrix4(wall.matrixWorld);
+      b.fromBufferAttribute(pos, i1).applyMatrix4(wall.matrixWorld);
+      c.fromBufferAttribute(pos, i2).applyMatrix4(wall.matrixWorld);
+      g.copy(a).add(b).add(c).divideScalar(3);
+      if (P.some((p) => p.distanceToSquared(g) < R2)) out.push(a.x, a.y, a.z, b.x, b.y, b.z, c.x, c.y, c.z);
+    }
+    if (!out.length) return;
+    const zg = new THREE.BufferGeometry();
+    zg.setAttribute('position', new THREE.Float32BufferAttribute(out, 3));
+    const zone = new THREE.Mesh(zg, new THREE.MeshBasicMaterial({ color: '#6e6478', transparent: true, opacity: 0.85, depthWrite: false, side: THREE.DoubleSide, polygonOffset: true, polygonOffsetFactor: -2, polygonOffsetUnits: -2 }));
+    zone.matrixAutoUpdate = false; zone.renderOrder = 996; zone.raycast = () => {};
+    root.add(zone);
+    dzObjs.push(zone);
+    beatObjs.push({ o: zone, base: new THREE.Matrix4() });
+  }
+  function setDisease(id) {
+    clearDisease();
+    dz = (proc.diseases || []).find((d) => d.id === id) || null;
+    if (dz) {
+      if (fx() === 'infarto') setupInfarct();
+      if (fx() === 'asma') {
+        for (const m of body.meshes.values()) {
+          if (m.visible && m.userData.part.system === 'respiratorio' && /bronch/i.test(m.userData.part.en)) mark(m, '#ff7a2f', 0.5, true);
+        }
+      }
+      if (fx() === 'acv') {
+        block('n-motor', 'Right internal capsule', 0.5);
+        (geo.byName.get('Right internal capsule') || []).forEach((m) => mark(m, '#9b1028', 0.9));
+      }
+      if (fx() === 'calculo') {
+        const p = block('k-orina-i', 'Left ureter', 0.4);
+        if (p) ball(p, geo.H * 0.0042, '#d8c79a');
+        const k = geo.byName.get('Left kidney')?.[0];
+        if (k) { const mv = mover(k); mv.dz = true; scaleAbout(mv, geo.center(k), 1.12, 1.08, 1.12); }
+      }
+    }
+    renderPanel();
+    if (dz && dz.step !== undefined) goStep(dz.step);
+  }
+
+  // --- sonido de los ruidos cardiacos (S1 «lub», S2 «dub») ---------------------------------------
+  function thump(f, d, gain) {
+    if (!audio) return;
+    const t = audio.currentTime, o = audio.createOscillator(), o2 = audio.createOscillator(), gn = audio.createGain();
+    o.type = 'sine'; o.frequency.setValueAtTime(f * 1.5, t); o.frequency.exponentialRampToValueAtTime(f, t + d);
+    o2.type = 'triangle'; o2.frequency.value = f * 2.2;
+    gn.gain.setValueAtTime(0.0001, t); gn.gain.exponentialRampToValueAtTime(gain, t + 0.012); gn.gain.exponentialRampToValueAtTime(0.0001, t + d);
+    o.connect(gn); o2.connect(gn); gn.connect(audio.destination);
+    o.start(t); o2.start(t); o.stop(t + d + 0.03); o2.stop(t + d + 0.03);
+  }
 
   // --- capas ---------------------------------------------------------------------------------
   function applyLayers(layers) {
@@ -394,14 +511,60 @@ export function createPhysio(viewer, panel, chipsEl, { toast } = {}) {
     };
   }
   // fases del ciclo (0-1 por latido, la duración de la diástole se acorta al subir la frecuencia)
-  const atrialK = (φ) => bump(φ, 0.02, 0.2);
-  const ventK = (φ) => bump(φ, 0.18, 0.18 + Math.min(0.42, 0.3 * (rate / 72) ** 0.5));
+  const sysDur = () => Math.min(0.42, 0.3 * (rate / 72) ** 0.5);
+  const atrialK = (φ) => (fx() === 'fa' ? 0.12 * (0.5 + 0.5 * Math.sin(tNow * 47)) : bump(φ, 0.02, 0.2));
+  const ventK = (φ) => bump(φ, 0.18, 0.18 + sysDur());
   function ecg(φ) {
     const g = (c, w, a) => a * Math.exp(-(((φ - c) / w) ** 2));
-    const qt = 0.18 + Math.min(0.42, 0.3 * (rate / 72) ** 0.5);
-    return g(0.08, 0.03, 0.13) + g(0.165, 0.008, -0.12) + g(0.18, 0.009, 1) + g(0.197, 0.01, -0.28) + g(qt - 0.06, 0.045, 0.3);
+    const qt = 0.18 + sysDur();
+    let v = g(0.165, 0.008, -0.12) + g(0.18, 0.009, 1) + g(0.197, 0.01, -0.28) + g(qt - 0.06, 0.045, 0.3);
+    if (fx() === 'fa') v += 0.045 * Math.sin(tNow * 41) + 0.03 * Math.sin(tNow * 27 + 1.3); // sin onda P, línea temblorosa
+    else v += g(0.08, 0.03, 0.13);
+    if (fx() === 'infarto') v += 0.3 * smooth((φ - 0.2) / 0.025) * smooth((qt - 0.03 - φ) / 0.06); // ST elevado
+    return v;
   }
-  const breathVol = (β) => (β < 0.4 ? smooth(β / 0.4) : 1 - smooth((β - 0.4) / 0.6));
+  // respiración: en el asma la espiración es lenta y el pulmón no se vacía (aire atrapado)
+  const inspF = () => (fx() === 'asma' ? 0.28 : 0.4);
+  function breathVol(β) {
+    const i = inspF(), x = β < i ? smooth(β / i) : 1 - smooth((β - i) / (1 - i));
+    return fx() === 'asma' ? 0.45 + 0.55 * x : x;
+  }
+
+  // --- diagrama de Wiggers: un ciclo cardiaco completo (presiones en mmHg y volumen del VI en ml) ---
+  function wiggers() {
+    const s = 0.19, o = 0.235, e = 0.17 + sysDur(), r = e + 0.06;
+    const inf = fx() === 'infarto', fa = fx() === 'fa';
+    const kick = (φ) => (fa ? 0 : bump(φ, 0.03, 0.16));
+    const PK = inf ? 100 : 122, EDV = fa ? 110 : 120, ESV = inf ? 76 : 50;
+    const shape = (p) => Math.pow(Math.sin(Math.PI * p), 0.7) * (1 - 0.3 * p) + 0.33 * p;
+    const lv = (φ) => {
+      if (φ < s) return 5 + 5 * kick(φ);
+      if (φ < o) return 9 + 71 * smooth((φ - s) / (o - s));
+      if (φ < e) return 80 + (PK - 80) * shape((φ - o) / (e - o));
+      const pe = 80 + (PK - 80) * shape(1);
+      if (φ < r) return 6 + (pe - 6) * (1 - smooth((φ - e) / (r - e)));
+      return 5 + 1.5 * ((φ - r) / (1 - r));
+    };
+    const pe = lv(e - 1e-4);
+    const ao = (φ) => {
+      if (φ >= o && φ < e) return lv(φ) - 1.5;
+      const d = φ >= e ? φ - e : φ + 1 - e, D = 1 - e + o;
+      return pe - (pe - 80) * (d / D) - 6 * bump(d, 0, 0.035) + 3 * bump(d, 0.025, 0.08); // incisura dicrota
+    };
+    const la = (φ) => {
+      const v = φ < o ? 0 : φ < r ? 6 * smooth((φ - o) / (r - o)) : 6 * (1 - smooth((φ - r) / 0.12));
+      return 5 + 5 * kick(φ) + 2 * bump(φ, s, o) + v;
+    };
+    const fill = (φ) => ESV + (EDV - 10 - ESV) * (1 - Math.exp(-(φ - r) / 0.07)) / (1 - Math.exp(-(1 - r) / 0.07));
+    const vol = (φ) => {
+      if (φ < s) return fa ? EDV : EDV - 10 + 10 * smooth((φ - 0.03) / 0.13);
+      if (φ < o) return EDV;
+      if (φ < e) return EDV - (EDV - ESV) * (1 - (1 - (φ - o) / (e - o)) ** 2);
+      if (φ < r) return ESV;
+      return fa ? ESV + (EDV - ESV) * (1 - Math.exp(-(φ - r) / 0.07)) / (1 - Math.exp(-(1 - r) / 0.07)) : fill(φ);
+    };
+    return { s, e, lv, ao, la, vol, EDV, ESV };
+  }
 
   // --- flujos de partículas --------------------------------------------------------------------
   function buildStreams() {
@@ -427,17 +590,32 @@ export function createPhysio(viewer, panel, chipsEl, { toast } = {}) {
     if (!proc) return;
     const real = dt;
     dt = playing ? dt * speed : 0;
-    // ritmo
-    if (proc.rate?.kind === 'hr') phase = (phase + dt * rate / 60) % 1;
+    tNow += dt;
+    // ritmo (en la fibrilación auricular cada latido dura distinto)
+    if (proc.rate?.kind === 'hr') {
+      const prev = phase;
+      phase += dt * rate / 60 * beatK;
+      if (phase >= 1) { phase -= 1; beatK = fx() === 'fa' ? 0.6 + Math.random() * 0.95 : 1; }
+      // ruidos cardiacos: S1 al empezar la contracción ventricular, S2 al terminar
+      if (soundOn && playing && proc.sound) {
+        const s2 = 0.17 + sysDur();
+        const crossed = (x) => (prev < x && phase >= x) || (phase < prev && (prev < x || phase >= x));
+        if (crossed(0.19)) thump(62, 0.16, 0.9);
+        if (crossed(s2)) thump(88, 0.11, 0.65);
+      }
+    }
     if (proc.rate?.kind === 'rr') breath = (breath + dt * rate / 60) % 1;
-    const vk = ventK(phase), ak = atrialK(phase);
+    const vk = ventK(phase) * (fx() === 'infarto' ? 0.55 : 1), ak = atrialK(phase);
     // latido
     if (heart && proc.beat) {
       for (const mv of heart.vent) scaleAbout(mv, heart.center, 1 - 0.07 * vk, 1 - 0.05 * vk, 1 - 0.07 * vk);
       for (const mv of heart.atria) scaleAbout(mv, heart.center, 1 - 0.05 * ak, 1 - 0.04 * ak, 1 - 0.05 * ak);
+      const c = heart.center;
+      _T.makeTranslation(c.x, c.y, c.z); _Ti.makeTranslation(-c.x, -c.y, -c.z); _S.makeScale(1 - 0.07 * vk, 1 - 0.05 * vk, 1 - 0.07 * vk);
+      for (const b of beatObjs) b.o.matrix.copy(_T).multiply(_S).multiply(_Ti).multiply(b.base);
     }
     // respiración
-    const vol = breathVol(breath), flow = breath < 0.4 ? 1 : -0.67;
+    const vol = breathVol(breath), flow = breath < inspF() ? 1 : (fx() === 'asma' ? -0.3 : -0.67);
     if (lungs) for (const l of lungs) l.scale.set(1 + 0.05 * vol, 1 + 0.09 * vol, 1 + 0.06 * vol);
     if (diaphragm) {
       _M.makeTranslation(0, -geo.H * 0.014 * vol, 0).multiply(diaphragm.base);
@@ -450,7 +628,7 @@ export function createPhysio(viewer, panel, chipsEl, { toast } = {}) {
     const gateOf = (st) => {
       if (st.gate === 'heart') return 0.25 + 2.1 * vk;
       if (st.gate === 'fill') return 0.15 + 1.8 * (1 - vk) * (phase > 0.5 ? 1 : 0.4) + 1.2 * ak;
-      if (st.gate === 'breath') return flow * (0.4 + 1.2 * Math.sin(Math.PI * (breath < 0.4 ? breath / 0.4 : (breath - 0.4) / 0.6)));
+      if (st.gate === 'breath') { const i = inspF(); return flow * (0.4 + 1.2 * Math.sin(Math.PI * (breath < i ? breath / i : (breath - i) / (1 - i)))); }
       return 1;
     };
     for (const st of streams) {
@@ -462,6 +640,8 @@ export function createPhysio(viewer, panel, chipsEl, { toast } = {}) {
         if (st.timer >= st.burst) { st.timer = 0; st.bursts.push({ u: 0, prev: 0 }); }
         for (const b of st.bursts) {
           b.prev = b.u; b.u += du;
+          // lesión: el impulso se apaga ahí
+          if (st.blockU != null && b.u >= st.blockU) { b.dead = true; continue; }
           if (st.flash) for (const pc of st.route.pieces) if (b.prev < pc.u1 && b.u >= pc.u0) pc.meshes.forEach((m) => flash(m, st.col));
           for (let k = 0; k < 7 && n < MAXP; k++) {
             const u = b.u - k * 0.006;
@@ -473,12 +653,14 @@ export function createPhysio(viewer, panel, chipsEl, { toast } = {}) {
             n++;
           }
         }
-        st.bursts = st.bursts.filter((b) => b.u - 0.04 < 1);
+        st.bursts = st.bursts.filter((b) => !b.dead && b.u - 0.04 < 1);
         continue;
       }
       for (const p of st.parts) {
         const prev = p.u;
         p.u += du;
+        // obstrucción (piedra): las partículas se amontonan antes
+        if (st.blockU != null && prev < st.blockU && p.u >= st.blockU) p.u = st.blockU - 0.012 - Math.random() * 0.1;
         if (p.u > 1) p.u -= 1;
         if (p.u < 0) p.u += 1;
         if (st.flash && du > 0) for (const pc of st.route.pieces) if (prev < pc.u0 && p.u >= pc.u0) pc.meshes.forEach((m) => flash(m, new THREE.Color(st.flashColor || st.color), 1.4, 0.45));
@@ -501,6 +683,7 @@ export function createPhysio(viewer, panel, chipsEl, { toast } = {}) {
     flashes = flashes.filter((f) => { if (f.t < f.dur) return true; root.remove(f.o); f.o.material.dispose(); return false; });
     // recorrido por zonas (mapa del cerebro)
     const step = proc.steps[stepIdx];
+    if (!step) return; // casos clínicos: sin pasos
     if (step.tour && playing) {
       tourT += real;
       const i = Math.floor(tourT / 2.2) % step.tour.length;
@@ -514,9 +697,10 @@ export function createPhysio(viewer, panel, chipsEl, { toast } = {}) {
       }
     }
     // gráfico (ECG o volumen pulmonar)
-    if (proc.graph) drawGraph(real, proc.graph === 'ecg' ? ecg(phase) : vol);
-    // avance automático de los pasos
-    if (playing) {
+    if (proc.graph === 'wiggers') drawWiggers();
+    else if (proc.graph) drawGraph(real, proc.graph === 'ecg' ? ecg(phase) : vol);
+    // avance automático de los pasos (con una enfermedad activa se queda en su paso)
+    if (playing && !dz) {
       stepT += real;
       const dur = stepDuration(step);
       const bar = panel.querySelector('.px-progress span');
@@ -553,6 +737,59 @@ export function createPhysio(viewer, panel, chipsEl, { toast } = {}) {
     ctx.stroke();
   }
 
+  // un ciclo fijo de izquierda a derecha y una línea que marca el momento actual
+  function drawWiggers() {
+    const cv = panel.querySelector('#px-graph');
+    if (!cv) return;
+    const dpr = devicePixelRatio, ctx = cv.getContext('2d');
+    const w = cv.width = cv.clientWidth * dpr, h = cv.height = cv.clientHeight * dpr;
+    const W = wiggers(), css = getComputedStyle(document.documentElement);
+    const muted = css.getPropertyValue('--muted') || '#888', grid = css.getPropertyValue('--border') || '#ccc';
+    const X = (φ) => 34 * dpr + φ * (w - 40 * dpr);
+    const band = (y0, y1, lo, hi) => (v) => h * y1 - ((v - lo) / (hi - lo)) * h * (y1 - y0);
+    const yE = band(0.03, 0.2, -0.35, 1.2), yP = band(0.27, 0.72, 0, 135), yV = band(0.79, 0.97, 40, 130);
+    ctx.clearRect(0, 0, w, h);
+    // sístole sombreada
+    ctx.fillStyle = 'rgba(225, 29, 72, 0.08)';
+    ctx.fillRect(X(W.s), 0, X(W.e) - X(W.s), h);
+    ctx.font = `${10 * dpr}px Inter, sans-serif`;
+    ctx.fillStyle = muted;
+    ctx.fillText('Sístole', X(W.s) + 4 * dpr, h * 0.25);
+    ctx.fillText('Diástole', X(Math.min(W.e + 0.1, 0.85)), h * 0.25);
+    // S1 y S2
+    ctx.strokeStyle = grid; ctx.setLineDash([4 * dpr, 4 * dpr]); ctx.lineWidth = dpr;
+    for (const [x, l] of [[W.s, 'S1'], [W.e, 'S2']]) {
+      ctx.beginPath(); ctx.moveTo(X(x), 0); ctx.lineTo(X(x), h); ctx.stroke();
+      ctx.fillText(l, X(x) + 3 * dpr, h * 0.77);
+    }
+    ctx.setLineDash([]);
+    // etiquetas de bandas
+    ctx.fillText('ECG', 2 * dpr, h * 0.13);
+    ctx.fillText('mmHg', 2 * dpr, h * 0.5);
+    ctx.fillText('ml', 2 * dpr, h * 0.9);
+    const line = (f, y, color, width = 2) => {
+      ctx.strokeStyle = color; ctx.lineWidth = width * dpr; ctx.beginPath();
+      for (let i = 0; i <= 200; i++) { const φ = i / 200, py = y(f(φ)); if (i) ctx.lineTo(X(φ), py); else ctx.moveTo(X(φ), py); }
+      ctx.stroke();
+    };
+    line((φ) => ecg(φ), yE, '#e11d48', 1.5);
+    line(W.la, yP, '#6366f1');
+    line(W.ao, yP, '#ef4444');
+    line(W.lv, yP, '#14b8a6', 2.5);
+    line(W.vol, yV, '#a855f7');
+    // momento actual
+    ctx.strokeStyle = css.getPropertyValue('--text') || '#000'; ctx.lineWidth = 1.5 * dpr;
+    ctx.beginPath(); ctx.moveTo(X(phase), 0); ctx.lineTo(X(phase), h); ctx.stroke();
+    for (const [f, y, c] of [[W.lv, yP, '#14b8a6'], [W.ao, yP, '#ef4444'], [W.vol, yV, '#a855f7']]) {
+      ctx.fillStyle = c; ctx.beginPath(); ctx.arc(X(phase), y(f(phase)), 3.5 * dpr, 0, Math.PI * 2); ctx.fill();
+    }
+    const ef = panel.querySelector('#px-ef');
+    if (ef) {
+      const sv = W.EDV - W.ESV, txt = `Volumen por latido: <b>${sv} ml</b> · Fracción de eyección: <b>${Math.round((sv / W.EDV) * 100)} %</b>${fx() === 'infarto' ? ' (baja)' : ''}`;
+      if (ef.innerHTML !== txt) ef.innerHTML = txt;
+    }
+  }
+
   // --- cámara ----------------------------------------------------------------------------------
   function frameStep(step, instant = false) {
     const box = new THREE.Box3();
@@ -582,23 +819,81 @@ export function createPhysio(viewer, panel, chipsEl, { toast } = {}) {
     if (b && body) open(Number(b.dataset.proc));
   });
 
+  const procChips = (p) => `<div class="chips px-procs">${PROCESSES.map((q, i) => `<button class="chip ${q === p ? 'on' : ''}" data-proc="${i}"><span class="dot" style="background:${q.color}"></span>${esc(q.label)}</button>`).join('')}</div>`;
+  const SOUND_ICO = '<svg class="ico" viewBox="0 0 24 24"><path d="M4 9v6h4l5 4V5L8 9z"/><path d="M16 9a4 4 0 0 1 0 6M19 6a8 8 0 0 1 0 12"/></svg>';
+
+  function renderCases() {
+    const c = proc.cases[caseIdx], ok = caseAns === c.answer;
+    panel.innerHTML = `
+      ${procChips(proc)}
+      <p class="kicker"><i style="background:${proc.color}"></i>Practica</p>
+      <h2>${esc(proc.title)}</h2>
+      <p class="px-intro">${esc(proc.intro)}</p>
+      <div class="px-case-head"><span>Caso ${caseIdx + 1} de ${proc.cases.length}</span><span>Aciertos: <b>${score[0]}</b> de ${score[1]}</span></div>
+      <div class="px-case"><p class="who">${esc(c.who)}</p><p>${esc(c.story)}</p></div>
+      <p class="px-q">${esc(c.q)}</p>
+      <div class="px-opts">${c.options.map(([l], i) => `<button data-opt="${i}" class="${caseAns === null ? '' : i === c.answer ? 'ok' : i === caseAns ? 'bad' : 'dim'}" ${caseAns === null ? '' : 'disabled'}>${esc(l)}</button>`).join('')}</div>
+      ${caseAns === null ? `<p class="px-hint">Elige una opción: se iluminará en el modelo.${c.view === 'front' || !c.view ? ' Vista de frente: la derecha del paciente está a tu izquierda.' : ''}</p>` : `
+        <div class="px-fb ${ok ? 'ok' : 'bad'}"><b>${ok ? '✓ ¡Correcto!' : `✗ No. Es: ${esc(c.options[c.answer][0])}`}</b><p>${esc(c.why)}</p></div>
+        <div class="px-case-btns">
+          ${c.see ? '<button class="btn ghost" data-see>▶ Ver la animación</button>' : ''}
+          <button class="btn" data-next-case>${caseIdx < proc.cases.length - 1 ? 'Siguiente caso →' : 'Empezar de nuevo'}</button>
+        </div>`}`;
+  }
+  function goCase(i) {
+    clearDisease();
+    caseIdx = i; caseAns = null;
+    if (i === 0) score = [0, 0];
+    const c = proc.cases[i];
+    frameStep({ focus: c.focus, view: c.view, margin: c.margin });
+    renderCases();
+    panel.scrollTo({ top: 0 });
+  }
+  function answerCase(i) {
+    const c = proc.cases[caseIdx];
+    if (caseAns !== null) return;
+    caseAns = i;
+    score = [score[0] + (i === c.answer ? 1 : 0), score[1] + 1];
+    const paint = (names, color) => names.forEach((n) => (geo.byName.get(n) || []).forEach((m) => { mark(m, color, 0.8); flash(m, new THREE.Color(color), 1.6, 0.9); }));
+    if (i !== c.answer) paint(c.options[i][1], '#ef4444');
+    paint(c.options[c.answer][1], '#22c55e');
+    renderCases();
+    const fb = panel.querySelector('.px-opts');
+    if (fb) panel.scrollTo({ top: fb.offsetTop - 12, behavior: 'smooth' });
+  }
+
   function renderPanel() {
     const p = proc;
+    if (p.cases) return renderCases();
+    const dzRow = p.diseases ? `
+      <div class="px-dz-row" role="group" aria-label="Sano o enfermo">
+        <button data-dz="" class="${dz ? '' : 'active'}">Sano</button>
+        ${p.diseases.map((d) => `<button data-dz="${d.id}" class="${dz?.id === d.id ? 'active bad' : ''}">${esc(d.label)}</button>`).join('')}
+      </div>
+      ${dz ? `<div class="px-dz-card"><h3>🩺 ${esc(dz.label)}</h3>
+        <p><b>Qué pasa:</b> ${esc(dz.que)}</p><p><b>Qué siente:</b> ${esc(dz.siente)}</p><p><b>Fíjate:</b> ${esc(dz.fijate)}</p></div>` : ''}` : '';
+    const graph = p.graph === 'wiggers'
+      ? `<div class="px-graph tall"><canvas id="px-graph"></canvas></div>
+         <div class="px-wleg"><span><i style="background:#ef4444"></i>Aorta</span><span><i style="background:#14b8a6"></i>Ventrículo izq.</span><span><i style="background:#6366f1"></i>Aurícula izq.</span><span><i style="background:#a855f7"></i>Volumen del VI</span></div>
+         <p class="px-ef" id="px-ef"></p>`
+      : p.graph ? `<div class="px-graph"><canvas id="px-graph"></canvas><span>${p.graph === 'ecg' ? 'Electrocardiograma' : 'Volumen de aire en los pulmones'}</span></div>` : '';
     panel.innerHTML = `
-      <div class="chips px-procs">${PROCESSES.map((q, i) => `<button class="chip ${q === p ? 'on' : ''}" data-proc="${i}"><span class="dot" style="background:${q.color}"></span>${esc(q.label)}</button>`).join('')}</div>
+      ${procChips(p)}
       <p class="kicker"><i style="background:${p.color}"></i>Fisiología en movimiento</p>
       <h2>${esc(p.title)}</h2>
       <p class="px-intro">${esc(p.intro)}</p>
+      ${dzRow}
       <div class="px-ctrl">
         <button class="round px-play" data-px="play" aria-label="${playing ? 'Pausar' : 'Reproducir'}">${playing ? '<svg class="ico" viewBox="0 0 24 24"><path d="M8 5v14M16 5v14"/></svg>' : '<svg class="ico" viewBox="0 0 24 24"><path d="M7 5l12 7-12 7z"/></svg>'}</button>
         <button class="round" data-px="prev" aria-label="Paso anterior"><svg class="ico" viewBox="0 0 24 24"><path d="m15 6-6 6 6 6"/></svg></button>
         <span class="px-count"></span>
         <button class="round" data-px="next" aria-label="Paso siguiente"><svg class="ico" viewBox="0 0 24 24"><path d="m9 6 6 6-6 6"/></svg></button>
+        ${p.sound ? `<button class="round ${soundOn ? 'on' : ''}" data-px="sound" aria-label="${soundOn ? 'Silenciar' : 'Escuchar los ruidos del corazón'}" title="Escuchar «lub-dub»">${SOUND_ICO}</button>` : ''}
         <div class="px-speed" role="group" aria-label="Velocidad">${[0.5, 1, 2].map((v) => `<button data-speed="${v}" class="${v === speed ? 'active' : ''}">${String(v).replace('.', ',')}×</button>`).join('')}</div>
       </div>
       <div class="px-progress"><span></span></div>
       ${p.rate ? `<label class="px-rate"><span>${esc(p.rate.label)}</span><input type="range" min="${p.rate.min}" max="${p.rate.max}" value="${rate}" step="1"><b>${rate} ${esc(p.rate.unit)}</b></label>` : ''}
-      ${p.graph ? `<div class="px-graph"><canvas id="px-graph"></canvas><span>${p.graph === 'ecg' ? 'Electrocardiograma' : 'Volumen de aire en los pulmones'}</span></div>` : ''}
+      ${graph}
       <div class="px-step" id="px-step"></div>
       <div class="px-legend">${p.legend.map(([c, l]) => `<span><i style="background:${c}"></i>${esc(l)}</span>`).join('')}</div>
       <div class="section-title">Pasos</div>
@@ -622,6 +917,23 @@ export function createPhysio(viewer, panel, chipsEl, { toast } = {}) {
     const b = e.target.closest('button');
     if (!b || !proc) return;
     if (b.dataset.proc !== undefined) { open(Number(b.dataset.proc)); return; }
+    if (b.dataset.dz !== undefined) { setDisease(b.dataset.dz); return; }
+    if (b.dataset.opt !== undefined) { answerCase(Number(b.dataset.opt)); return; }
+    if (b.hasAttribute('data-next-case')) { goCase((caseIdx + 1) % proc.cases.length); return; }
+    if (b.hasAttribute('data-see')) {
+      const see = proc.cases[caseIdx].see, i = PROCESSES.findIndex((q) => q.id === see.proc);
+      open(i);
+      if (see.dz) setDisease(see.dz); else if (see.step !== undefined) goStep(see.step);
+      return;
+    }
+    if (b.dataset.px === 'sound') {
+      soundOn = !soundOn;
+      if (soundOn) { audio ??= new (window.AudioContext || window.webkitAudioContext)(); audio.resume(); }
+      b.classList.toggle('on', soundOn);
+      b.setAttribute('aria-label', soundOn ? 'Silenciar' : 'Escuchar los ruidos del corazón');
+      toast?.(soundOn ? '🔊 Escucha: «lub» (S1) al cerrarse mitral y tricúspide, «dub» (S2) al cerrarse aórtica y pulmonar' : 'Sonido apagado', 3500);
+      return;
+    }
     if (b.dataset.px === 'play') { playing = !playing; renderPanel(); }
     if (b.dataset.px === 'prev') goStep(Math.max(0, stepIdx - 1));
     if (b.dataset.px === 'next') goStep(Math.min(proc.steps.length - 1, stepIdx + 1));
@@ -640,7 +952,7 @@ export function createPhysio(viewer, panel, chipsEl, { toast } = {}) {
     visibleStreams = s.streams ? new Set(s.streams) : null;
     renderStep();
     frameStep(s);
-    const el = panel.querySelector('#px-step');
+    const el = panel.querySelector(dz ? '.px-dz-row' : '#px-step');
     if (el && (el.offsetTop < panel.scrollTop || el.offsetTop > panel.scrollTop + panel.clientHeight - 80)) panel.scrollTo({ top: el.offsetTop - 12, behavior: 'smooth' });
   }
 
@@ -648,6 +960,7 @@ export function createPhysio(viewer, panel, chipsEl, { toast } = {}) {
   function teardown() {
     for (const mv of movers) mv.reset();
     movers = [];
+    clearDisease();
     for (const o of extras) { root.remove(o); o.geometry.dispose(); o.material.dispose(); }
     extras = [];
     clearFlashes();
@@ -673,6 +986,7 @@ export function createPhysio(viewer, panel, chipsEl, { toast } = {}) {
     buildStreams();
     renderChips();
     stepIdx = 0;
+    if (proc.cases) { goCase(0); return; }
     renderPanel();
     goStep(0);
   }

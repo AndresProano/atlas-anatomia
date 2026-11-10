@@ -8,7 +8,7 @@ export const GOOGLE_CLIENT_ID = '882446948533-b980vni0p4fdhs25gdb5ruqq0i0jtgni.a
 const ALPHABET = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
 export const CODE_RE = /^[A-Z2-9]{4}-[A-Z2-9]{4}-[A-Z2-9]{4}$/;
 
-function syncUrl() {
+export function syncUrl() {
   // para pruebas locales: ?sync=http://127.0.0.1:8787
   const q = new URLSearchParams(location.search).get('sync');
   if (q) { try { localStorage.setItem('atlas-sync-url', q); } catch { /* nada */ } return q; }

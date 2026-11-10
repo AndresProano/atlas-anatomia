@@ -10,10 +10,14 @@
 //   PUT  /v1/me/progress    (Bearer) { progress }            -> combinado
 // Código de sincronización (versión anterior, se mantiene):
 //   GET/PUT /v1/p/<CODIGO>
+// Opiniones de los usuarios (botón «Danos tu opinión»):
+//   POST /v1/feedback       { text, kind, where, contact? }  -> { ok }
+//   Se leen con: sh scripts/opiniones.sh
 //
 // En KV:  u:<correo>  usuario (contraseña con PBKDF2 + sal, código de recuperación hasheado)
 //         s:<token>   sesión (vence en 180 días)        pu:<id>  progreso de la cuenta
 //         rl:<correo> intentos fallidos (bloqueo temporal)
+//         f:<fecha>-<azar> opinión        rf:<hash de IP> opiniones enviadas en la última hora
 
 const ALLOWED = ['https://andresproano.github.io', 'http://127.0.0.1', 'http://localhost'];
 const CODE_RE = /^[A-Z2-9]{4}-[A-Z2-9]{4}-[A-Z2-9]{4}$/;
@@ -212,6 +216,34 @@ async function auth(action, req, env, headers) {
   return json({ error: 'ruta no encontrada' }, 404, headers);
 }
 
+// --- opiniones ----------------------------------------------------------------------------------
+const FEEDBACK_KINDS = ['error', 'idea', 'contenido', 'otro'];
+const MAX_FEEDBACK_PER_HOUR = 5;
+async function feedback(req, env, headers) {
+  if (req.method !== 'POST') return json({ error: 'método no permitido' }, 405, headers);
+  if (!req.headers.get('Origin')) return json({ error: 'origen no permitido' }, 403, headers); // solo desde el sitio
+  const { data, error, status } = await readBody(req);
+  if (error) return json({ error }, status, headers);
+  const text = typeof data.text === 'string' ? data.text.trim().slice(0, 2000) : '';
+  if (text.length < 3) return json({ error: 'Escribe tu opinión' }, 400, headers);
+  // límite por persona sin guardar la IP: solo su hash, y vence en una hora
+  const ip = req.headers.get('CF-Connecting-IP') || 'local';
+  const rk = `rf:${await sha256(`atlas-feedback:${ip}`)}`;
+  const sent = (await env.ATLAS.get(rk, 'json')) || { n: 0 };
+  if (sent.n >= MAX_FEEDBACK_PER_HOUR) return json({ error: 'Ya enviaste varias opiniones. Prueba en una hora.' }, 429, headers);
+  const item = {
+    text,
+    kind: FEEDBACK_KINDS.includes(data.kind) ? data.kind : 'otro',
+    where: typeof data.where === 'string' ? data.where.slice(0, 80) : '',
+    contact: typeof data.contact === 'string' ? data.contact.trim().slice(0, 120) : '',
+    v: typeof data.v === 'string' ? data.v.slice(0, 16) : '',
+    t: Date.now(),
+  };
+  await env.ATLAS.put(`f:${new Date(item.t).toISOString()}-${randomHex(3)}`, JSON.stringify(item));
+  await env.ATLAS.put(rk, JSON.stringify({ n: sent.n + 1 }), { expirationTtl: 3600 });
+  return json({ ok: true }, 201, headers);
+}
+
 async function storeProgress(req, env, key, headers, extra = {}) {
   if (req.method === 'GET') {
     const d = await env.ATLAS.get(key, 'json');
@@ -240,6 +272,7 @@ export default {
 
     const a = url.pathname.match(/^\/v1\/auth\/(register|login|logout|reset|google)$/);
     if (a) return auth(a[1], req, env, headers);
+    if (url.pathname === '/v1/feedback') return feedback(req, env, headers);
 
     if (url.pathname === '/v1/me/progress') {
       const s = await sessionFrom(req, env);

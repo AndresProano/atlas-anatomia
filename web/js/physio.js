@@ -3,6 +3,7 @@
 import * as THREE from 'three';
 import { ConvexGeometry } from 'three/addons/geometries/ConvexGeometry.js';
 import { PROCESSES, ROUTES, SPINE, NERVE_TUBES } from './physio-data.js?v=9d8bd228';
+import { donateHtml } from './launch.js?v=9d8bd228';
 
 const V3 = THREE.Vector3;
 const esc = (s) => String(s ?? '').replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
@@ -838,7 +839,8 @@ export function createPhysio(viewer, panel, chipsEl, { toast } = {}) {
         <div class="px-case-btns">
           ${c.see ? '<button class="btn ghost" data-see>▶ Ver la animación</button>' : ''}
           <button class="btn" data-next-case>${caseIdx < proc.cases.length - 1 ? 'Siguiente caso →' : 'Empezar de nuevo'}</button>
-        </div>`}`;
+        </div>
+        ${caseIdx === proc.cases.length - 1 ? `<p class="px-final">Terminaste: <b>${score[0]} de ${score[1]}</b> correctos.</p>${donateHtml('¿Te sirvieron estos casos? Ayúdame a agregar más.')}` : ''}`}`;
   }
   function goCase(i) {
     clearDisease();

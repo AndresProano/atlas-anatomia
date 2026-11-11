@@ -56,7 +56,7 @@ const TitleCardInner = ({
       <Line delay={0.4} style={{ fontSize: 48, fontWeight: 500, color: "rgba(255,255,255,0.8)", lineHeight: 1.3, marginTop: 40 }}>
         {subtitle}
       </Line>
-      <Line delay={0.8} style={{ fontSize: 44, fontWeight: 700, color: "#2dd4bf", marginTop: 70 }}>
+      <Line delay={0.8} style={{ fontSize: 44, fontWeight: 700, color: "#b79cff", marginTop: 70 }}>
         {footer}
       </Line>
     </div>

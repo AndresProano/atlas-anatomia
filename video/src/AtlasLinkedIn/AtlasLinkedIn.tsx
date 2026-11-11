@@ -14,7 +14,7 @@ export const AtlasLinkedIn = () => {
           title="Fisiología en movimiento"
           subtitle="Un atlas 3D del cuerpo humano, gratis y en español"
           footer="Para estudiantes de medicina"
-          style={{ background: "radial-gradient(120% 80% at 50% 0%, #12324a 0%, #0b1220 60%, #070b14 100%)" }}
+          style={{ background: "radial-gradient(120% 80% at 50% 0%, #4a2aa8 0%, #1e1035 55%, #120a22 100%)" }}
         />
         <Scene
           name="Circulación"
@@ -26,7 +26,7 @@ export const AtlasLinkedIn = () => {
           zoom={1.35}
           focusX={30}
           focusY={45}
-          style={{ background: "radial-gradient(120% 80% at 50% 0%, #12324a 0%, #0b1220 60%, #070b14 100%)" }}
+          style={{ background: "radial-gradient(120% 80% at 50% 0%, #4a2aa8 0%, #1e1035 55%, #120a22 100%)" }}
         />
         <Scene
           name="Ciclo cardíaco"
@@ -38,7 +38,7 @@ export const AtlasLinkedIn = () => {
           zoom={1}
           focusX={50}
           focusY={50}
-          style={{ background: "radial-gradient(120% 80% at 50% 0%, #12324a 0%, #0b1220 60%, #070b14 100%)" }}
+          style={{ background: "radial-gradient(120% 80% at 50% 0%, #4a2aa8 0%, #1e1035 55%, #120a22 100%)" }}
         />
         <Scene
           name="Infarto"
@@ -50,7 +50,7 @@ export const AtlasLinkedIn = () => {
           zoom={1.15}
           focusX={30}
           focusY={45}
-          style={{ background: "radial-gradient(120% 80% at 50% 0%, #12324a 0%, #0b1220 60%, #070b14 100%)" }}
+          style={{ background: "radial-gradient(120% 80% at 50% 0%, #4a2aa8 0%, #1e1035 55%, #120a22 100%)" }}
         />
         <Scene
           name="Vía óptica"
@@ -62,7 +62,7 @@ export const AtlasLinkedIn = () => {
           zoom={1.25}
           focusX={30}
           focusY={40}
-          style={{ background: "radial-gradient(120% 80% at 50% 0%, #12324a 0%, #0b1220 60%, #070b14 100%)" }}
+          style={{ background: "radial-gradient(120% 80% at 50% 0%, #4a2aa8 0%, #1e1035 55%, #120a22 100%)" }}
         />
         <Scene
           name="Caso clínico"
@@ -74,7 +74,7 @@ export const AtlasLinkedIn = () => {
           zoom={1}
           focusX={50}
           focusY={50}
-          style={{ background: "radial-gradient(120% 80% at 50% 0%, #12324a 0%, #0b1220 60%, #070b14 100%)" }}
+          style={{ background: "radial-gradient(120% 80% at 50% 0%, #4a2aa8 0%, #1e1035 55%, #120a22 100%)" }}
         />
         <TitleCard
           name="Cierre"
@@ -83,7 +83,7 @@ export const AtlasLinkedIn = () => {
           title="Pruébalo gratis"
           subtitle="andresproano.github.io/atlas-anatomia"
           footer="¿Qué le agregarías? Te leo en los comentarios"
-          style={{ background: "radial-gradient(120% 80% at 50% 0%, #12324a 0%, #0b1220 60%, #070b14 100%)" }}
+          style={{ background: "radial-gradient(120% 80% at 50% 0%, #4a2aa8 0%, #1e1035 55%, #120a22 100%)" }}
         />
       </Track>
     </>

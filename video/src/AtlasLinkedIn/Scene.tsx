@@ -9,7 +9,7 @@ import {
 } from "remotion";
 
 const FONT = '"Segoe UI", Inter, system-ui, sans-serif';
-const ACCENT = "#2dd4bf";
+const ACCENT = "#b79cff"; // lila de la paleta de Andrés (morado noche #1e1035, violeta #6a3de8)
 
 // Texto de la escena: entra con un desplazamiento suave
 const Caption = ({ kicker, caption }: { kicker: string; caption: string }) => {
@@ -58,7 +58,7 @@ const Clip = ({ clip, zoom, focusX, focusY }: { clip: string; zoom: number; focu
         height: 600,
         borderRadius: 28,
         overflow: "hidden",
-        boxShadow: "0 30px 80px rgba(0,0,0,0.55), 0 0 0 2px rgba(45,212,191,0.35)",
+        boxShadow: "0 30px 80px rgba(0,0,0,0.55), 0 0 0 2px rgba(183,156,255,0.55), 0 0 60px rgba(106,61,232,0.45)",
         opacity: interpolate(frame, [0, 0.4 * fps], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" }),
       }}
     >

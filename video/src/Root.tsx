@@ -28,7 +28,7 @@ export const RemotionRoot = () => (
           zoom: 1,
           focusX: 50,
           focusY: 50,
-          style: { background: "radial-gradient(120% 80% at 50% 0%, #12324a 0%, #0b1220 60%, #070b14 100%)" },
+          style: { background: "radial-gradient(120% 80% at 50% 0%, #4a2aa8 0%, #1e1035 55%, #120a22 100%)" },
         }}
       />
       <Composition
@@ -42,7 +42,7 @@ export const RemotionRoot = () => (
           title: "Fisiología en movimiento",
           subtitle: "Un atlas 3D del cuerpo humano, gratis y en español",
           footer: "Para estudiantes de medicina",
-          style: { background: "radial-gradient(120% 80% at 50% 0%, #12324a 0%, #0b1220 60%, #070b14 100%)" },
+          style: { background: "radial-gradient(120% 80% at 50% 0%, #4a2aa8 0%, #1e1035 55%, #120a22 100%)" },
         }}
       />
     </Folder>

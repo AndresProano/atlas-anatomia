@@ -1,0 +1,16 @@
+{
+  "name": "atlas-video",
+  "private": true,
+  "description": "Videos promocionales del Atlas Anatómico 3D (Remotion). node_modules es un enlace a ~/proyectos/videos-marketing/node_modules.",
+  "scripts": {
+    "dev": "remotion studio",
+    "render": "remotion render AtlasLinkedIn out/atlas-linkedin.mp4"
+  },
+  "dependencies": {
+    "@remotion/cli": "4.0.541",
+    "@remotion/media": "4.0.541",
+    "react": "19.3.1",
+    "react-dom": "19.3.1",
+    "remotion": "4.0.541"
+  }
+}

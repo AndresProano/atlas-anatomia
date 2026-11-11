@@ -146,7 +146,7 @@ export function createViewer(canvas) {
   // animaciones continuas (fisiología): cada función recibe dt en segundos y fuerza el redibujo
   const tickers = new Set();
   let lastT = performance.now();
-  (function loop() {
+  function loop() {
     requestAnimationFrame(loop);
     const now = performance.now(), dt = Math.min((now - lastT) / 1000, 0.1);
     lastT = now;
@@ -154,9 +154,10 @@ export function createViewer(canvas) {
     const moved = controls.update();
     if (dirty || moved || tickers.size) {
       dirty = false;
+      updateZoomCut();
       renderer.render(scene, camera);
     }
-  })();
+  }
 
   // --- encuadre -------------------------------------------------------
   let anim = null;
@@ -178,6 +179,7 @@ export function createViewer(canvas) {
     camera.updateProjectionMatrix();
     controls.minDistance = radius * 0.05;
     controls.maxDistance = dist * 6;
+    zoomCut.box.copy(box); zoomCut.dist0 = dist; // lo encuadrado es lo que se «abre» al acercarse
     const fromPos = camera.position.clone(), fromT = controls.target.clone();
     if (instant) {
       camera.position.copy(toPos); controls.target.copy(center); controls.update(); requestRender(); return;
@@ -198,9 +200,41 @@ export function createViewer(canvas) {
   const clipPlane = new THREE.Plane(new THREE.Vector3(-1, 0, 0), 0);
   const clipState = { active: false, axis: 'none', pos: 0.5, flip: false, bounds: new THREE.Box3() };
   const clippedMaterials = new Set();
+  // Corte por zoom: al acercarse, un plano perpendicular a la mirada avanza desde la cara frontal de lo
+  // encuadrado hasta su mitad, como si uno se fuera metiendo en el cuerpo. Al alejarse se vuelve a cerrar.
+  const zoomPlane = new THREE.Plane(new THREE.Vector3(0, 0, -1), 0);
+  const zoomCut = { enabled: true, active: false, depth: 0, box: new THREE.Box3(), dist0: 0 };
+  const PLANES = { '00': [], '10': [clipPlane], '01': [zoomPlane], '11': [clipPlane, zoomPlane] };
+  const planes = () => PLANES[`${clipState.active ? 1 : 0}${zoomCut.active ? 1 : 0}`];
+  function applyPlanes() { const p = planes(); for (const m of clippedMaterials) m.clippingPlanes = p; }
+  const ZOOM_START = 0.75, ZOOM_FULL = 0.2; // distancia relativa al encuadre: empieza a cortar / corte máximo
+  const _f = new THREE.Vector3(), _c = new THREE.Vector3();
+  function updateZoomCut() {
+    let t = 0;
+    if (zoomCut.enabled && zoomCut.dist0 && !zoomCut.box.isEmpty()) {
+      const r = camera.position.distanceTo(controls.target) / zoomCut.dist0;
+      t = THREE.MathUtils.smoothstep(ZOOM_START - r, 0, ZOOM_START - ZOOM_FULL);
+    }
+    zoomCut.depth = t;
+    const on = t > 0.002;
+    if (on) {
+      camera.getWorldDirection(_f);
+      const b = zoomCut.box;
+      let near = Infinity, far = -Infinity;
+      for (let i = 0; i < 8; i++) {
+        _c.set(i & 1 ? b.max.x : b.min.x, i & 2 ? b.max.y : b.min.y, i & 4 ? b.max.z : b.min.z);
+        const d = _f.dot(_c);
+        near = Math.min(near, d); far = Math.max(far, d);
+      }
+      // se conserva lo que queda más allá del plano (f·p ≥ pos)
+      zoomPlane.normal.copy(_f);
+      zoomPlane.constant = -(near + (far - near) * 0.5 * t);
+    }
+    if (on !== zoomCut.active) { zoomCut.active = on; applyPlanes(); }
+  }
   function registerMaterial(m) {
     clippedMaterials.add(m);
-    m.clippingPlanes = clipState.active ? [clipPlane] : [];
+    m.clippingPlanes = planes();
   }
   function setClip(axis, pos, flip, bounds) {
     Object.assign(clipState, { axis, pos, flip, active: axis !== 'none' });
@@ -213,7 +247,7 @@ export function createViewer(canvas) {
       clipPlane.normal.copy(n);
       clipPlane.constant = flip ? -v : v;
     }
-    for (const m of clippedMaterials) m.clippingPlanes = clipState.active ? [clipPlane] : [];
+    applyPlanes();
     requestRender();
   }
 
@@ -241,6 +275,7 @@ export function createViewer(canvas) {
     const hits = raycaster.intersectObjects(candidates, false);
     for (const h of hits) {
       if (clipState.active && clipPlane.distanceToPoint(h.point) < 0) continue;
+      if (zoomCut.active && zoomPlane.distanceToPoint(h.point) < 0) continue; // lo ya «atravesado» no se toca
       const op = h.object.material.opacity ?? 1;
       if (op < 0.15) continue; // atravesar capas casi invisibles
       if (op < 0.6 && h.object.userData.part?.system === 'piel') continue; // la silueta de piel no tapa los clics
@@ -268,7 +303,8 @@ export function createViewer(canvas) {
     setTimeout(work, 300);
   }
 
+  requestAnimationFrame(loop); // arranca después de declarar todo lo que usa el bucle
   const addTicker = (f) => { tickers.add(f); return () => tickers.delete(f); };
 
-  return { addTicker, gpuName, softwareGpu, THREE, renderer, scene, camera, controls, requestRender, panBy, orbitBy, nudge, zoomBy, setNavMode, get navMode() { return navMode; }, fitTo, pick, setClip, clipState, registerMaterial, buildTreesIdle };
+  return { addTicker, gpuName, softwareGpu, THREE, renderer, scene, camera, controls, requestRender, panBy, orbitBy, nudge, zoomBy, setNavMode, get navMode() { return navMode; }, fitTo, pick, setClip, clipState, zoomCut, registerMaterial, buildTreesIdle };
 }

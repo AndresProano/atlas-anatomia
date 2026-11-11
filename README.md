@@ -20,6 +20,8 @@ Visible Human Project, Open Anatomy, NIH 3D, BioDigital, Pulse, BioGears y OpenS
 - **Buscador** en español, inglés o latín (sin tildes). Si la pieza está debajo de los músculos, estos se vuelven semitransparentes.
 - **Corte** sagital, coronal o axial con deslizador (también en órganos).
 - **Órganos en detalle** (HuBMAP): riñón con pirámides y papilas, corazón, ojo, útero, ovarios, mama, placenta, etc.
+- **Entrar con el zoom**: al acercarse, un corte perpendicular a la mirada avanza desde el frente de lo encuadrado (el cuerpo o el órgano abierto) hasta su mitad, así uno se va metiendo en el cuerpo; al alejarse se cierra.
+- **Abrir órgano**: al tocar una pieza del corazón, encéfalo, ojos, hígado, páncreas o vía aérea aparece «Abrir…»: el órgano queda aislado, se puede ver con las **partes separadas** (vista explotada), con etiquetas y la lista de sus partes. «Ver en detalle» lleva al órgano de HuBMAP (para el riñón es la única opción, porque en BodyParts3D es una sola pieza).
 - **Quiz**: se resalta una estructura y eliges su nombre entre 4 opciones; filtrable por sistema.
 
 ## Fisiología en movimiento (pestaña Fisiología)

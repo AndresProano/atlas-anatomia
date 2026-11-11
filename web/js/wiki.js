@@ -2,10 +2,12 @@
 const cache = new Map();
 
 function clean(name) {
+  // en las cavidades del corazón el lado importa (ventrículo izquierdo ≠ derecho ≠ tercer ventrículo del cerebro)
+  const keepSide = /ventr|atri|aur[ií]cul/i.test(name || '');
   return (name || '')
     .replace(/\s*\((izq|der)\.\)/gi, '')
-    .replace(/^(left|right)\s+/i, '')
-    .replace(/\b(izquierd[oa]|derech[oa])\b/gi, '')
+    .replace(keepSide ? /^$/ : /^(left|right)\s+/i, '')
+    .replace(keepSide ? /^$/ : /\b(izquierd[oa]|derech[oa])\b/gi, '')
     .replace(/\s+/g, ' ')
     .trim();
 }
@@ -18,7 +20,8 @@ function relevant(title, q) {
   const qs = words(q);
   // artículos de patologías no describen la estructura
   if (/^(fractura|luxaci|s[ií]ndrome|enfermedad|c[aá]ncer|tumor|fracture|syndrome|disease|cancer)/i.test(title)) return false;
-  return !qs.length || qs.some((w) => t.has(w));
+  // al menos la mitad de las palabras importantes deben coincidir (antes bastaba una: «Cavidad del ventrículo» → «Tercer ventrículo»)
+  return !qs.length || qs.filter((w) => t.has(w)).length >= Math.ceil(qs.length / 2);
 }
 
 async function search(lang, q) {

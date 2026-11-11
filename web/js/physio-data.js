@@ -351,7 +351,7 @@ export const PROCESSES = [
       { t: '3. Estómago', focus: ['Stomach'], margin: 1.6,
         text: 'Las células parietales secretan ácido clorhídrico (pH 1,5-3) y factor intrínseco (necesario para absorber la vitamina B12 en el íleon), y las células principales, pepsinógeno, que se activa a pepsina e inicia la digestión de las proteínas. Se forma el quimo, que pasa al duodeno a través del píloro.',
         dato: 'Vaciamiento gástrico: 2-4 h. La barrera de moco y bicarbonato protege la mucosa del ácido.' },
-      { t: '4. Duodeno: bilis y jugo pancreático', focus: ['Duodenum', 'Gallbladder', 'Pancreas', 'Cystic duct'], margin: 1.5,
+      { t: '4. Duodeno: bilis y jugo pancreático', focus: ['Duodenum', 'Gallbladder', 'Pancreas', 'Cystic duct'], margin: 1.5, hide: ['Stomach'],
         streams: ['d-comida', 'd-bilis', 'd-higado', 'd-pancreas'],
         text: 'Por la ampolla de Vater llegan la bilis (producida en el hígado y almacenada en la vesícula biliar), cuyas sales biliares emulsionan los lípidos, y el jugo pancreático: bicarbonato, que neutraliza el quimo ácido, y enzimas (amilasa, lipasa y proteasas). Las proteasas se secretan inactivas (tripsinógeno) y la enteropeptidasa las activa en el duodeno.',
         dato: 'La secretina estimula la secreción de bicarbonato; la colecistocinina (CCK), la de enzimas y la contracción de la vesícula biliar.' },

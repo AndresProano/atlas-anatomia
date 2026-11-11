@@ -81,7 +81,7 @@ const card = (s) => `
     <a href="${s.url}" target="_blank" rel="noopener">${new URL(s.url).hostname} →</a>
   </div>`;
 
-import { donateHtml } from './launch.js?v=d6ebd671';
+import { donateHtml } from './launch.js?v=da0ca425';
 
 export function renderSources(el) {
   el.innerHTML = `

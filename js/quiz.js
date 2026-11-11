@@ -4,9 +4,9 @@
 //  - Señalar: te dan el nombre y tocas la estructura en el modelo.
 //  - Función / Enfermedades (Comprender): respondes con tus palabras y se califica por ideas clave.
 // Repetición espaciada (cajas de Leitner): lo que fallas vuelve antes, lo que dominas sale menos.
-import { displayName } from './body.js?v=7c754a0a';
-import { renderGoogleButton } from './sync.js?v=7c754a0a';
-import { gradeConcepts, gradeDisease } from './clinica.js?v=7c754a0a';
+import { displayName } from './body.js?v=531bae72';
+import { renderGoogleButton } from './sync.js?v=531bae72';
+import { gradeConcepts, gradeDisease } from './clinica.js?v=531bae72';
 
 export const QUIZ_GROUPS = {
   all: { label: 'Todo el cuerpo', systems: ['esqueletico', 'muscular', 'digestivo', 'respiratorio', 'urogenital', 'reproductor', 'endocrino', 'cardiovascular', 'nervioso'] },

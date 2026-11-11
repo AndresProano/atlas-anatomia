@@ -44,10 +44,10 @@ const Caption = ({ kicker, caption }: { kicker: string; caption: string }) => {
   );
 };
 
-// Grabación del atlas en un marco redondeado, con un leve acercamiento durante la escena
+// Grabación del atlas en un marco redondeado
 const Clip = ({ clip, zoom, focusX, focusY }: { clip: string; zoom: number; focusX: number; focusY: number }) => {
   const frame = useCurrentFrame();
-  const { fps, durationInFrames } = useVideoConfig();
+  const { fps } = useVideoConfig();
   return (
     <div
       style={{
@@ -70,10 +70,7 @@ const Clip = ({ clip, zoom, focusX, focusY }: { clip: string; zoom: number; focu
           height: "100%",
           objectFit: "cover",
           transformOrigin: `${focusX}% ${focusY}%`,
-          scale: interpolate(frame, [0, durationInFrames], [zoom, zoom * 1.06], {
-            extrapolateLeft: "clamp",
-            extrapolateRight: "clamp",
-          }),
+          scale: zoom, // acercamiento fijo: uno animado hacía vibrar el texto fino de la interfaz
         }}
       />
     </div>

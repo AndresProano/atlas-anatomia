@@ -1,7 +1,10 @@
-// Graba clips del atlas publicado para el video de LinkedIn (cuadros de Chrome → MP4 a 30 fps).
+// Graba clips del atlas publicado para el video de LinkedIn, sin temblor.
 // Uso: node grabar-clips.mjs <carpeta-salida>   (por ejemplo video/public/atlas)
-// Necesita puppeteer-core instalado y Chrome. Usa el ffmpeg que trae Remotion porque no tiene el filtro «fps»
-// que pide page.screencast() de Puppeteer: por eso guarda los cuadros a 30 fps y los une con libx264.
+//
+// El atlas corre con un reloj virtual: durante la grabación cada cuadro avanza exactamente 1/30 s
+// (requestAnimationFrame y performance.now controlados desde aquí) y recién entonces se toma la foto.
+// Así el movimiento queda perfectamente parejo aunque la captura sea lenta.
+// Necesita puppeteer-core y Chrome. Une los cuadros con el ffmpeg que trae Remotion (libx264).
 import puppeteer from 'puppeteer-core';
 import { mkdirSync, writeFileSync, rmSync } from 'node:fs';
 import { execFileSync } from 'node:child_process';
@@ -19,36 +22,36 @@ await page.setViewport({ width: 1440, height: 900, deviceScaleFactor: 1 });
 await page.evaluateOnNewDocument(() => {
   localStorage.setItem('atlas-aviso', '1'); localStorage.setItem('atlas-fisio-visto', '1');
   localStorage.setItem('atlas-hint', '1'); localStorage.setItem('atlas-theme', 'dark');
+  // reloj virtual: apagado hasta que el grabador lo active
+  const realNow = performance.now.bind(performance), realRAF = window.requestAnimationFrame.bind(window);
+  let virtual = false, vt = 0, queue = [];
+  performance.now = () => (virtual ? vt : realNow());
+  window.requestAnimationFrame = (cb) => { if (!virtual) return realRAF(cb); queue.push(cb); return queue.length; };
+  window.__clock = {
+    start() { vt = realNow(); virtual = true; },
+    step(ms) { vt += ms; const run = queue; queue = []; for (const cb of run) cb(vt); },
+    stop() { virtual = false; const run = queue; queue = []; for (const cb of run) realRAF(cb); },
+  };
 });
 await page.goto('https://andresproano.github.io/atlas-anatomia/', { waitUntil: 'networkidle2', timeout: 120000 });
 await page.waitForFunction(() => window.__atlas?.body?.state.loaded.size >= 12, { timeout: 180000 });
 await page.evaluate(() => window.__atlas.body.allLoaded);
 const wait = (ms) => new Promise((r) => setTimeout(r, ms));
 const js = (code) => page.evaluate(code);
-const cdp = await page.createCDPSession();
 
-// graba `seconds` segundos: guarda el último cuadro recibido cada 1/30 s (cuadros constantes)
 async function record(name, seconds, during) {
   const dir = join(out, `_frames_${name}`);
   rmSync(dir, { recursive: true, force: true });
   mkdirSync(dir, { recursive: true });
-  let last = null;
-  const onFrame = async (f) => { last = f.data; cdp.send('Page.screencastFrameAck', { sessionId: f.sessionId }).catch(() => {}); };
-  cdp.on('Page.screencastFrame', onFrame);
-  await cdp.send('Page.startScreencast', { format: 'jpeg', quality: 92, maxWidth: 1440, maxHeight: 900, everyNthFrame: 1 });
-  while (!last) await wait(10);
   const total = Math.round(seconds * FPS);
-  const t0 = Date.now();
-  let duringDone = !during;
+  await js('window.__clock.start()');
   for (let i = 0; i < total; i++) {
-    const target = t0 + (i * 1000) / FPS;
-    const d = target - Date.now();
-    if (d > 0) await wait(d);
-    if (!duringDone && Date.now() - t0 > 1500) { duringDone = true; js(during); }
-    writeFileSync(join(dir, `f${String(i).padStart(5, '0')}.jpg`), Buffer.from(last, 'base64'));
+    if (during && i === Math.round(1.5 * FPS)) await js(during);
+    await js(`window.__clock.step(${1000 / FPS})`);
+    const img = await page.screenshot({ type: 'jpeg', quality: 92 });
+    writeFileSync(join(dir, `f${String(i).padStart(5, '0')}.jpg`), img);
   }
-  await cdp.send('Page.stopScreencast');
-  cdp.off('Page.screencastFrame', onFrame);
+  await js('window.__clock.stop()');
   execFileSync(ffmpeg, ['-y', '-loglevel', 'error', '-framerate', String(FPS), '-i', join(dir, 'f%05d.jpg'),
     '-c:v', 'libx264', '-pix_fmt', 'yuv420p', '-crf', '18', '-movflags', '+faststart', join(out, `${name}.mp4`)]);
   rmSync(dir, { recursive: true, force: true });

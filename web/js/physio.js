@@ -786,7 +786,7 @@ export function createPhysio(viewer, panel, chipsEl, { toast } = {}) {
     }
     const ef = panel.querySelector('#px-ef');
     if (ef) {
-      const sv = W.EDV - W.ESV, txt = `Volumen por latido: <b>${sv} ml</b> · Fracción de eyección: <b>${Math.round((sv / W.EDV) * 100)} %</b>${fx() === 'infarto' ? ' (baja)' : ''}`;
+      const sv = W.EDV - W.ESV, txt = `Volumen sistólico (VS): <b>${sv} ml</b> · Fracción de eyección (FE): <b>${Math.round((sv / W.EDV) * 100)} %</b>${fx() === 'infarto' ? ' (disminuida)' : ''}`;
       if (ef.innerHTML !== txt) ef.innerHTML = txt;
     }
   }
@@ -868,17 +868,17 @@ export function createPhysio(viewer, panel, chipsEl, { toast } = {}) {
     const p = proc;
     if (p.cases) return renderCases();
     const dzRow = p.diseases ? `
-      <div class="px-dz-row" role="group" aria-label="Sano o enfermo">
-        <button data-dz="" class="${dz ? '' : 'active'}">Sano</button>
+      <div class="px-dz-row" role="group" aria-label="Normal o patológico">
+        <button data-dz="" class="${dz ? '' : 'active'}">Normal</button>
         ${p.diseases.map((d) => `<button data-dz="${d.id}" class="${dz?.id === d.id ? 'active bad' : ''}">${esc(d.label)}</button>`).join('')}
       </div>
       ${dz ? `<div class="px-dz-card"><h3>🩺 ${esc(dz.label)}</h3>
-        <p><b>Qué pasa:</b> ${esc(dz.que)}</p><p><b>Qué siente:</b> ${esc(dz.siente)}</p><p><b>Fíjate:</b> ${esc(dz.fijate)}</p></div>` : ''}` : '';
+        <p><b>Fisiopatología:</b> ${esc(dz.que)}</p><p><b>Clínica:</b> ${esc(dz.siente)}</p><p><b>Hallazgos clave:</b> ${esc(dz.fijate)}</p></div>` : ''}` : '';
     const graph = p.graph === 'wiggers'
       ? `<div class="px-graph tall"><canvas id="px-graph"></canvas></div>
-         <div class="px-wleg"><span><i style="background:#ef4444"></i>Aorta</span><span><i style="background:#14b8a6"></i>Ventrículo izq.</span><span><i style="background:#6366f1"></i>Aurícula izq.</span><span><i style="background:#a855f7"></i>Volumen del VI</span></div>
+         <div class="px-wleg"><span><i style="background:#ef4444"></i>Presión aórtica</span><span><i style="background:#14b8a6"></i>Presión del VI</span><span><i style="background:#6366f1"></i>Presión de la AI</span><span><i style="background:#a855f7"></i>Volumen del VI</span></div>
          <p class="px-ef" id="px-ef"></p>`
-      : p.graph ? `<div class="px-graph"><canvas id="px-graph"></canvas><span>${p.graph === 'ecg' ? 'Electrocardiograma' : 'Volumen de aire en los pulmones'}</span></div>` : '';
+      : p.graph ? `<div class="px-graph"><canvas id="px-graph"></canvas><span>${p.graph === 'ecg' ? 'Electrocardiograma (ECG)' : 'Volumen pulmonar (volumen corriente)'}</span></div>` : '';
     panel.innerHTML = `
       ${procChips(p)}
       <p class="kicker"><i style="background:${p.color}"></i>Fisiología en movimiento</p>
@@ -890,7 +890,7 @@ export function createPhysio(viewer, panel, chipsEl, { toast } = {}) {
         <button class="round" data-px="prev" aria-label="Paso anterior"><svg class="ico" viewBox="0 0 24 24"><path d="m15 6-6 6 6 6"/></svg></button>
         <span class="px-count"></span>
         <button class="round" data-px="next" aria-label="Paso siguiente"><svg class="ico" viewBox="0 0 24 24"><path d="m9 6 6 6-6 6"/></svg></button>
-        ${p.sound ? `<button class="round ${soundOn ? 'on' : ''}" data-px="sound" aria-label="${soundOn ? 'Silenciar' : 'Escuchar los ruidos del corazón'}" title="Escuchar «lub-dub»">${SOUND_ICO}</button>` : ''}
+        ${p.sound ? `<button class="round ${soundOn ? 'on' : ''}" data-px="sound" aria-label="${soundOn ? 'Silenciar' : 'Escuchar los ruidos del corazón'}" title="Escuchar los ruidos cardíacos (R1 y R2)">${SOUND_ICO}</button>` : ''}
         <div class="px-speed" role="group" aria-label="Velocidad">${[0.5, 1, 2].map((v) => `<button data-speed="${v}" class="${v === speed ? 'active' : ''}">${String(v).replace('.', ',')}×</button>`).join('')}</div>
       </div>
       <div class="px-progress"><span></span></div>
@@ -900,7 +900,7 @@ export function createPhysio(viewer, panel, chipsEl, { toast } = {}) {
       <div class="px-legend">${p.legend.map(([c, l]) => `<span><i style="background:${c}"></i>${esc(l)}</span>`).join('')}</div>
       <div class="section-title">Pasos</div>
       <ol class="px-steps">${p.steps.map((s, i) => `<li><button data-step="${i}">${esc(s.t)}</button></li>`).join('')}</ol>
-      <p class="px-note">Animación esquemática y en cámara lenta sobre los modelos de BodyParts3D. La médula, los nervios del brazo y la silueta de los pulmones están dibujados aparte porque no hay mallas abiertas de ellos.</p>`;
+      <p class="px-note">Animación esquemática y en cámara lenta sobre los modelos de BodyParts3D. La médula espinal, los nervios del miembro superior y la silueta pulmonar están dibujados aparte porque no hay mallas abiertas de ellos.</p>`;
     renderStep();
   }
   function renderStep() {
@@ -933,7 +933,7 @@ export function createPhysio(viewer, panel, chipsEl, { toast } = {}) {
       if (soundOn) { audio ??= new (window.AudioContext || window.webkitAudioContext)(); audio.resume(); }
       b.classList.toggle('on', soundOn);
       b.setAttribute('aria-label', soundOn ? 'Silenciar' : 'Escuchar los ruidos del corazón');
-      toast?.(soundOn ? '🔊 Escucha: «lub» (S1) al cerrarse mitral y tricúspide, «dub» (S2) al cerrarse aórtica y pulmonar' : 'Sonido apagado', 3500);
+      toast?.(soundOn ? '🔊 R1 (S1): cierre de mitral y tricúspide · R2 (S2): cierre de aórtica y pulmonar' : 'Sonido apagado', 3500);
       return;
     }
     if (b.dataset.px === 'play') { playing = !playing; renderPanel(); }

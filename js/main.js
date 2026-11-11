@@ -11,6 +11,7 @@ import { renderSources } from './sources.js?v=da0ca425';
 import { wikiFor } from './wiki.js?v=da0ca425';
 import { createPhysio } from './physio.js?v=da0ca425';
 import { setupLaunch, afterNotice, physioCta, physioSeen, markPhysioSeen } from './launch.js?v=da0ca425';
+import { createOrganExplorer } from './organ-open.js?v=da0ca425';
 
 const $ = (s) => document.querySelector(s);
 const V = window.ATLAS_V || '';
@@ -119,6 +120,7 @@ function renderLayers() {
 layersEl.addEventListener('click', (e) => {
   const b = e.target.closest('button');
   if (!b) return;
+  if (explorer?.isOpen) explorer.close(true);
   if (b.hasAttribute('data-xray')) return setXray(!xray);
   const l = LAYERS.find((x) => x.key === b.dataset.layer);
   setLayer(l, !layerOn(l));
@@ -185,6 +187,29 @@ function clinicaHtml(name) {
     <ul class="dz">${e.enfermedades.map((d) => `<li><b>${esc(d.nombre)}</b>: ${esc(d.nota)}</li>`).join('')}</ul>
   </div>`;
 }
+// «Abrir órgano»: botón en la ficha o, si ya está abierto, la lista de sus partes
+let explorer = null;
+const hubOrgan = (o) => o.hub && (hubmap.find((h) => h.en === o.hub && h.sex === bodySex) || hubmap.find((h) => h.en === o.hub));
+function organHtml(p) {
+  if (!explorer || mode !== 'body') return '';
+  const o = explorer.organFor(body, p.id);
+  if (!o) return '';
+  const hub = hubOrgan(o);
+  const short = o.label.replace(/^(el|la) /, '');
+  if (explorer.isOpen && explorer.has(p.id)) {
+    const list = explorer.partList();
+    return `<div class="open-organ">
+      <div class="section-title">Partes ${esc(('de ' + o.label).replace(/^de el /, 'del '))} (${list.length}) · toca una</div>
+      <div class="parts">${list.map((x) => `<button data-part="${x.id}" class="${x.id === p.id ? 'active' : ''}">${esc(x.text)}</button>`).join('')}</div>
+      ${hub ? `<button class="btn ghost" data-hub="${hub.id}">🔬 Ver ${esc(short)} en detalle (HuBMAP)</button>` : ''}
+    </div>`;
+  }
+  return `<div class="open-organ">
+    ${o.internal === false ? '' : `<button class="btn" data-open-organ="${o.key}">${o.icon} Abrir ${esc(o.label)}</button>`}
+    ${hub ? `<button class="btn ${o.internal === false ? '' : 'ghost'}" data-hub="${hub.id}">🔬 Ver ${esc(short)} ${o.internal === false ? 'por dentro' : 'en detalle'}</button>` : ''}
+    ${o.internal === false ? '<p class="note">En el modelo del cuerpo este órgano es una sola pieza; el detallado muestra su interior.</p>' : ''}
+  </div>`;
+}
 function showPart(p) {
   if (!p) return closeSheet();
   const target = { kind: 'body', id: p.id };
@@ -192,12 +217,31 @@ function showPart(p) {
     <p class="kicker"><i style="background:${SYSTEM_COLORS[p.system]}"></i>${SYSTEM_SHORT[p.system] || ''}</p>
     <h2>${esc(displayName(p))}</h2>
     <p class="latin">${esc(p.la || p.en)}</p>
+    ${organHtml(p)}
     ${actionsHtml()}
     ${clinicaHtml(displayName(p))}
     ${descHtml()}`, target);
   fillDesc(p.es, p.en, target);
 }
 sheetBody.addEventListener('click', (e) => {
+  const openKey = e.target.closest('[data-open-organ]')?.dataset.openOrgan;
+  if (openKey && sheetTarget?.kind === 'body') {
+    const id = sheetTarget.id;
+    if (explorer.open(body, explorer.ORGANS.find((o) => o.key === openKey))) { body.select(id); showPart(body.byId.get(id)); updateShowAll(); }
+    return;
+  }
+  const partId = e.target.closest('[data-part]')?.dataset.part;
+  if (partId) return selectBody(partId);
+  const hubId = e.target.closest('[data-hub]')?.dataset.hub;
+  if (hubId) {
+    const entry = hubmap.find((h) => h.id === hubId);
+    if (explorer.isOpen) explorer.close(true);
+    sex = entry.sex;
+    document.querySelectorAll('#sex-filter button').forEach((x) => x.classList.toggle('active', x.dataset.sex === sex));
+    setMode('organs', { skipDefault: true });
+    openOrgan(entry);
+    return;
+  }
   const act = e.target.closest('[data-act]')?.dataset.act;
   const part = e.target.closest('[data-gk]')?.dataset.gk;
   if (part !== undefined) return selectOrganPart(part, true);
@@ -233,6 +277,7 @@ function updateShowAll() {
   showAllBtn.hidden = !hiddenSomething;
 }
 showAllBtn.addEventListener('click', () => {
+  if (explorer?.isOpen) explorer.close(true);
   if (mode === 'organs') organs.showAll(); else body.showAll();
   updateShowAll();
 });
@@ -389,6 +434,14 @@ setupLaunch({ toast });
 const physioBox = $('#physio-box');
 const physio = createPhysio(viewer, physioBox, $('#physio-chips'), { toast });
 
+// --- abrir órganos (cuerpo) -----------------------------------------------------------------------
+explorer = createOrganExplorer(viewer, {
+  onClose: () => {
+    renderLayers(); updateClip(); updateShowAll();
+    if (sheetTarget?.kind === 'body') showPart(body.byId.get(sheetTarget.id));
+  },
+});
+
 // --- cuerpo masculino / femenino ----------------------------------------------------------------
 const bodies = { M: body };
 let bodySex = 'M';
@@ -413,6 +466,7 @@ async function switchBody(sx) {
   }
   if (mode === 'quiz') quiz.stop();
   if (mode === 'physio') physio.stop();
+  if (explorer.isOpen) explorer.close(true);
   body.select(null);
   body.root.visible = false;
   bodySex = sx;
@@ -436,7 +490,8 @@ async function switchBody(sx) {
 sexBtns.forEach((b) => b.addEventListener('click', () => switchBody(b.dataset.sex)));
 
 // --- modos ------------------------------------------------------------------------------------
-function setMode(m) {
+function setMode(m, { skipDefault = false } = {}) {
+  if (explorer?.isOpen) explorer.close(true);
   if (mode === 'quiz' && m !== 'quiz') { quiz.stop(); renderLayers(); }
   if (mode === 'physio' && m !== 'physio') physio.stop();
   mode = m;
@@ -462,7 +517,7 @@ function setMode(m) {
     if (!organs.current) { sex = bodySex; document.querySelectorAll('#sex-filter button').forEach((x) => x.classList.toggle('active', x.dataset.sex === sex)); }
     renderOrganChips();
     if (organs.current) { organs.frame(VIEWS.front); showOrganSummary(); }
-    else openOrgan(hubmap.find((o) => o.id === '3d-vh-f-heart') || hubmap[0]); // nunca abrir vacío
+    else if (!skipDefault) openOrgan(hubmap.find((o) => o.id === '3d-vh-f-heart') || hubmap[0]); // nunca abrir vacío
   }
   if (m === 'quiz') quiz.start();
   if (m === 'physio') { clipAxis = 'none'; markPhysioSeen(); physio.start(body); }
@@ -588,7 +643,7 @@ document.querySelectorAll('#navpad [data-pan], #navpad [data-zoom]').forEach((b)
 window.addEventListener('keydown', (e) => {
   if (e.target.matches('input, select, textarea')) return;
   const k = e.key.toLowerCase();
-  if (k === 'escape') { body.select(null); organs.select(null); closeSheet(); }
+  if (k === 'escape') { if (explorer?.isOpen) { explorer.close(); return; } body.select(null); organs.select(null); closeSheet(); }
   if (k === '/' && mode === 'body') { e.preventDefault(); searchEl.focus(); }
   const act = { h: 'hide', i: 'isolate', f: 'focus' }[k];
   if (act) sheetBody.querySelector(`[data-act="${act}"]`)?.click();
@@ -599,4 +654,4 @@ if (physioSeen()) document.querySelector('.tab-new')?.remove();
 // enlace directo: #fisiologia o #fisiologia/<proceso> (circulacion, corazon, respiracion, nervios, digestion, rinones, casos)
 const deep = location.hash.match(/^#fisiologia(?:\/([a-z]+))?/);
 if (deep) { physio.setInitial(deep[1]); setMode('physio'); }
-window.__atlas = { viewer, get body() { return body; }, organs, get quiz() { return quiz; }, physio, switchBody, setMode }; // depuración y pruebas
+window.__atlas = { viewer, get body() { return body; }, organs, get quiz() { return quiz; }, physio, switchBody, setMode, selectBody, get explorer() { return explorer; } }; // depuración y pruebas

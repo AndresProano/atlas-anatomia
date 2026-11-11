@@ -92,6 +92,29 @@ export const NERVE_TUBES = [
   [{ cord: ['Fifth cervical vertebra', 'First thoracic vertebra'] }, 'Left axillary artery', 'Left brachial artery', 'Left radial artery'],
 ];
 
+// Nombres en español para las etiquetas 3D (si no está aquí, se usa el nombre del catálogo)
+export const LABEL_ES = {
+  'Cavity of right atrium': 'Aurícula derecha', 'Cavity of right ventricle': 'Ventrículo derecho',
+  'Cavity of left atrium': 'Aurícula izquierda', 'Cavity of left ventricle': 'Ventrículo izquierdo',
+  'Ascending aorta': 'Aorta ascendente', 'Arch of aorta': 'Cayado aórtico', 'Descending thoracic aorta': 'Aorta torácica',
+  'Abdominal aorta': 'Aorta abdominal', 'Pulmonary trunk': 'Tronco pulmonar', 'Superior vena cava': 'Vena cava superior',
+  'Inferior vena cava': 'Vena cava inferior', 'Anterior leaflet of mitral valve': 'Válvula mitral', 'Posterior leaflet of mitral valve': 'Válvula mitral',
+  'Anterior cusp of aortic valve': 'Válvula aórtica', 'Posterior cusp of pulmonary valve': 'Válvula pulmonar',
+  'Trunk of anterior interventricular branch of left coronary artery': 'Arteria descendente anterior', 'Trunk of left coronary artery': 'Coronaria izquierda',
+  'Optic part of left retina': 'Retina izquierda', 'Optic part of right retina': 'Retina derecha', 'Optic chiasm': 'Quiasma óptico',
+  'Distal phalanx of left index finger': 'Dedo índice izquierdo', 'Short head of left biceps brachii': 'Bíceps braquial izquierdo',
+  'White matter of left cerebral hemisphere': 'Hemisferio izquierdo', 'Right internal capsule': 'Cápsula interna derecha',
+  'Right precentral gyrus': 'Giro precentral derecho', 'Right postcentral gyrus': 'Giro poscentral derecho', 'Right thalamus': 'Tálamo derecho',
+  'Right posterior basal segmental bronchial tree': 'Bronquios segmentarios', 'Right main bronchus proper': 'Bronquio principal derecho',
+  'Left main bronchus': 'Bronquio principal izquierdo', 'Diaphragm': 'Diafragma', 'Trachea': 'Tráquea', 'Epiglottis': 'Epiglotis',
+  'Left kidney': 'Riñón izquierdo', 'Right kidney': 'Riñón derecho', 'Urinary bladder': 'Vejiga', 'Left ureter': 'Uréter izquierdo', 'Right ureter': 'Uréter derecho',
+  'Left renal artery': 'Arteria renal izquierda', 'Right renal artery': 'Arteria renal derecha', 'Celiac trunk': 'Tronco celíaco',
+  'Proximal part of jejunum': 'Yeyuno', 'Middle part of ileum': 'Íleon', 'Distal part of ileum': 'Íleon terminal', 'Pancreas': 'Páncreas', 'Gallbladder': 'Vesícula biliar',
+};
+// etiquetas por defecto cuando el paso enfoca el corazón
+export const HEART_LABELS = [['Cavity of right atrium', 'AD'], ['Cavity of right ventricle', 'VD'], ['Cavity of left atrium', 'AI'],
+  ['Cavity of left ventricle', 'VI'], ['Ascending aorta', 'Aorta'], ['Pulmonary trunk', 'Tronco pulmonar']];
+
 const GREAT_VESSELS = ['Ascending aorta', 'Arch of aorta', 'Descending thoracic aorta', 'Pulmonary trunk', 'Left pulmonary artery', 'Right pulmonary artery',
   'Superior vena cava', 'Inferior vena cava', 'Right superior pulmonary vein', 'Right inferior pulmonary vein', 'Left superior pulmonary vein',
   'Left inferior pulmonary vein', 'Brachiocephalic artery', 'Left common carotid artery', 'Left subclavian artery'];
@@ -155,7 +178,7 @@ export const PROCESSES = [
     title: 'Ciclo cardíaco',
     intro: 'El corazón es una bomba doble de cuatro cavidades. Su sistema de conducción genera cada latido de forma autónoma (automatismo); el sistema nervioso autónomo solo modula la frecuencia y la fuerza.',
     layers: { cardiovascular: { op: 0.6, heart: true, names: GREAT_VESSELS }, esqueletico: 0.08 },
-    beat: true, sound: true,
+    beat: true, sound: true, trail: 3,
     rate: { kind: 'hr', label: 'Frecuencia cardíaca (FC)', min: 40, max: 180, value: 72, unit: 'lpm' },
     graph: 'wiggers',
     diseases: [

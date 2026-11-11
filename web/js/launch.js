@@ -15,6 +15,30 @@ export function donateHtml(text = '¿Te sirve el atlas? Ayúdame a mantenerlo gr
   return `<a class="donate" href="${esc(DONATE_URL)}" target="_blank" rel="noopener">${HEART}<span>${esc(text)}</span><b>Donar con PayPal o tarjeta</b></a>`;
 }
 
+// Ejecuta fn cuando no hay aviso educativo en pantalla (para no amontonar mensajes en la primera visita)
+export function afterNotice(fn) {
+  if (document.querySelector('.notice')) window.addEventListener('atlas-aviso-ok', () => setTimeout(fn, 350), { once: true });
+  else fn();
+}
+
+// Primera visita: invitar a ver Fisiología (lo más vistoso), hasta que la persona la abra o lo cierre
+export const physioSeen = () => !!store.get('atlas-fisio-visto');
+export function markPhysioSeen() {
+  store.set('atlas-fisio-visto', '1');
+  document.querySelector('.cta')?.remove();
+  document.querySelector('.tab-new')?.remove();
+}
+export function physioCta(go) {
+  if (physioSeen() || document.querySelector('.cta')) return false;
+  const c = document.createElement('div');
+  c.className = 'cta';
+  c.innerHTML = '<button class="cta-go"><span class="cta-new">Nuevo</span><span>Mira la sangre circular y el corazón latir</span><b>▶</b></button><button class="cta-x" aria-label="Cerrar">×</button>';
+  c.querySelector('.cta-go').addEventListener('click', () => { c.remove(); go(); });
+  c.querySelector('.cta-x').addEventListener('click', () => markPhysioSeen());
+  document.body.appendChild(c);
+  return true;
+}
+
 export function setupLaunch({ toast }) {
   // 1) analítica sin cookies (solo si hay token)
   if (CF_ANALYTICS_TOKEN && !/^(127\.|localhost)/.test(location.hostname)) {
@@ -31,7 +55,11 @@ export function setupLaunch({ toast }) {
     n.className = 'notice';
     n.setAttribute('role', 'note');
     n.innerHTML = '<p><b>Material educativo.</b> Sirve para estudiar anatomía y fisiología; no reemplaza el consejo de un médico ni sirve para diagnosticar.</p><button class="btn">Entendido</button>';
-    n.querySelector('button').addEventListener('click', () => { store.set('atlas-aviso', '1'); n.remove(); });
+    n.querySelector('button').addEventListener('click', () => {
+      store.set('atlas-aviso', '1');
+      n.remove();
+      window.dispatchEvent(new Event('atlas-aviso-ok'));
+    });
     document.body.appendChild(n);
   }
 

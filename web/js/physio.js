@@ -1083,6 +1083,9 @@ export function createPhysio(viewer, panel, chipsEl, { toast } = {}) {
     stepIdx = i; stepT = 0; tourT = 0; tourI = -1;
     const s = proc.steps[i];
     visibleStreams = s.streams ? new Set(s.streams) : null;
+    // piezas ocultas en este paso (p. ej. el estómago, para ver el páncreas que está detrás)
+    body.state.hidden = new Set((s.hide || []).flatMap((n) => (geo.byName.get(n) || []).map((m) => m.userData.part.id)));
+    body.setSystemVisible(body.order[0], body.state.sysVisible[body.order[0]]); // refresca la visibilidad
     renderStep();
     frameStep(s);
     setLabels(s.tour ? [] : stepLabels(s));

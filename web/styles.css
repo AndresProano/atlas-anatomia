@@ -547,3 +547,35 @@ body:not([data-mode="physio"]) .px-labels { display: none; }
 .cta-new { padding: 2px 7px; border-radius: 10px; background: #e11d48; color: #fff; font-size: 11px; font-weight: 700; flex-shrink: 0; }
 .cta-x { width: 32px; height: 32px; border-radius: 50%; font-size: 20px; color: var(--muted); flex-shrink: 0; }
 @media (min-width: 900px) { .cta { top: 84px; } }
+
+/* Abrir órgano: botones en la ficha, barra de herramientas y etiquetas */
+.open-organ { display: grid; gap: 8px; margin: 4px 0 16px; }
+.open-organ .btn { width: 100%; font-size: 15px; }
+.open-organ .parts { max-height: 220px; overflow-y: auto; }
+.open-organ .note { margin: 0; font-size: 12px; color: var(--muted); }
+.organ-bar-tools {
+  position: fixed; z-index: 32; left: 12px; right: 12px; top: calc(70px + var(--safe-t)); margin: 0 auto; width: fit-content; max-width: calc(100vw - 24px);
+  display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 8px; padding: 8px 10px;
+  border-radius: 22px; background: var(--surface-solid); box-shadow: var(--shadow); animation: up .25s ease-out;
+}
+.organ-bar-tools .ox-title { font-weight: 700; font-size: 15px; padding: 0 6px; text-transform: capitalize; }
+.organ-bar-tools .ox-modes { display: flex; gap: 4px; padding: 3px; border-radius: 16px; background: var(--surface-2); }
+.organ-bar-tools .ox-modes button { padding: 7px 12px; border-radius: 13px; font-size: 13px; font-weight: 600; color: var(--muted); }
+.organ-bar-tools .ox-modes button.on { background: var(--accent); color: var(--accent-ink); }
+.organ-bar-tools input[type=range] { width: 140px; accent-color: var(--accent); }
+.organ-bar-tools .ox-close { width: 34px; height: 34px; border-radius: 50%; background: var(--surface-2); font-size: 14px; }
+@media (min-width: 900px) {
+  .organ-bar-tools { left: 16px; right: auto; margin: 0; top: 76px; }
+  body.organ-open .tools { display: none; }
+}
+body.organ-open .dock { display: none; }
+.ox-labels { position: absolute; inset: 0; pointer-events: none; z-index: 5; }
+body:not([data-mode="body"]) .ox-labels { display: none; }
+.ox-labels svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+.ox-labels line { stroke: var(--text); stroke-width: 1.2; opacity: .75; }
+.ox-labels circle { fill: var(--accent); stroke: var(--surface-solid); stroke-width: 1.5; }
+.ox-label {
+  position: absolute; left: 0; top: 0; padding: 4px 9px; border-radius: 9px; white-space: nowrap;
+  font-size: 12px; font-weight: 600; color: var(--text); background: var(--surface-solid);
+  box-shadow: 0 2px 8px rgba(15, 23, 42, .25); border: 1px solid var(--border);
+}

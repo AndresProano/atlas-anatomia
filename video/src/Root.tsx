@@ -2,9 +2,18 @@ import { Composition, Folder } from "remotion";
 import { AtlasLinkedIn } from "./AtlasLinkedIn/AtlasLinkedIn";
 import { Scene } from "./AtlasLinkedIn/Scene";
 import { TitleCard } from "./AtlasLinkedIn/TitleCard";
+import { AtlasLinkedInPro } from "./AtlasPro/AtlasLinkedInPro";
 
 export const RemotionRoot = () => (
   <>
+    <Composition
+      id="AtlasLinkedInPro"
+      component={AtlasLinkedInPro}
+      width={1080}
+      height={1350}
+      fps={30}
+      durationInFrames={1035}
+    />
     <Composition
       id="AtlasLinkedIn"
       component={AtlasLinkedIn}

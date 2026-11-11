@@ -2,7 +2,7 @@
 // digestión y orina). Las rutas se calculan a partir de la geometría real de cada pieza (línea central).
 import * as THREE from 'three';
 import { ConvexGeometry } from 'three/addons/geometries/ConvexGeometry.js';
-import { PROCESSES, ROUTES, SPINE, NERVE_TUBES } from './physio-data.js?v=531bae72';
+import { PROCESSES, ROUTES, SPINE, NERVE_TUBES, LABEL_ES, HEART_LABELS } from './physio-data.js?v=531bae72';
 import { donateHtml } from './launch.js?v=531bae72';
 
 const V3 = THREE.Vector3;
@@ -440,6 +440,79 @@ export function createPhysio(viewer, panel, chipsEl, { toast } = {}) {
   }
   function clearFlashes() { for (const f of flashes) { root.remove(f.o); f.o.material.dispose(); } flashes = []; }
 
+  // --- etiquetas 3D: nombre de cada estructura del paso, con una línea que apunta a ella ----------------
+  const canvas = viewer.renderer.domElement;
+  const labelLayer = document.createElement('div');
+  labelLayer.className = 'px-labels';
+  labelLayer.innerHTML = '<svg class="px-lines" aria-hidden="true"></svg>';
+  canvas.parentElement.appendChild(labelLayer);
+  const svg = labelLayer.querySelector('svg');
+  let labels = [];
+  const labelText = (name) => LABEL_ES[name] || (geo.byName.get(name)?.[0]?.userData.part.es || name).replace(/\s*\((izq|der)\.\)$/, '');
+  function setLabels(list) {
+    for (const l of labels) l.el.remove();
+    labels = [];
+    for (const [names, text, kind] of list) {
+      const ms = names.flatMap((n) => geo.byName.get(n) || []);
+      if (!ms.length) continue;
+      const el = document.createElement('div');
+      el.className = `px-label${kind ? ' ' + kind : ''}`;
+      el.textContent = text;
+      labelLayer.appendChild(el);
+      labels.push({ anchor: centroid(ms.map((m) => geo.center(m))), el, w: 0 });
+    }
+  }
+  // etiquetas por defecto de un paso: las que trae el paso, las del corazón o las estructuras que enfoca
+  function stepLabels(step) {
+    if (step.labels) return step.labels.map(([n, t]) => [Array.isArray(n) ? n : [n], t]);
+    if (step.focus === 'heart') return HEART_LABELS.map(([n, t]) => [[n], t]);
+    if (!Array.isArray(step.focus)) return [];
+    const seen = new Set(), out = [];
+    for (const n of step.focus) {
+      const t = labelText(n);
+      if (seen.has(t)) continue;
+      seen.add(t);
+      out.push([[n], t]);
+    }
+    return out.slice(0, 5);
+  }
+  const _lv = new V3();
+  function placeLabels() {
+    if (!labels.length) { if (svg.innerHTML) svg.innerHTML = ''; return; }
+    const W = canvas.clientWidth, H = canvas.clientHeight, mobile = W < 900;
+    // zona libre: sin el panel (a la derecha en escritorio, abajo en celular)
+    const right = !mobile && !panel.hidden ? W - panel.offsetWidth - 40 : W - 12;
+    const bottom = mobile && !panel.hidden ? H - panel.offsetHeight - 8 : H - 90;
+    const pts = [];
+    for (const l of labels) {
+      _lv.copy(l.anchor).project(viewer.camera);
+      const x = (_lv.x + 1) / 2 * W, y = (1 - _lv.y) / 2 * H;
+      const ok = _lv.z < 1 && x > 4 && x < right && y > 60 && y < bottom;
+      l.el.style.display = ok ? '' : 'none';
+      if (!ok) continue;
+      if (!l.w) { l.w = l.el.offsetWidth; l.h = l.el.offsetHeight; }
+      pts.push({ l, x, y, side: x < (right + 0) / 2 ? -1 : 1 });
+    }
+    // separar verticalmente las etiquetas de cada lado para que no se encimen
+    const lines = [];
+    for (const side of [-1, 1]) {
+      const g = pts.filter((p) => p.side === side).sort((a, b) => a.y - b.y);
+      let lastBottom = 60;
+      for (const p of g) {
+        let ly = Math.max(p.y - p.l.h / 2, lastBottom + 6);
+        ly = Math.min(ly, bottom - p.l.h);
+        lastBottom = ly + p.l.h;
+        const off = mobile ? 34 : 64;
+        let lx = side < 0 ? p.x - off - p.l.w : p.x + off;
+        lx = Math.max(6, Math.min(lx, right - p.l.w));
+        p.l.el.style.transform = `translate(${Math.round(lx)}px, ${Math.round(ly)}px)`;
+        const ex = side < 0 ? lx + p.l.w : lx, ey = ly + p.l.h / 2;
+        lines.push(`<line x1="${p.x.toFixed(1)}" y1="${p.y.toFixed(1)}" x2="${ex.toFixed(1)}" y2="${ey.toFixed(1)}"/><circle cx="${p.x.toFixed(1)}" cy="${p.y.toFixed(1)}" r="3.5"/>`);
+      }
+    }
+    svg.innerHTML = lines.join('');
+  }
+
   // --- extras: pulmones, médula, nervios ------------------------------------------------------
   function addExtras() {
     const H = geo.H;
@@ -575,6 +648,8 @@ export function createPhysio(viewer, panel, chipsEl, { toast } = {}) {
       const route = geo.build(ROUTES[s.route]);
       if (!route) continue;
       const st = { ...s, route, col: new THREE.Color(s.color), col2: s.color2 ? new THREE.Color(s.color2) : null, size: H * 0.0032 * (s.size || 1), parts: [] };
+      st.trail = s.trail ?? proc.trail ?? 0;
+      st.trailStep = (H * 0.006) / route.len; // separación de la estela: ~1 cm, sin importar el largo de la ruta
       if (s.burst) {
         st.timer = -(s.delay || 0);
         st.bursts = [];
@@ -674,6 +749,17 @@ export function createPhysio(viewer, panel, chipsEl, { toast } = {}) {
         particles.setMatrixAt(n, _mx.compose(_p, _q, _sc.set(s, s, s)));
         particles.setColorAt(n, color);
         n++;
+        // estela: puntos más chicos detrás, para que se vea hacia dónde va la sangre
+        for (let k = 1; k <= (st.trail || 0) && n < MAXP; k++) {
+          const u = p.u - k * st.trailStep * Math.sign(du || 1);
+          if (u <= 0 || u >= 1) break;
+          sample(st.route, u, _p);
+          _p.x += p.j * st.size * 1.4; _p.z += Math.sin(p.j * 9) * st.size * 1.2;
+          const ts = s * (1 - k * 0.24);
+          particles.setMatrixAt(n, _mx.compose(_p, _q, _sc.set(ts, ts, ts)));
+          particles.setColorAt(n, _c.copy(color).multiplyScalar(0.85 - k * 0.15));
+          n++;
+        }
       }
     }
     particles.count = n;
@@ -683,6 +769,7 @@ export function createPhysio(viewer, panel, chipsEl, { toast } = {}) {
     for (const f of flashes) { f.t += real; f.o.material.opacity = f.peak * Math.max(0, 1 - f.t / f.dur); }
     flashes = flashes.filter((f) => { if (f.t < f.dur) return true; root.remove(f.o); f.o.material.dispose(); return false; });
     // recorrido por zonas (mapa del cerebro)
+    placeLabels();
     const step = proc.steps[stepIdx];
     if (!step) return; // casos clínicos: sin pasos
     if (step.tour && playing) {
@@ -692,6 +779,7 @@ export function createPhysio(viewer, panel, chipsEl, { toast } = {}) {
         tourI = i;
         const [label, names] = step.tour[i];
         names.forEach((nm) => (geo.byName.get(nm) || []).forEach((m) => flash(m, FLASH, 2.1, 0.75)));
+        setLabels([[names, label.split(':')[0]]]);
         const el = panel.querySelector('#px-tour');
         if (el) el.innerHTML = `<b>${esc(label.split(':')[0])}</b>${label.includes(':') ? ':' + esc(label.split(':').slice(1).join(':')) : ''}`;
         panel.querySelectorAll('.px-tour-list li').forEach((li, k) => li.classList.toggle('on', k === i));
@@ -826,6 +914,7 @@ export function createPhysio(viewer, panel, chipsEl, { toast } = {}) {
   function renderCases() {
     const c = proc.cases[caseIdx], ok = caseAns === c.answer;
     panel.innerHTML = `
+      <button class="handle px-handle" data-px="fold" aria-label="Plegar o desplegar el panel"></button>
       ${procChips(proc)}
       <p class="kicker"><i style="background:${proc.color}"></i>Practica</p>
       <h2>${esc(proc.title)}</h2>
@@ -847,6 +936,7 @@ export function createPhysio(viewer, panel, chipsEl, { toast } = {}) {
     caseIdx = i; caseAns = null;
     if (i === 0) score = [0, 0];
     const c = proc.cases[i];
+    setLabels([]);
     frameStep({ focus: c.focus, view: c.view, margin: c.margin });
     renderCases();
     panel.scrollTo({ top: 0 });
@@ -859,6 +949,7 @@ export function createPhysio(viewer, panel, chipsEl, { toast } = {}) {
     const paint = (names, color) => names.forEach((n) => (geo.byName.get(n) || []).forEach((m) => { mark(m, color, 0.8); flash(m, new THREE.Color(color), 1.6, 0.9); }));
     if (i !== c.answer) paint(c.options[i][1], '#ef4444');
     paint(c.options[c.answer][1], '#22c55e');
+    setLabels([[c.options[c.answer][1], `✓ ${c.options[c.answer][0]}`, 'ok'], ...(i !== c.answer ? [[c.options[i][1], `✗ ${c.options[i][0]}`, 'bad']] : [])]);
     renderCases();
     const fb = panel.querySelector('.px-opts');
     if (fb) panel.scrollTo({ top: fb.offsetTop - 12, behavior: 'smooth' });
@@ -880,10 +971,12 @@ export function createPhysio(viewer, panel, chipsEl, { toast } = {}) {
          <p class="px-ef" id="px-ef"></p>`
       : p.graph ? `<div class="px-graph"><canvas id="px-graph"></canvas><span>${p.graph === 'ecg' ? 'Electrocardiograma (ECG)' : 'Volumen pulmonar (volumen corriente)'}</span></div>` : '';
     panel.innerHTML = `
+      <button class="handle px-handle" data-px="fold" aria-label="Plegar o desplegar el panel"></button>
       ${procChips(p)}
       <p class="kicker"><i style="background:${p.color}"></i>Fisiología en movimiento</p>
       <h2>${esc(p.title)}</h2>
-      <p class="px-intro">${esc(p.intro)}</p>
+      <p class="px-intro clamp">${esc(p.intro)}</p>
+      <button class="link px-more" data-px="more">Leer más</button>
       ${dzRow}
       <div class="px-ctrl">
         <button class="round px-play" data-px="play" aria-label="${playing ? 'Pausar' : 'Reproducir'}">${playing ? '<svg class="ico" viewBox="0 0 24 24"><path d="M8 5v14M16 5v14"/></svg>' : '<svg class="ico" viewBox="0 0 24 24"><path d="M7 5l12 7-12 7z"/></svg>'}</button>
@@ -898,8 +991,10 @@ export function createPhysio(viewer, panel, chipsEl, { toast } = {}) {
       ${graph}
       <div class="px-step" id="px-step"></div>
       <div class="px-legend">${p.legend.map(([c, l]) => `<span><i style="background:${c}"></i>${esc(l)}</span>`).join('')}</div>
-      <div class="section-title">Pasos</div>
-      <ol class="px-steps">${p.steps.map((s, i) => `<li><button data-step="${i}">${esc(s.t)}</button></li>`).join('')}</ol>
+      <details class="px-all">
+        <summary>Todos los pasos (${p.steps.length})</summary>
+        <ol class="px-steps">${p.steps.map((s, i) => `<li><button data-step="${i}">${esc(s.t)}</button></li>`).join('')}</ol>
+      </details>
       <p class="px-note">Animación esquemática y en cámara lenta sobre los modelos de BodyParts3D. La médula espinal, los nervios del miembro superior y la silueta pulmonar están dibujados aparte porque no hay mallas abiertas de ellos.</p>`;
     renderStep();
   }
@@ -928,6 +1023,13 @@ export function createPhysio(viewer, panel, chipsEl, { toast } = {}) {
       if (see.dz) setDisease(see.dz); else if (see.step !== undefined) goStep(see.step);
       return;
     }
+    if (b.dataset.px === 'fold') { panel.classList.toggle('folded'); return; }
+    if (b.dataset.px === 'more') {
+      const intro = panel.querySelector('.px-intro');
+      intro.classList.toggle('clamp');
+      b.textContent = intro.classList.contains('clamp') ? 'Leer más' : 'Leer menos';
+      return;
+    }
     if (b.dataset.px === 'sound') {
       soundOn = !soundOn;
       if (soundOn) { audio ??= new (window.AudioContext || window.webkitAudioContext)(); audio.resume(); }
@@ -942,6 +1044,15 @@ export function createPhysio(viewer, panel, chipsEl, { toast } = {}) {
     if (b.dataset.step !== undefined) goStep(Number(b.dataset.step));
     if (b.dataset.speed) { speed = Number(b.dataset.speed); panel.querySelectorAll('[data-speed]').forEach((x) => x.classList.toggle('active', x === b)); }
   });
+  let touchY = null;
+  panel.addEventListener('touchstart', (e) => { touchY = panel.scrollTop <= 0 ? e.touches[0].clientY : null; }, { passive: true });
+  panel.addEventListener('touchend', (e) => {
+    if (touchY === null) return;
+    const dy = e.changedTouches[0].clientY - touchY;
+    if (dy > 50) panel.classList.add('folded');
+    if (dy < -50 && panel.classList.contains('folded')) panel.classList.remove('folded');
+    touchY = null;
+  }, { passive: true });
   panel.addEventListener('input', (e) => {
     if (e.target.type !== 'range' || !proc?.rate) return;
     rate = Number(e.target.value);
@@ -954,6 +1065,7 @@ export function createPhysio(viewer, panel, chipsEl, { toast } = {}) {
     visibleStreams = s.streams ? new Set(s.streams) : null;
     renderStep();
     frameStep(s);
+    setLabels(s.tour ? [] : stepLabels(s));
     const el = panel.querySelector(dz ? '.px-dz-row' : '#px-step');
     if (el && (el.offsetTop < panel.scrollTop || el.offsetTop > panel.scrollTop + panel.clientHeight - 80)) panel.scrollTo({ top: el.offsetTop - 12, behavior: 'smooth' });
   }
@@ -963,6 +1075,8 @@ export function createPhysio(viewer, panel, chipsEl, { toast } = {}) {
     for (const mv of movers) mv.reset();
     movers = [];
     clearDisease();
+    setLabels([]);
+    svg.innerHTML = '';
     for (const o of extras) { root.remove(o); o.geometry.dispose(); o.material.dispose(); }
     extras = [];
     clearFlashes();
@@ -996,6 +1110,7 @@ export function createPhysio(viewer, panel, chipsEl, { toast } = {}) {
   return {
     root,
     get active() { return !!disposeTick; },
+    setInitial(id) { const i = PROCESSES.findIndex((q) => q.id === id); if (i >= 0) procIdx = i; },
     start(b, i = procIdx) {
       body = b;
       root.visible = true;

@@ -10,7 +10,7 @@ import { createQuiz } from './quiz.js?v=531bae72';
 import { renderSources } from './sources.js?v=531bae72';
 import { wikiFor } from './wiki.js?v=531bae72';
 import { createPhysio } from './physio.js?v=531bae72';
-import { setupLaunch } from './launch.js?v=531bae72';
+import { setupLaunch, afterNotice, physioCta, physioSeen, markPhysioSeen } from './launch.js?v=531bae72';
 
 const $ = (s) => document.querySelector(s);
 const V = window.ATLAS_V || '';
@@ -86,9 +86,13 @@ body = await createBody(viewer, {
       if (viewer.softwareGpu && store.get('atlas-gpu-warn') !== 'off') {
         store.set('atlas-gpu-warn', 'off');
         toast('Tu navegador no usa la tarjeta gráfica: activa la aceleración de hardware para que vaya fluido.', 6000);
-      } else if (!store.get('atlas-hint')) {
-        store.set('atlas-hint', '1');
-        toast('Toca una estructura para ver su ficha');
+      } else {
+        // primera visita: primero el aviso educativo; después, la invitación a Fisiología o la pista
+        afterNotice(() => {
+          if (mode !== 'body') return;
+          if (physioCta(() => setMode('physio'))) return;
+          if (!store.get('atlas-hint')) { store.set('atlas-hint', '1'); toast('Toca una estructura para ver su ficha'); }
+        });
       }
     }
   },
@@ -461,7 +465,8 @@ function setMode(m) {
     else openOrgan(hubmap.find((o) => o.id === '3d-vh-f-heart') || hubmap[0]); // nunca abrir vacío
   }
   if (m === 'quiz') quiz.start();
-  if (m === 'physio') { clipAxis = 'none'; physio.start(body); }
+  if (m === 'physio') { clipAxis = 'none'; markPhysioSeen(); physio.start(body); }
+  if (m !== 'body') document.querySelector('.cta')?.remove();
   if (m === 'sources') renderSources($('#sources-page'));
   updateClip();
   updateShowAll();
@@ -590,4 +595,8 @@ window.addEventListener('keydown', (e) => {
 });
 
 setMode('body');
+if (physioSeen()) document.querySelector('.tab-new')?.remove();
+// enlace directo: #fisiologia o #fisiologia/<proceso> (circulacion, corazon, respiracion, nervios, digestion, rinones, casos)
+const deep = location.hash.match(/^#fisiologia(?:\/([a-z]+))?/);
+if (deep) { physio.setInitial(deep[1]); setMode('physio'); }
 window.__atlas = { viewer, get body() { return body; }, organs, get quiz() { return quiz; }, physio, switchBody, setMode }; // depuración y pruebas

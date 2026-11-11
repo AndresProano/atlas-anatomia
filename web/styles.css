@@ -562,7 +562,8 @@ body:not([data-mode="physio"]) .px-labels { display: none; }
 .organ-bar-tools .ox-modes { display: flex; gap: 4px; padding: 3px; border-radius: 16px; background: var(--surface-2); }
 .organ-bar-tools .ox-modes button { padding: 7px 12px; border-radius: 13px; font-size: 13px; font-weight: 600; color: var(--muted); }
 .organ-bar-tools .ox-modes button.on { background: var(--accent); color: var(--accent-ink); }
-.organ-bar-tools input[type=range] { width: 140px; accent-color: var(--accent); }
+.organ-bar-tools .ox-hint { font-size: 13px; color: var(--muted); padding: 0 4px; }
+body.organ-open .cta { display: none; }
 .organ-bar-tools .ox-close { width: 34px; height: 34px; border-radius: 50%; background: var(--surface-2); font-size: 14px; }
 @media (min-width: 900px) {
   .organ-bar-tools { left: 16px; right: auto; margin: 0; top: 76px; }

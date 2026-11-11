@@ -1,5 +1,5 @@
-// «Abrir órgano»: aísla un órgano del cuerpo y deja verlo entero, cortado a la mitad o con sus partes separadas
-// (vista explotada), con etiquetas y la lista de sus partes.
+// «Abrir órgano»: aísla un órgano del cuerpo, con etiquetas y la lista de sus partes. Para verlo por dentro basta
+// con acercarse (el visor corta lo que queda delante al hacer zoom); también se pueden separar sus partes.
 import * as THREE from 'three';
 
 const V3 = THREE.Vector3;
@@ -23,7 +23,7 @@ export const ORGANS = [
 
 export function createOrganExplorer(viewer, { onClose } = {}) {
   let body = null, organ = null, parts = [], center = new V3(), radius = 1, box = new THREE.Box3();
-  let snapshot = null, mode = 'whole', explodeT = 0, explodeTarget = 0, cutPos = 0.5, stopTick = null;
+  let snapshot = null, mode = 'whole', explodeT = 0, explodeTarget = 0, stopTick = null;
   const cache = new WeakMap(); // cuerpo → { centros, corazón }
 
   // --- utilidades por cuerpo ---------------------------------------------------------------------
@@ -154,11 +154,11 @@ export function createOrganExplorer(viewer, { onClose } = {}) {
   bar.hidden = true;
   document.body.appendChild(bar);
   function renderBar() {
-    const btn = (m, t) => `<button data-ox="${m}" class="${mode === m ? 'on' : ''}">${t}</button>`;
+    const sep = mode === 'explode';
     bar.innerHTML = `
       <span class="ox-title">${organ.icon} ${organ.label.replace(/^(el|la|los|las) /, '')}</span>
-      <div class="ox-modes">${btn('whole', 'Entero')}${organ.internal === false ? '' : btn('cut', 'Cortar a la mitad') + btn('explode', 'Separar partes')}</div>
-      ${mode === 'cut' ? `<input type="range" min="0.15" max="0.85" step="0.01" value="${cutPos}" aria-label="Posición del corte">` : ''}
+      <span class="ox-hint">🔍 Acércate para ver por dentro</span>
+      ${organ.internal === false ? '' : `<div class="ox-modes"><button data-ox="${sep ? 'whole' : 'explode'}" class="${sep ? 'on' : ''}" aria-pressed="${sep}">Separar partes</button></div>`}
       <button class="ox-close" data-ox="close" aria-label="Cerrar">✕</button>`;
   }
   bar.addEventListener('click', (e) => {
@@ -167,19 +167,11 @@ export function createOrganExplorer(viewer, { onClose } = {}) {
     if (b.dataset.ox === 'close') return close();
     setMode(b.dataset.ox);
   });
-  bar.addEventListener('input', (e) => {
-    if (e.target.type !== 'range') return;
-    cutPos = Number(e.target.value);
-    viewer.setClip('coronal', cutPos, false, box);
-  });
-
   function setMode(m) {
-    mode = m;
-    explodeTarget = m === 'explode' ? 1 : 0;
-    // corte coronal: se quita la mitad anterior para ver el interior desde adelante
-    viewer.setClip(m === 'cut' ? 'coronal' : 'none', cutPos, false, box);
+    mode = m === 'explode' ? 'explode' : 'whole';
+    explodeTarget = mode === 'explode' ? 1 : 0;
     const dir = new V3(0.15, 0.1, 1).normalize();
-    if (m === 'explode') viewer.fitTo(box.clone().expandByScalar(radius * 1.25), dir, { margin: 1.15 });
+    if (mode === 'explode') viewer.fitTo(box.clone().expandByScalar(radius * 1.25), dir, { margin: 1.15 });
     else viewer.fitTo(box, dir, { margin: 1.6 });
     renderBar();
     viewer.requestRender();
@@ -202,7 +194,7 @@ export function createOrganExplorer(viewer, { onClose } = {}) {
     body.state.hidden = new Set();
     body.state.isolated = new Set(parts.map((m) => m.userData.part.id));
     for (const s of systems) body.setSystemOpacity(s, 1);
-    explodeT = 0; explodeTarget = 0; mode = 'whole'; cutPos = 0.5;
+    explodeT = 0; explodeTarget = 0; mode = 'whole';
     viewer.fitTo(box, new V3(0.15, 0.1, 1).normalize(), { margin: 1.6 });
     // colores distintos por parte (encéfalo, hígado, vía aérea): si no, todo es del mismo color y no se distingue
     if (o.tint) {

@@ -584,17 +584,32 @@ export function createPhysio(viewer, panel, chipsEl, { toast } = {}) {
       vent: list.filter((m) => !/atri|auricle/i.test(m.userData.part.en)).map(mover),
     };
   }
-  // fases del ciclo (0-1 por latido, la duración de la diástole se acorta al subir la frecuencia)
-  const sysDur = () => Math.min(0.42, 0.3 * (rate / 72) ** 0.5);
-  const atrialK = (φ) => (fx() === 'fa' ? 0.12 * (0.5 + 0.5 * Math.sin(tNow * 47)) : bump(φ, 0.02, 0.2));
-  const ventK = (φ) => bump(φ, 0.18, 0.18 + sysDur());
+  // Tiempos del ciclo en segundos, convertidos a fracción del ciclo (φ de 0 a 1).
+  // PR (0,12-0,20 s) y QRS casi fijos; QT por Bazett (QT ≈ 0,40·√RR). Al subir la FC se acorta sobre todo la diástole.
+  function timing() {
+    const RR = 60 / rate;
+    const pr = Math.min(0.2, Math.max(0.12, 0.16 - (rate - 72) * 0.0004));
+    // a FC alta el QT se limita para que siempre quede un tramo de llenado diastólico
+    const qt = Math.min(0.4 * Math.sqrt(RR), 0.8 * RR - pr);
+    const k = 1 / RR; // fracción del ciclo por segundo
+    const ivr = Math.min(0.08, 0.12 * RR); // relajación isovolumétrica
+    return { RR, k, ivr: ivr * k, q: pr * k, s: (pr + 0.03) * k, e: (pr + qt - 0.02) * k, tEnd: (pr + qt) * k };
+  }
+  const atrialK = (φ) => {
+    if (fx() === 'fa') return 0.12 * (0.5 + 0.5 * Math.sin(tNow * 47)); // aurículas que tiemblan
+    const T = timing();
+    return bump(φ, 0.07 * T.k, T.q + 0.02 * T.k);
+  };
+  const ventK = (φ) => { const T = timing(); return bump(φ, T.s, T.e); };
   function ecg(φ) {
-    const g = (c, w, a) => a * Math.exp(-(((φ - c) / w) ** 2));
-    const qt = 0.18 + sysDur();
-    let v = g(0.165, 0.008, -0.12) + g(0.18, 0.009, 1) + g(0.197, 0.01, -0.28) + g(qt - 0.06, 0.045, 0.3);
-    if (fx() === 'fa') v += 0.045 * Math.sin(tNow * 41) + 0.03 * Math.sin(tNow * 27 + 1.3); // sin onda P, línea temblorosa
-    else v += g(0.08, 0.03, 0.13);
-    if (fx() === 'infarto') v += 0.3 * smooth((φ - 0.2) / 0.025) * smooth((qt - 0.03 - φ) / 0.06); // ST elevado
+    const T = timing(), k = T.k;
+    const g = (c, w, a) => a * Math.exp(-(((φ - c) / (w * k)) ** 2)); // c: fracción del ciclo; w: segundos
+    let v = g(T.q + 0.005 * k, 0.008, -0.12) + g(T.q + 0.02 * k, 0.009, 1) + g(T.q + 0.037 * k, 0.01, -0.28) + g(T.tEnd - 0.07 * k, 0.045, 0.3);
+    if (fx() === 'fa') {
+      const t = φ / k; // ondas f (≈ 6-9 por segundo) en lugar de la onda P
+      v += 0.04 * Math.sin(2 * Math.PI * 6.3 * t + tNow * 2) + 0.025 * Math.sin(2 * Math.PI * 8.7 * t + 1.3);
+    } else v += g(0.05 * k, 0.022, 0.13); // onda P
+    if (fx() === 'infarto') v += 0.3 * smooth((φ - T.q - 0.06 * k) / (0.02 * k)) * smooth((T.tEnd - 0.04 * k - φ) / (0.06 * k)); // ST elevado
     return v;
   }
   // respiración: en el asma la espiración es lenta y el pulmón no se vacía (aire atrapado)
@@ -606,36 +621,41 @@ export function createPhysio(viewer, panel, chipsEl, { toast } = {}) {
 
   // --- diagrama de Wiggers: un ciclo cardiaco completo (presiones en mmHg y volumen del VI en ml) ---
   function wiggers() {
-    const s = 0.19, o = 0.235, e = 0.17 + sysDur(), r = e + 0.06;
+    const T = timing(), k = T.k;
+    const s = T.s, o = s + 0.05 * k, e = T.e, r = e + T.ivr; // contracción isovolumétrica ~50 ms, relajación ~80 ms
     const inf = fx() === 'infarto', fa = fx() === 'fa';
-    const kick = (φ) => (fa ? 0 : bump(φ, 0.03, 0.16));
-    const PK = inf ? 100 : 122, EDV = fa ? 110 : 120, ESV = inf ? 76 : 50;
+    const ka = 0.07 * k, kb = T.q + 0.02 * k; // sístole auricular (después de la onda P)
+    const kick = (φ) => (fa ? 0 : bump(φ, ka, kb));
+    const PK = inf ? 100 : 122, ESV = inf ? 76 : 50;
+    const PRE = 106, EDV = fa ? PRE : PRE + 14; // la sístole auricular aporta ~14 ml; en la FA se pierde
+    const lvd = inf ? 16 : 5; // presión telediastólica del VI: sube con el infarto (congestión pulmonar)
     const shape = (p) => Math.pow(Math.sin(Math.PI * p), 0.7) * (1 - 0.3 * p) + 0.33 * p;
+    const pe = 80 + (PK - 80) * shape(1);
     const lv = (φ) => {
-      if (φ < s) return 5 + 5 * kick(φ);
-      if (φ < o) return 9 + 71 * smooth((φ - s) / (o - s));
+      if (φ < s) return lvd + 4 * kick(φ);
+      if (φ < o) return lvd + (80 - lvd) * smooth((φ - s) / (o - s));
       if (φ < e) return 80 + (PK - 80) * shape((φ - o) / (e - o));
-      const pe = 80 + (PK - 80) * shape(1);
-      if (φ < r) return 6 + (pe - 6) * (1 - smooth((φ - e) / (r - e)));
-      return 5 + 1.5 * ((φ - r) / (1 - r));
+      if (φ < r) return lvd - 2 + (pe - (lvd - 2)) * (1 - smooth((φ - e) / (r - e)));
+      return lvd - 2 + 2 * ((φ - r) / (1 - r)); // llenado: termina en la presión telediastólica
     };
-    const pe = lv(e - 1e-4);
     const ao = (φ) => {
       if (φ >= o && φ < e) return lv(φ) - 1.5;
       const d = φ >= e ? φ - e : φ + 1 - e, D = 1 - e + o;
-      return pe - (pe - 80) * (d / D) - 6 * bump(d, 0, 0.035) + 3 * bump(d, 0.025, 0.08); // incisura dicrota
+      return pe - (pe - 80) * (d / D) - 6 * bump(d, 0, 0.035) + 3 * bump(d, 0.025, 0.08); // incisura dícrota
     };
+    // aurícula izquierda: por encima del VI mientras la mitral está abierta; ondas a, c y v
     const la = (φ) => {
-      const v = φ < o ? 0 : φ < r ? 6 * smooth((φ - o) / (r - o)) : 6 * (1 - smooth((φ - r) / 0.12));
-      return 5 + 5 * kick(φ) + 2 * bump(φ, s, o) + v;
+      if (φ < s) return lvd + 1 + 7 * kick(φ);
+      if (φ < r) return lvd + 1 + 2 * bump(φ, s, o) + 4 * smooth((φ - s) / (r - s));
+      return lv(φ) + 1 + 6 * (1 - smooth((φ - r) / (0.1 * k)));
     };
-    const fill = (φ) => ESV + (EDV - 10 - ESV) * (1 - Math.exp(-(φ - r) / 0.07)) / (1 - Math.exp(-(1 - r) / 0.07));
+    const fillTo = (φ, top) => ESV + (top - ESV) * (1 - Math.exp(-(φ - r) / (0.1 * k))) / (1 - Math.exp(-(1 - r) / (0.1 * k)));
     const vol = (φ) => {
-      if (φ < s) return fa ? EDV : EDV - 10 + 10 * smooth((φ - 0.03) / 0.13);
+      if (φ < s) return fa ? EDV : PRE + (EDV - PRE) * smooth((φ - ka) / (kb - ka));
       if (φ < o) return EDV;
       if (φ < e) return EDV - (EDV - ESV) * (1 - (1 - (φ - o) / (e - o)) ** 2);
       if (φ < r) return ESV;
-      return fa ? ESV + (EDV - ESV) * (1 - Math.exp(-(φ - r) / 0.07)) / (1 - Math.exp(-(1 - r) / 0.07)) : fill(φ);
+      return fillTo(φ, PRE);
     };
     return { s, e, lv, ao, la, vol, EDV, ESV };
   }
@@ -674,10 +694,10 @@ export function createPhysio(viewer, panel, chipsEl, { toast } = {}) {
       if (phase >= 1) { phase -= 1; beatK = fx() === 'fa' ? 0.6 + Math.random() * 0.95 : 1; }
       // ruidos cardiacos: S1 al empezar la contracción ventricular, S2 al terminar
       if (soundOn && playing && proc.sound) {
-        const s2 = 0.17 + sysDur();
+        const T = timing();
         const crossed = (x) => (prev < x && phase >= x) || (phase < prev && (prev < x || phase >= x));
-        if (crossed(0.19)) thump(62, 0.16, 0.9);
-        if (crossed(s2)) thump(88, 0.11, 0.65);
+        if (crossed(T.s)) thump(62, 0.16, 0.9); // R1: cierre de las válvulas AV
+        if (crossed(T.e)) thump(88, 0.11, 0.65); // R2: cierre de las semilunares
       }
     }
     if (proc.rate?.kind === 'rr') breath = (breath + dt * rate / 60) % 1;

@@ -1,16 +1,16 @@
 // Interfaz tipo app: visor a pantalla completa, buscador flotante, capas en chips,
 // ficha como hoja inferior (móvil) o tarjeta lateral (escritorio) y barra de pestañas.
-import { createViewer, VIEWS } from './scene.js?v=531bae72';
-import { createBody, SYSTEM_COLORS, displayName } from './body.js?v=531bae72';
-import { createOrgans } from './organs.js?v=531bae72';
-import { createProfiles } from './profiles.js?v=531bae72';
-import { loadClinica } from './clinica.js?v=531bae72';
-import { createSync } from './sync.js?v=531bae72';
-import { createQuiz } from './quiz.js?v=531bae72';
-import { renderSources } from './sources.js?v=531bae72';
-import { wikiFor } from './wiki.js?v=531bae72';
-import { createPhysio } from './physio.js?v=531bae72';
-import { setupLaunch, afterNotice, physioCta, physioSeen, markPhysioSeen } from './launch.js?v=531bae72';
+import { createViewer, VIEWS } from './scene.js?v=d6ebd671';
+import { createBody, SYSTEM_COLORS, displayName } from './body.js?v=d6ebd671';
+import { createOrgans } from './organs.js?v=d6ebd671';
+import { createProfiles } from './profiles.js?v=d6ebd671';
+import { loadClinica } from './clinica.js?v=d6ebd671';
+import { createSync } from './sync.js?v=d6ebd671';
+import { createQuiz } from './quiz.js?v=d6ebd671';
+import { renderSources } from './sources.js?v=d6ebd671';
+import { wikiFor } from './wiki.js?v=d6ebd671';
+import { createPhysio } from './physio.js?v=d6ebd671';
+import { setupLaunch, afterNotice, physioCta, physioSeen, markPhysioSeen } from './launch.js?v=d6ebd671';
 
 const $ = (s) => document.querySelector(s);
 const V = window.ATLAS_V || '';

@@ -1,6 +1,6 @@
 // Lanzamiento público: aviso educativo, formulario de opiniones, botón de donación (PayPal) y analítica sin cookies.
-import { DONATE_URL, CF_ANALYTICS_TOKEN } from './config.js?v=531bae72';
-import { syncUrl } from './sync.js?v=531bae72';
+import { DONATE_URL, CF_ANALYTICS_TOKEN } from './config.js?v=d6ebd671';
+import { syncUrl } from './sync.js?v=d6ebd671';
 
 const store = {
   get: (k) => { try { return localStorage.getItem(k); } catch { return null; } },
